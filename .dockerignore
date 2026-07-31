@@ -1,0 +1,50 @@
+# Repository metadata and local configuration
+.git
+.git/**
+**/.env
+**/.env.*
+!**/.env.example
+**/local.properties
+
+# Credentials, keys, and signing material
+**/*credentials*.json
+**/service-account*.json
+**/google-services.json
+**/GoogleService-Info.plist
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/*.jks
+**/*.keystore
+
+# Python environments and generated files
+**/venv/
+**/.venv/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+
+# Web dependencies, builds, and coverage
+**/node_modules/
+**/dist/
+**/build/
+**/coverage/
+**/.next/
+
+# Android and Gradle outputs
+**/.gradle/
+**/*.apk
+**/*.aab
+
+# Runtime data
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+
+# Editor and operating-system metadata
+**/.idea/
+**/.vscode/
+**/.DS_Store
+**/*.iml
