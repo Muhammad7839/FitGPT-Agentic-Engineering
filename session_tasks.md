@@ -21,6 +21,13 @@ Definition of done:
 - The focused test command passes.
 - No production or unrelated file is modified.
 
+### Results
+
+Merge decision: Merged
+Reason: The agent created focused tests for the recommendation explanation builder, stayed within its write and read scope, required no external services or credentials, and passed the independent focused validation with 20 tests.
+Commits on this branch:
+- 4a9ceb6 test: cover recommendation explanations
+
 ## Session B
 
 Branch name: course/parallel-storage-docs
@@ -43,3 +50,10 @@ Definition of done:
 - It identifies configuration names without exposing or inventing secret values.
 - It includes concise setup, security, and troubleshooting guidance.
 - No application, README, environment-example, or unrelated file is modified.
+
+### Results
+
+Merge decision: Merged after human review and correction
+Reason: The agent created a useful storage-backend guide and stayed within its declared write scope. During review, the orchestrator found that the agent read backend/app/main.py outside the declared read scope and that several URL and R2 statements required safer, more source-supported wording. The document was corrected and independently validated before merge.
+Commits on this branch:
+- 8c8d2ee docs: explain image storage backends
