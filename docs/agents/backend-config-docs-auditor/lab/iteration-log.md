@@ -186,7 +186,8 @@ The procedure will require:
 
 Revision commit:
 
-Pending.
+- `aaaf82d80242d4d81d89f25311d93c8b6c93ee14`
+- `agent: backend-config-docs-auditor v0.1.3 -- add patch evidence closure and self-check, refs lab run 1`
 
 ### Remaining Limitations
 
