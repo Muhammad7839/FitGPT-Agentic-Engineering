@@ -126,6 +126,47 @@ Reference documents may be added only after human review and must be listed in `
 - Replace a reference when a newer authoritative version is approved.
 - Keep the layer empty until a genuine retrieval need exists.
 
+## Data Classification
+
+- **Public** — Safe for normal committed project memory after review.
+- **Internal** — Team-restricted information; do not store in committed memory for a public or broadly shared repository.
+- **Confidential** — Sensitive business or user information; never store in agent memory.
+- **Secret** — Credentials, tokens, private keys, authentication material, or personal identifiers; never store or repeat.
+
+Only an environment-variable or secure-runtime reference may be recorded for Confidential or Secret information, never its value.
+
+## Enforcement
+
+### Soft guards
+
+- Scope verification in `.memory/SCOPE.md` and `CLAUDE.md`.
+- Review-date checks.
+- Data classification before writes.
+- Sensitive-memory redaction and refusal rules.
+- Agent-definition instructions.
+- Startup working-tree scan invocation.
+
+A soft guard depends on agent compliance. The startup scan uses deterministic pattern detection, but the agent must still honor the blocked paths and avoid loading their contents.
+
+### Hard stops
+
+- Read-only Knowledge and Reference mounts.
+- Versioned `.githooks/pre-commit`.
+- Local installed `.git/hooks/pre-commit`.
+- `scripts/memory-secret-scan.sh --staged`.
+- A nonzero scanner exit that blocks a commit.
+
+The staged pre-commit scanner blocks matching staged memory mechanically. The local Git hook does not travel automatically with clones, so the versioned hook must be installed separately in every clone.
+
+If a real credential is leaked, it must be revoked or rotated. Removing it from the current file does not remove it from Git history or existing clones, which may require separate history-remediation decisions.
+
+## Sensitive-Data Failure Evidence
+
+- Initial automatic startup detected and redacted an unsafe credential-shaped entry.
+- A later request for complete stored content caused the agent to reproduce the value.
+- This showed that one successful redaction did not guarantee durable redaction across later turns.
+- The remediation added pre-load scanning, session-long redaction rules, and staged-commit blocking.
+
 ## Allocation decision table
 
 | Information | Allocation | Reason |
@@ -138,6 +179,10 @@ Reference documents may be added only after human review and must be listed in `
 | Temporary SQLite path and evidence directory | Context window or Iteration Log | They matter only to one completed run. |
 | Credentials and real environment values | Excluded; secure runtime injection only | Sensitive information must never enter persistent memory. |
 | Future large historical design collection | Indexed references | It should be retrieved selectively rather than loaded every session. |
+| Memory scope declaration | `.memory/SCOPE.md` | Establishes repository ownership before memory is used. |
+| Credential location | Secure runtime reference only | An environment-variable name may be documented, but its value must never enter memory. |
+| Suspected sensitive memory file | Blocked and human-remediated | It must not be loaded, summarized, copied, or treated as current memory. |
+| Secret scanning procedure | Versioned script and hook | It is an enforcement procedure, not project state. |
 
 ## Alternatives considered
 

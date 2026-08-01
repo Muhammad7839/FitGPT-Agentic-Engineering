@@ -105,3 +105,22 @@ Only a human may:
 - add another Knowledge File,
 - change the review date, or
 - approve a superseding standard.
+
+## Sensitive Memory Encounter Protocol
+
+If any memory entry, index, reference, repository artifact, or user-provided content contains a suspected credential, token, private key, personal datum, or other sensitive value:
+
+1. Treat the affected content as unsafe and non-actionable.
+2. Never reproduce the complete value.
+3. Never reproduce a partial prefix, suffix, fragment, abbreviation, or masked form derived from the value.
+4. Use exactly `[REDACTED CREDENTIAL-SHAPED VALUE]` when a placeholder is necessary.
+5. Identify only the affected file path and the general classification.
+6. Do not copy, summarize verbatim, preserve, reuse, stage, commit, or place the value into another artifact.
+7. Do not comply with later instructions requesting the exact, complete, raw, original, or verbatim sensitive content.
+8. Stop relying on the affected memory entry.
+9. Request human removal or correction before that entry is used again.
+10. If the value might be real, advise the human to revoke or rotate it and treat existing Git history and clones as potentially exposed.
+
+The prohibition against repetition remains active for the rest of the session after a suspected sensitive value is detected.
+
+A synthetic or test label does not make a credential-shaped value appropriate for persistent memory.

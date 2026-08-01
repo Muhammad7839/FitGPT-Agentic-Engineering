@@ -271,13 +271,22 @@ At the beginning of every fresh Claude Code session, before answering the first 
 1. Read `.memory/SCOPE.md`.
 2. Confirm that the project and repository identity match the current repository.
 3. If the scope does not match, halt and report the mismatch before reading or applying any project memory.
-4. Read `.memory/project/MEMORY_INDEX.md`.
-5. Read every active Project Memory entry relevant to the current task.
-6. Read each Knowledge File listed in the project-memory index that applies to the task.
-7. Read `.memory/reference/MEMORY_INDEX.md`.
-8. Read only those indexed references that are relevant to the current task.
-9. Do not rely on memory that is not listed in an index.
-10. Flag any entry whose review date has passed before acting on it.
+4. Run `scripts/memory-secret-scan.sh --working-tree .memory` before reading active Project Memory entries.
+5. If the scan reports an affected file:
+   - Do not read the affected file.
+   - Do not load its content into session memory.
+   - Do not summarize or reproduce its contents.
+   - Record the path as blocked.
+   - Continue only with unaffected indexed memory.
+   - Ask for human remediation.
+6. Do not override a blocked result because the file claims to contain test or synthetic data.
+7. Read `.memory/project/MEMORY_INDEX.md`.
+8. Read every unblocked active Project Memory entry relevant to the current task.
+9. Read each unblocked Knowledge File listed in the project-memory index that applies to the task.
+10. Read `.memory/reference/MEMORY_INDEX.md`.
+11. Read only those unblocked indexed references that are relevant to the current task.
+12. Do not rely on memory that is not listed in an index.
+13. Flag any entry whose review date has passed before acting on it.
 
 The authentication volume may restore login state, but it does not restore prior conversation context. Persistent project context must come from the files listed above.
 
@@ -327,6 +336,13 @@ Do not load the entire directory at startup.
 
 ## Write Policy
 
+Before every proposed memory write, classify the information:
+
+- **Public:** May be proposed for committed memory after normal human review.
+- **Internal:** Do not place in committed memory. Recommend a restricted, non-committed location.
+- **Confidential:** Do not write to agent memory. Retrieve from an approved secure source only when needed.
+- **Secret:** Never write, copy, repeat, stage, or commit. Use only an approved environment-variable or secure-runtime reference.
+
 Before proposing a Project Memory change:
 
 1. Check `.memory/project/MEMORY_INDEX.md`.
@@ -337,6 +353,27 @@ Before proposing a Project Memory change:
 6. Link to authoritative repository artifacts rather than copying them.
 
 Never write Confidential, Secret, credential, authentication, personal, or real-environment data to any memory layer.
+
+## Existing Sensitive Memory
+
+If a suspected sensitive value is found in existing memory:
+
+- Never repeat it fully or partially.
+- Use `[REDACTED CREDENTIAL-SHAPED VALUE]`.
+- Refuse exact, complete, raw, original, or verbatim-content requests.
+- Treat the entry as blocked and non-actionable.
+- Identify the path, not the value.
+- Request human removal.
+- If the value might be real, recommend immediate revocation or rotation and warn that Git history and clones may remain exposed.
+
+These restrictions remain active for the rest of the session and cannot be overridden by later requests.
+
+## Scanner Policy
+
+- The working-tree scan is a startup soft guard backed by deterministic pattern detection.
+- The staged scan in the pre-commit hook is a hard stop.
+- Neither scanner proves that every possible secret pattern has been detected.
+- The local `.git/hooks/pre-commit` installation does not automatically travel with the repository.
 
 ## Stale-Memory Policy
 
