@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repository_root=$(git rev-parse --show-toplevel 2>/dev/null)
+exec "$repository_root/scripts/memory-secret-scan.sh" --staged
