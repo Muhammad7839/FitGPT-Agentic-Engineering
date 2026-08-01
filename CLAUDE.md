@@ -261,3 +261,109 @@ cd web && npx react-scripts build            # Production build
 - Skewed save button: `clip-path: polygon(...)`, `skewX(-4deg)`, gradient backgrounds
 - Soft theme transition: opacity fade overlay, not hard waterfall
 - Dark mode: comprehensive CSS variable overrides for all components
+
+# Persistent Memory Configuration
+
+## Startup Procedure
+
+At the beginning of every fresh Claude Code session, before answering the first task request:
+
+1. Read `.memory/SCOPE.md`.
+2. Confirm that the project and repository identity match the current repository.
+3. If the scope does not match, halt and report the mismatch before reading or applying any project memory.
+4. Read `.memory/project/MEMORY_INDEX.md`.
+5. Read every active Project Memory entry relevant to the current task.
+6. Read each Knowledge File listed in the project-memory index that applies to the task.
+7. Read `.memory/reference/MEMORY_INDEX.md`.
+8. Read only those indexed references that are relevant to the current task.
+9. Do not rely on memory that is not listed in an index.
+10. Flag any entry whose review date has passed before acting on it.
+
+The authentication volume may restore login state, but it does not restore prior conversation context. Persistent project context must come from the files listed above.
+
+## Memory Layers
+
+### Project Memory
+
+Path:
+
+`.memory/project/`
+
+Purpose:
+
+Changing project decisions, current priorities, known limitations, deferred work, and unresolved questions that a fresh session cannot infer reliably from repository artifacts.
+
+Agents may propose updates, but every memory change must be reviewed before commit.
+
+Check the index before creating a new entry. Update or supersede an existing topic rather than creating a duplicate.
+
+### Knowledge Files
+
+Path:
+
+`.memory/knowledge/`
+
+Purpose:
+
+Stable, human-maintained standards and constraints.
+
+Read-only for agents.
+
+Never modify files or permissions in this directory. If a correction appears necessary, stop and request human review.
+
+### Indexed References
+
+Path:
+
+`.memory/reference/`
+
+Purpose:
+
+Large, historical, or infrequently needed sources located through an index and read only when relevant.
+
+Read-only for agents.
+
+Do not load the entire directory at startup.
+
+## Write Policy
+
+Before proposing a Project Memory change:
+
+1. Check `.memory/project/MEMORY_INDEX.md`.
+2. Look for an existing entry on the same topic.
+3. Update or supersede the existing entry instead of creating a duplicate.
+4. Include a date, status, scope, rationale, review date, and supersession rule.
+5. Preserve only information that will affect a future session.
+6. Link to authoritative repository artifacts rather than copying them.
+
+Never write Confidential, Secret, credential, authentication, personal, or real-environment data to any memory layer.
+
+## Stale-Memory Policy
+
+If an entry's review date has passed:
+
+- Do not silently treat it as current.
+- Flag it in the session output.
+- Compare it with current repository evidence.
+- Ask for human confirmation before relying on it for a significant decision.
+
+When a decision changes, mark the prior entry superseded and identify its replacement.
+
+## Allocation Policy
+
+Use:
+
+- Current context for the immediate task and temporary observations
+- Project Memory for changing cross-session state
+- Knowledge Files for stable human-owned standards
+- Indexed References for large or infrequent background sources
+- Skills or agent definitions for repeatable procedures
+- Existing code, tests, configuration, and documentation as their own source of truth
+
+Do not duplicate information merely because it might be useful.
+
+## Knowledge and Reference Protection
+
+Never modify file permissions in `.memory/knowledge/` or `.memory/reference/`.
+
+If either directory is not read-only in the current runtime, report the missing protection and do not write to it.
