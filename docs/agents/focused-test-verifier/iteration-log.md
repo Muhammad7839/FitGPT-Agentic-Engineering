@@ -107,5 +107,6 @@ Evaluate only this focused test target. Follow your agent definition exactly.
 - Observed misfire: The agent could not execute its required Bash action, so pytest never started.
 - Root cause: The agent definition exposed Bash through its tool allowlist, but the workflow used `permissionMode: dontAsk` without explicitly preauthorizing Bash. Tool availability and permission approval are separate. In `dontAsk` mode, the unapproved Bash action was denied rather than presented for confirmation.
 - Proposed targeted fix: Update the agent to `v0.1.1` to document the requirement that the invoking sandbox preauthorize only Read and Bash. Run 2 will add the matching `--allowedTools Read Bash` invocation setting while preserving `dontAsk`, the read-only mount, and all existing scope restrictions.
-- Changes made: Pending.
+- Changes made: `bb04cce` — agent: focused-test-verifier v0.1.1 -- require preauthorized Bash, refs run 1
+  The Run 2 invocation will explicitly preauthorize only Read and Bash; it will not broaden the agent's tool allowlist or use permission bypass mode.
 - Measurement limitation: The coordinator decision is known as approximately 2026-08-01 10:09 EDT rather than to the second, so second-level review-latency precision is unavailable.
