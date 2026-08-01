@@ -366,7 +366,9 @@ The initial prompt will explicitly perform the existing persistent-memory startu
 
 Changes made:
 
-Pending.
+- `733ceff` — `agent: backend-config-docs-auditor v0.1.1 -- initialize memory before first task, refs fresh run 1`
+- The correction uses the defined agent's `initialPrompt` to execute the existing startup procedure before the first user task.
+- No memory content, governance rule, or CLAUDE.md allocation decision was changed.
 
 ### Limitations
 
