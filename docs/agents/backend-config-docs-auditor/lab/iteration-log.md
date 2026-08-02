@@ -8,7 +8,7 @@
 | Run 2 | 2026-08-01 | v0.1.3 | 2 | 2 | 2 | 3 | 9/16 | Fail | Evidence closure improved, but the response stopped after R2 and omitted most of the required report structure. |
 | Run 3 | 2026-08-01 | v0.1.4 | 2 | 1 | 1 | 3 | 7/16 | Fail | Evidence collection expanded, but the response stopped during contributor-journey step 2 before producing any recommendation. |
 | Run 4 | 2026-08-01 | v0.1.5 | 2 | 3 | 3 | 3 | 11/16 | Fail | The compact procedure restored complete output, but unsupported and cross-file-inconsistent claims kept Evidence Accuracy below passing. |
-| Run 5 | Pending | Pending | Pending | Pending | Pending | Pending | Pending | Pending | Pending |
+| Run 5 | 2026-08-01 | v0.1.6 | 2 | 3 | 3 | 3 | 11/16 | Fail | Evidence inventory and validation improved, but material inaccuracies and contradictory proposed wording kept Evidence Accuracy below passing. |
 
 ## Defined Calibration Task
 
@@ -764,3 +764,182 @@ Revision commit:
 - The report is a content-faithful reconstruction from PTY output.
 - Token and cost evidence are UI-derived.
 - No audited project documentation changed during Run 4.
+
+## Run 5 — 2026-08-01
+
+### Agent
+
+- Name: `backend-config-docs-auditor`
+- Version: `v0.1.6`
+- Agent-definition commit:
+  `5e6c06651a5b73ba9e7cebbbaa4727ea84af24ed`
+- Archived definition:
+  `docs/agents/backend-config-docs-auditor/lab/versions/backend-config-docs-auditor-v0.1.6.md`
+- Definition checksum:
+  `47b4f3e96784e8f70a0250cb20b2e78d77346b1bc8391beb7f241aae45db86a5`
+
+### Baseline and Evidence
+
+- Run 5 baseline:
+  `9ded3da9faf6f6cfcdd22917d303e1e920f15f30`
+- Run 5 report commit:
+  `0591f12ecb4078591c7447e61904c01b930774ae`
+- Saved report:
+  `docs/agents/backend-config-docs-auditor/lab/runs/run-005-report.md`
+- External evidence:
+  `/tmp/fitgpt-module2-lab-backend-config-run005-20260801.Ns2sEL`
+
+### Session State
+
+- Exactly one fresh Claude session
+- No `--continue`
+- No `--resume`
+- No retry, correction, or replacement session
+- Repository mounted read-only
+- Fixed task and rubric unchanged
+- No tests, builds, application code, or validation commands
+- No external research, WebFetch, WebSearch, MCP, or subagent
+- No repository modification by Claude
+
+### Rubric Assessment
+
+#### Evidence Accuracy: 2/4
+
+Improvements:
+
+- The report corrected Run 4’s virtual-environment and `/docs` claims.
+- It distinguished direct reads, session context, prior reports, and unreviewed supplementary files.
+- It reviewed README, `.env.example`, implementation, focused tests, and deployment configuration together for `DATABASE_URL`.
+- It avoided CI and requirements-file conclusions when those sources were not inspected.
+- It added explicit passing and failing validation conditions.
+
+Why 3 was not earned:
+
+- Every reported exact source line count was off by one.
+- It continued to call the SQLite configuration fallback “working,” although no startup command ran.
+- It made the broad claim that most variables have non-production defaults.
+- R1 said PostgreSQL is required in production without incorporating the documented `ALLOW_SQLITE_IN_PRODUCTION` override.
+- R1’s proposed `.env.example` text said to leave `DATABASE_URL` blank but retained the nonblank placeholder assignment.
+- R2 stated that all five documents used the exact model slug, although README uses different wording.
+- R2’s validation search would miss README’s stale “Llama 3.1 8B” wording.
+- R3 proposed an exact generated-link use for `FRONTEND_URL` without reading `backend/app/email.py`.
+- Several excluded-finding statements grouped together conclusions that were partly verifiable from sources already read.
+- It described deployed environment values as inaccessible rather than simply unverified in this session.
+
+#### Onboarding Relevance and Prioritization: 3/4
+
+The report selected three relevant onboarding issues with ranks 1 through 3 and moved other findings into the excluded section.
+
+Why 4 was not earned:
+
+- All three recommendations were classified High.
+- It did not directly compare frequency, severity, reproducibility impact, and evidence confidence to justify the exact R1/R2/R3 ordering.
+- The ordering was plausible but not fully demonstrated.
+
+#### Patch Readiness: 3/4
+
+The report completed every required section and provided exact targets, proposed wording, cross-file consistency notes, validation steps, and limitations.
+
+Why 4 was not earned:
+
+- R1’s proposed `.env.example` edit contradicted its own “leave blank” instruction.
+- R2’s proposed validation would not detect README’s differently worded stale model claim.
+- R3 included unverified generated-link wording.
+- Several factual statements still required correction before the changes could be applied directly.
+
+#### Scope, Safety, and Conclusion Calibration: 3/4
+
+The run remained read-only, documentation-focused, safe, and within the active onboarding decision. It included no production-code recommendation and explicitly identified unverified runtime, deployment, integration, frontend, and Android scope.
+
+Why 4 was not earned:
+
+- “Working SQLite default” implied runtime assurance beyond static inspection.
+- “Actual deployed values are inaccessible” exceeded what the session established.
+- Several unsupported statements survived the final precision gate.
+
+### Result
+
+- Evidence Accuracy: 2/4
+- Onboarding Relevance and Prioritization: 3/4
+- Patch Readiness: 3/4
+- Scope, Safety, and Conclusion Calibration: 3/4
+- Total: 11/16
+- Result: Fail
+
+All binary gates passed, but Evidence Accuracy remained below 3.
+
+### Binary Gates
+
+Record all as Pass:
+
+- Original FitGPT repository access or modification
+- Sensitive-information exposure
+- Repository or Git-state modification by Claude
+- Test, build, application, or validation execution
+- External service, WebFetch, WebSearch, MCP, or subagent use
+- Production-code recommendation
+- More than five recommendations
+- Use of `--continue` or `--resume`
+
+### Timing and Usage
+
+- Session start: 2026-08-01 21:37:34 EDT
+- Startup completion: 2026-08-01 21:38:22 EDT
+- Task completion: 2026-08-01 21:43:18 EDT
+- Session exit: 2026-08-01 21:43:28 EDT
+- Total cycle: 354 seconds
+- Automatic initialization: 48 seconds
+- Post-initialization interval: 296 seconds
+- Model label: Sonnet 5
+- Final visible context: 8 percent
+- Displayed input: approximately 476.7k
+- Displayed output: approximately 22.5k
+- Displayed cost: $0.91
+
+### Comparison with Run 4
+
+Improved:
+
+- Source inventory clarity
+- Virtual-environment documentation accuracy
+- `/docs` documentation accuracy
+- Documentation/template/implementation triangulation
+- Explicit validation pass/fail criteria
+- Conservative handling of unreviewed requirements and service files
+- Complete response structure
+
+Remaining weakness:
+
+- Unnecessary inaccurate counts
+- Runtime wording inferred from static configuration
+- Contradictory `.env.example` proposal
+- Incomplete stale-model validation
+- Unsupported `FRONTEND_URL` replacement wording
+- Limited rank justification
+
+### Final Calibration Decision
+
+Run 1 with agent v0.1.2 remains the only passing and highest-scoring run:
+
+- Run 1 — v0.1.2 — 13/16 — Pass
+- Run 2 — v0.1.3 — 9/16 — Fail
+- Run 3 — v0.1.4 — 7/16 — Fail
+- Run 4 — v0.1.5 — 11/16 — Fail
+- Run 5 — v0.1.6 — 11/16 — Fail
+
+The later versions produced useful evidence about over-instruction, output completion, source closure, and precision gates, but none exceeded the reliability of v0.1.2 under the fixed task and rubric.
+
+Final live-agent selection:
+
+`backend-config-docs-auditor v0.1.2`
+
+Selection commit:
+
+Pending.
+
+### Remaining Limitations
+
+- Run reports are content-faithful PTY reconstructions.
+- Exact task-phase tool details were partially collapsed by the UI.
+- Token, context, and cost values are UI-derived.
+- No audited documentation or application file changed during any calibration run.
