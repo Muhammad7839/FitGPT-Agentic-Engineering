@@ -10,8 +10,8 @@ Exact tool identifiers come from the installed `coursetools` server source. `cod
 | Implementer | Apply only approved documentation/template edits. | Approved plan, writable allowlist, and first-review corrective instructions if needed. | Changed-file list and concise implementation summary. | `mcp__coursetools__file_read`, `mcp__coursetools__file_write` | `codebase_search`: exact paths supplied; `shell`, `test_runner`: independent testing; `task_tracker`: cannot mark own work complete; `web_search`: no external evidence. | Limits write authority to the approved plan and prevents self-approval. | Medium; bounded writes. | Only `README.md` and `backend/.env.example` may change; one reviewer-driven retry maximum. | Current-run plan approval is required before invocation. |
 | Reviewer | Compare edits with committed configuration and focused tests. | Changed-file list, diff or proposed contents, acceptance criteria. | `Pass` or `Revise`, severity-ranked findings, corrective instructions, open questions. | `mcp__coursetools__file_read` | `file_write`: independent review; `codebase_search`: explicit paths suffice; `shell`, `test_runner`: separate Tester role; `task_tracker`: no issue changes; `web_search`: committed evidence only. | Keeps the reviewer independent from the writer and tester. | High; read-only. | `Pass` requires no unresolved high-severity issue and no scope violation. A second `Revise` halts. | No new checkpoint; approved plan remains controlling. |
 | Tester | Run and interpret only the focused backend configuration test representation. | Approved changed-file list and `backend/tests/test_config_startup.py`. | Command represented by dummy tool, `Pass`/`Fail`/`Blocked`, failures, limitations. | `mcp__coursetools__file_read`, `mcp__coursetools__test_runner` | `file_write`: no repairs; `codebase_search`: target supplied; `shell`: bounded runner is narrower; `task_tracker`: no issue changes; `web_search`: irrelevant. | Prevents test execution from expanding into repair or general shell access. | Medium; bounded execution. | Only the supplied focused target is accepted. `Fail` or `Blocked` halts and escalates. | Final human approval occurs only after Tester and Reviewer pass. |
-| Project Manager | Update controlled issue after all gates and final approval. | Final run summary and explicit current-run human-approval token. | Issue status and update confirmation or failure escalation. | `mcp__coursetools__task_tracker` | `file_read`, `file_write`, `codebase_search`: no repository access; `shell`, `test_runner`: gates already complete; `web_search`: irrelevant. | Separates shared-record mutation from implementation, review, and testing. | Medium; shared dummy record change. | Approval evidence, Reviewer `Pass`, and Tester `Pass` must all be present. | Explicit final current-run human approval is mandatory. |
-| Orchestrator | Delegate, evaluate, loop, halt, and request approval. | User bug report and role outputs. | Scoped handoffs, gate decisions, approval requests, final summary, escalation. | Built-in `Agent`; `mcp__coursetools__file_read` and `mcp__coursetools__file_write` only for handoff documents and final summaries. | `codebase_search`: delegate evidence work; `shell`, `test_runner`: Tester owns execution; `task_tracker`: Project Manager owns updates; `web_search`: prohibited; source-code editing: prohibited. | Prevents the coordinator from collapsing independent roles or self-validating. | Medium; routing and bounded workflow-document writes. | Validate each output contract and retry counter before routing forward. | Requests both plan approval and final issue-update approval. |
+| Project Manager | Update controlled issue after all gates and final approval. | Structured final handoff in a fresh direct process: controlled issue, Reviewer `Pass`, Tester `Pass`, final summary, and explicit current-run approval token. | Issue status and update confirmation or failure escalation. | `mcp__coursetools__task_tracker` only | `file_read`, `file_write`, `codebase_search`: no repository access; `shell`, `test_runner`: gates already complete; `web_search`: irrelevant. | A separate process isolates shared-record mutation from the Orchestrator, implementation, review, and testing. | Medium; one controlled dummy record change. | Approval evidence, Reviewer `Pass`, and Tester `Pass` must all be present. | Explicit final current-run human approval is mandatory before the isolated process starts. |
+| Orchestrator | Delegate, evaluate, loop, halt, request approval, and produce the final Project Manager handoff. | User bug report and role outputs. | Scoped handoffs, gate decisions, approval requests, final Project Manager handoff, escalation. | Built-in `Agent`; `mcp__coursetools__file_read` and `mcp__coursetools__file_write` only for handoff documents and final summaries. | `codebase_search`: delegate evidence work; `shell`, `test_runner`: Tester owns execution; `task_tracker`: explicitly denied at process launch; `web_search`: prohibited; source-code editing: prohibited. | The Orchestrator process cannot probe or update tickets and stops before the isolated Project Manager process starts. | Medium; routing and bounded workflow-document writes. | Validate each output contract and retry counter before routing forward. | Requests both approvals, then stops after producing the approved Project Manager handoff. |
 
 ## Later-run writable and test scopes
 
@@ -37,6 +37,19 @@ Exact tool identifiers come from the installed `coursetools` server source. `cod
 
 `file_read` is the only tool granted to more than two roles. That concentration is justified by role-specific path isolation and read-only behavior.
 
+## Runtime process isolation
+
+The Orchestrator stage is launched with
+`mcp__coursetools__task_tracker` explicitly denied. It coordinates Planner,
+Implementer, Reviewer, and Tester, obtains final human approval, returns the
+structured Project Manager handoff, and stops.
+
+Project Manager then runs once in a fresh direct process with
+`mcp__coursetools__task_tracker` as its only available course tool. Repository,
+shell, testing, web, and editing tools are denied. This process boundary prevents
+the Orchestrator from updating or probing tickets while allowing the dedicated
+role to perform only the approved controlled update.
+
 ## Alternatives considered
 
 1. Giving Implementer `mcp__coursetools__task_tracker` — rejected because it could mark its own work complete before independent review, testing, and human approval.
@@ -47,4 +60,10 @@ Exact tool identifiers come from the installed `coursetools` server source. `cod
 
 ## Verification status
 
-The installed source advertises every identifier in this map, including `mcp__coursetools__codebase_search`. Project registration is pending Claude Code approval, so availability and denial behavior remain unproven until the separately authorized boundary test. This document does not claim that enforcement has already been demonstrated.
+The installed source advertises every identifier in this map, including
+`mcp__coursetools__codebase_search`. The independent course-server authorization
+probe denied an `implementer` request for `task_tracker`. Failed Run 2 also showed
+that prompt-only Orchestrator separation was insufficient: the Orchestrator
+attempted `task_tracker`, and the server denied it. Run 3 therefore requires the
+explicit process-level denial and separate Project Manager process described
+above; its result must be recorded rather than assumed.

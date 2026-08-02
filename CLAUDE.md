@@ -431,9 +431,20 @@ Orchestrator version: `1.0.0`.
 4. Reviewer
 5. Tester
 6. Human final approval
-7. Project Manager
+7. Structured Project Manager handoff
+8. Stop the Orchestrator process
+9. Project Manager in a fresh role-isolated process
 
-The Orchestrator coordinates this sequence. It does not perform a subagent's responsibility itself.
+The Orchestrator coordinates Planner through Tester, obtains both human approvals,
+produces the final Project Manager handoff, and then stops. It does not perform a
+subagent's responsibility itself and never runs Project Manager in its own process.
+
+The Orchestrator stage must be launched with
+`mcp__coursetools__task_tracker` explicitly denied. After final approval, a fresh
+direct Project Manager process receives only the structured handoff and has only
+`mcp__coursetools__task_tracker`. This process boundary prevents the Orchestrator
+from probing or updating tickets while preserving the dedicated Project Manager's
+approved controlled update.
 
 ### Evaluation gates
 
@@ -511,8 +522,8 @@ Invoke only for `COURSE-FITGPT-001` after Reviewer `Pass`, Tester `Pass`, and ex
 - Reviewer returns `Revise`: return exact findings to Implementer once, then rerun Reviewer.
 - Reviewer still returns `Revise` after the retry: halt and escalate.
 - Tester returns `Fail` or `Blocked`: halt and escalate. Do not allow Implementer to change application code or tests.
-- Human denies or omits final approval: stop before Project Manager and `task_tracker`.
-- Project Manager update failure: return the failure to the Orchestrator and escalate; do not retry automatically.
+- Human denies or omits final approval: stop before creating the Project Manager handoff.
+- Project Manager update failure: preserve the isolated-process failure and escalate; do not retry automatically.
 
 ### Human checkpoints
 
@@ -537,6 +548,9 @@ Invoke only for `COURSE-FITGPT-001` after Reviewer `Pass`, Tester `Pass`, and ex
 - Orchestrator must never write source files itself.
 - Orchestrator must never run tests itself or invoke `mcp__coursetools__test_runner`.
 - Orchestrator must never invoke `mcp__coursetools__task_tracker`.
+- Orchestrator-stage runtime permissions must explicitly deny `mcp__coursetools__task_tracker`.
+- Orchestrator must produce the approved Project Manager handoff and stop; it must not invoke Project Manager in its process.
+- Project Manager must run in a fresh direct process with only `mcp__coursetools__task_tracker` available.
 - Implementer must never invoke `mcp__coursetools__task_tracker`.
 - Project Manager must never read or write repository files.
 - No workflow role may use `mcp__coursetools__web_search` or `mcp__coursetools__shell`.
