@@ -25,6 +25,7 @@ Correct and verify backend onboarding documentation through scoped delegation.
 | Run 2 | 2026-08-02 | 1.0.0 | planner | Orchestrator → Planner → Orchestrator → halted checkpoint | Complete Planner handoff | Server denied Orchestrator task_tracker call using role test | Planner Pass; human approval not requested after violation | Fail | Orchestrator called task_tracker before approval and targeted test; no state changed, and the single session ended without retry. |
 | Run 3 | 2026-08-02 | 1.0.0 | planner, implementer, reviewer, tester | Orchestrator → Planner → human plan approval → Implementer → Reviewer → Tester → halted gate | Complete Planner, Implementer, and Reviewer handoffs; incomplete Tester handoff | Orchestrator denied task_tracker; role grants matched; Tester made zero tool calls | Planner Pass; APPROVE_RUN3_PLAN; Reviewer Pass; Tester Blocked | Blocked | Tester correctly rejected a handoff missing explicit Reviewer Pass evidence, the approved changed-file list, and acceptance criteria; README.md and backend/.env.example remained modified and unstaged. |
 | Run 4 | 2026-08-02 | 1.0.0 | tester | Corrected continuation from unchanged Run 3 reviewed state | Complete, mechanically validated Tester handoff | CLI requested file_read/test_runner only, but live init exposed no tools and left coursetools pending | Runtime exposure gate failed before final approval | Blocked | The model text claimed a dummy pass, but the stream contained zero tool-use events and no actual test_runner request or response; two later APPROVE_RUN4_FINAL messages were rejected as invalid and Project Manager was not invoked. |
+| Run 5 | 2026-08-02 | 1.0.0 | tester, project-manager | Explicit-MCP continuation from unchanged Run 3 Reviewer-approved state after preserved Run 4 Blocked result | Complete Tester and Project Manager handoffs | Tester exposed only file_read/test_runner and called test_runner once; Project Manager exposed only task_tracker and called it once | Tester Pass; APPROVE_RUN5_FINAL; Project Manager Pass | Pass | Explicit MCP allowances produced actual bounded tool events; the controlled dummy test passed and only COURSE-FITGPT-001 received the simulated Done update. |
 
 ## Required Run Evidence
 
@@ -2161,3 +2162,679 @@ was unsupported by the event stream.
 
 Run 4 stopped before the final human checkpoint and Project Manager, exactly as
 required by the runtime-exposure and evidence gates.
++
+
+## Run 5 — Explicit MCP Tool Authorization Completion — 2026-08-02
+
+### Relationship to Runs 3 and 4
+
+Run 5 was the explicitly authorized completion from the unchanged
+Reviewer-approved documentation state created in Run 3. It did not rerun
+Planner, Implementer, or Reviewer. Run 3 remains preserved as Blocked at its
+incomplete Tester handoff gate in commit
+`b39929aa714eb013387b681d5b5c2054c0e353d9`. Run 4 remains preserved as
+Blocked at its pending-MCP runtime exposure gate in commit
+`ef35b7cb2186003bbca0f12a3721f0b2f13adbb0`. Both later
+`APPROVE_RUN4_FINAL` messages remain rejected and were not reused.
+
+Run 5 authorization permitted exactly one fresh Tester process, a new final
+human checkpoint after a technically valid Tester Pass, exactly one fresh
+Project Manager process after the exact current-run approval, the controlled
+commits, and final evidence packaging. It prohibited retries, permission
+weakening, remote Git operations, protected-path edits, real external service
+access, and any substitute tool call.
+
+### Starting State, Explicit Authorization, and Checksum Continuity
+
+- Branch: `main`.
+- Starting HEAD after the authorized Run 4 log commit:
+  `ef35b7cb2186003bbca0f12a3721f0b2f13adbb0`.
+- Starting dirty paths: `README.md` and `backend/.env.example` only.
+- `git diff --check`: passed.
+- Current Run 5 final approval received exactly as:
+  `APPROVE_RUN5_FINAL`.
+- Run 5 evidence directory:
+  `/tmp/fitgpt-orchestration-run-005-20260802T154530-Hn8V47`.
+- Run 3 Reviewer evidence directory:
+  `/tmp/fitgpt-orchestration-run-003-fsRbLJ`.
+- Claude Code version: `2.1.220`.
+- Direct-agent runtime image:
+  `agentic_engineer_3:latest`.
+
+The exact documentation bytes remained identical to the Run 3
+Reviewer-approved state before Tester, after Tester, before Project Manager,
+and after Project Manager:
+
+```text
+README.md:
+a0d7974b88383f4ce57ef19c767f2a46295d1958ba3c0a2070b5bebb40f2a3ae
+
+backend/.env.example:
+6bd51622ae34398e268988384c7de380377c539542deb72bc14e4048a382bd2b
+```
+
+The protected application and focused-test files also remained unchanged:
+
+```text
+backend/app/config.py:
+adba18feaa0060e906ebdf543d72912e6b57927cf8ea2d90e46ba3349c69eb81
+
+backend/tests/test_config_startup.py:
+86b730f1753c76113e3880035df74322d451584cf5fe117d3d70b6f836a25d5d
+```
+
+All 510 tracked-file checksums, 13 protected-file checksums, 5 memory-file
+checksums, refs, index manifest, dirty-file hashes, Git status, and ignored
+inventory matched their before-Tester manifests after both direct processes.
+
+### Complete Tester Handoff
+
+The following is the complete handoff supplied to the one Run 5 Tester:
+
+~~~~text
+# Handoff: Orchestrator to Subagent
+
+## Workflow identity
+
+- Issue: COURSE-FITGPT-001
+- Workflow run: Run 5
+- Subagent: tester
+- Agent version: 1.0.0
+
+## Single responsibility
+
+Run and interpret only the approved focused backend configuration test
+representation. Do not edit, repair, broadly test, or update an issue.
+
+## Task brief
+
+Verify the unchanged Reviewer-approved Run 3 documentation changes using the
+bounded course test runner for exactly:
+
+`backend/tests/test_config_startup.py`
+
+Invoke `mcp__coursetools__test_runner` exactly once with the course server's
+real arguments:
+
+- `role`: `tester`
+- `suite`: `backend/tests/test_config_startup.py`
+
+## Reviewer Pass evidence
+
+The following is the complete, exact Reviewer output preserved from the Run 3
+reviewer subagent transcript:
+
+```text
+# Review Result
+
+## Verdict
+
+Pass
+
+## Evidence checked
+
+- `README.md` (full file, current committed content) — Tech Stack blurb, "How to Run the Backend Locally" step 4, "Environment Variables" table + `DATABASE_URL` note.
+- `backend/.env.example` (full file, current committed content) — `DATABASE_URL` comment block.
+- `backend/app/config.py` (full file, current committed content) — `_default_sqlite_url`, `_normalize_database_url`, `DATABASE_URL` assignment, `PRODUCTION_ENVIRONMENTS`, `validate_runtime_configuration()`.
+- `backend/tests/test_config_startup.py` (full file, current committed content) — all six test functions.
+
+## Findings
+
+None at high severity. No unresolved findings.
+
+Verification notes (not defects, confirming accuracy):
+
+- **Criterion 1** — README's `Environment Variables` table row for `DATABASE_URL` reads: "PostgreSQL connection string. Optional for local development (see note below); required in a production-flagged environment." This matches the acceptance criterion exactly.
+- **Criterion 2** — Step 4 of "How to Run the Backend Locally" now reads: "You can leave `DATABASE_URL` blank/unset for local development ... Fill in the other values as needed for the features you plan to use." This no longer implies every variable must be filled in before the server starts, and it is accurate: `config.py`'s `get_env()` defaults mean every other variable (SECRET_KEY, GROQ_API_KEY, etc.) also has a working default outside production mode.
+- **Criterion 3** — `backend/.env.example`'s comment: "Optional for local development — if left unset/blank, the backend automatically falls back to a local SQLite database (backend/fitgpt.db). Required and must be a PostgreSQL connection string when ENVIRONMENT=production." This no longer reads as an unconditional Postgres requirement and communicates the local-optional/production-required distinction correctly.
+- **Criterion 4** — Neither `README.md` nor `backend/.env.example` mentions `test_config_startup.py` at all, so no claim is made (correctly or incorrectly) that this test verifies local SQLite fallback. Confirmed by reading the test file directly: all six tests exercise `collect_optional_config_warnings`, `resolve_google_client_id`, `get_list_env`, and `validate_runtime_configuration` under `ENVIRONMENT="production"` monkeypatches (requiring `DATABASE_URL`, rejecting SQLite unless `ALLOW_SQLITE_IN_PRODUCTION` is set). None of the tests exercise the default/local (non-production) fallback path.
+- **Criterion 5** — Only `README.md` and `backend/.env.example` contents were read as changed evidence; `backend/app/config.py` and `backend/tests/test_config_startup.py` were read only to verify accuracy of claims, and their contents are pure application code/test logic with no documentation-style edits, consistent with being unmodified.
+- **Criterion 6** — README's variable table lists only the original seven rows (`DATABASE_URL`, `SECRET_KEY`, `GROQ_API_KEY`, `GMAIL_ADDRESS`, `GMAIL_APP_PASSWORD`, `FRONTEND_URL`, `OPENWEATHER_API_KEY`). `ENVIRONMENT` and `ALLOW_SQLITE_IN_PRODUCTION` appear only in the explanatory prose note, not as new formal rows. `FITGPT_LOCAL_BACKEND` is not mentioned anywhere, which is acceptable since it is not required to satisfy the distinction being documented. `backend/.env.example` adds no new lines for any of these three variables.
+- **Criterion 7** — Verified against `config.py` directly: `DATABASE_URL` defaults to `sqlite:///.../fitgpt.db` when `DATABASE_URL` env var is unset/blank (matches README/`.env.example` fallback claim). `validate_runtime_configuration()` confirms: in `PRODUCTION_ENVIRONMENTS = {"prod", "production"}`, it raises if `_DATABASE_URL_FROM_ENV` is empty ("DATABASE_URL must be set in production") and raises if the resolved `DATABASE_URL` starts with `sqlite` unless `ALLOW_SQLITE_IN_PRODUCTION` is true. The README note's description of this logic, including the override, is accurate.
+
+## Scope and boundary check
+
+Approved-path check: the two files evaluated as changed evidence (`README.md`, `backend/.env.example`) are both within the approved `{README.md, backend/.env.example}` set. `backend/app/config.py` and `backend/tests/test_config_startup.py` were read only for verification and show no documentation-style additions — no evidence of out-of-scope modification. No application code or test file content changes are implied by anything in the two documentation files. No scope violation identified.
+
+## Open questions
+
+None. No required evidence path was missing; all four files needed for this review were readable and sufficient to confirm every acceptance criterion.
+```
+
+Reviewer metadata and integrity evidence:
+
+- Reviewer version: 1.0.0
+- Reviewer retry count: 0
+- Reviewer tool calls: four `mcp__coursetools__file_read` calls with role
+  `reviewer`, for `README.md`, `backend/.env.example`,
+  `backend/app/config.py`, and `backend/tests/test_config_startup.py`
+- Run 3 Reviewer transcript SHA-256:
+  `3455b9321b668e01d14a05eb6f41422d11ccb0ea3c6d34c4a4d67d49dfe40095`
+- Reviewer-read `README.md` SHA-256:
+  `a0d7974b88383f4ce57ef19c767f2a46295d1958ba3c0a2070b5bebb40f2a3ae`
+- Current `README.md` SHA-256:
+  `a0d7974b88383f4ce57ef19c767f2a46295d1958ba3c0a2070b5bebb40f2a3ae`
+- Reviewer-read `backend/.env.example` SHA-256:
+  `6bd51622ae34398e268988384c7de380377c539542deb72bc14e4048a382bd2b`
+- Current `backend/.env.example` SHA-256:
+  `6bd51622ae34398e268988384c7de380377c539542deb72bc14e4048a382bd2b`
+
+Both current files are byte-identical to the content read and passed by the
+Run 3 Reviewer.
+
+## Approved changed-file list
+
+- `README.md`
+- `backend/.env.example`
+
+The current checksums listed above match the files reviewed during Run 3. No
+other changed path is approved.
+
+## Exact allowed test target
+
+`backend/tests/test_config_startup.py`
+
+No alternate target is permitted.
+
+## Allowed input context
+
+- `README.md`
+- `backend/.env.example`
+- `backend/tests/test_config_startup.py`
+- Complete Reviewer Pass result above
+- Approved changed-file list above
+- Acceptance criteria below
+
+## Acceptance criteria
+
+- Only `README.md` and `backend/.env.example` changed.
+- No application code or test file changed.
+- Local-development wording accurately states that `DATABASE_URL` is optional
+  and the SQLite fallback is used automatically.
+- Production wording accurately states that a real `DATABASE_URL` is required.
+- Production SQLite rejection and the `ALLOW_SQLITE_IN_PRODUCTION` override
+  wording are accurate.
+- Documentation does not claim that this documentation workflow runtime-tested
+  local SQLite startup.
+- Reviewer returned `Pass` with no unresolved high-severity issue.
+- Tester must invoke the controlled `test_runner` exactly once with role
+  `tester` and suite `backend/tests/test_config_startup.py`.
+- Tester must report the dummy tool result accurately and state its
+  limitations.
+
+## Explicit prohibitions
+
+- No file writes
+- No shell
+- No task tracker
+- No web search
+- No alternate test target
+- No repair loop
+- No application or test changes
+- No claim of full pytest or backend health
+
+## Required output format
+
+# Focused Test Result
+
+## Test target
+
+## Result
+
+`Pass`, `Fail`, or `Blocked`
+
+## Tool response
+
+## Failures
+
+## Scope limitations
+
+## Boundary compliance
+~~~~
+
+### Exact Tester Direct Invocation and Tool Boundary
+
+The repository and authentication credential volume were both mounted
+read-only. The one direct process was launched by this exact outer invocation:
+
+```text
+docker run --rm --name fitgpt-orchestration-run-005-tester --entrypoint /bin/bash -v /Users/muhammad/course-projects/FitGPT-Agentic-Engineering:/workspace:ro -v /tmp/fitgpt-orchestration-run-005-20260802T154530-Hn8V47:/logs -v claude-auth:/claude-auth:ro -w /workspace agentic_engineer_3:latest /logs/tester-stage/run.sh
+```
+
+Its supported Claude Code invocation was:
+
+```text
+claude --agent tester --permission-mode dontAsk --allowedTools mcp__coursetools__file_read,mcp__coursetools__test_runner --disallowedTools Read,Glob,Grep,Bash,Edit,Write,WebFetch,WebSearch,NotebookEdit,Agent,mcp__coursetools__file_write,mcp__coursetools__codebase_search,mcp__coursetools__shell,mcp__coursetools__task_tracker,mcp__coursetools__web_search --mcp-config /workspace/.mcp.json --strict-mcp-config --no-chrome --setting-sources project,local --no-session-persistence --output-format stream-json --verbose --name fitgpt-orchestration-run-005-tester --print
+```
+
+`MCP_CONNECTION_NONBLOCKING=0` was set so initialization waited for the
+bounded MCP connection. The installed Claude Code 2.1.220 CLI did not expose a
+`--max-turns` option, so that unsupported option was omitted. No
+`--tools` global filter, resume, continue, retry, or replacement process was
+used.
+
+The actual initialization event reported:
+
+```json
+{
+  "tools": [
+    "mcp__coursetools__file_read",
+    "mcp__coursetools__test_runner"
+  ],
+  "mcp_servers": [
+    {
+      "name": "coursetools",
+      "status": "connected"
+    }
+  ],
+  "permissionMode": "dontAsk",
+  "claude_code_version": "2.1.220"
+}
+```
+
+Thus `file_write`, `codebase_search`, `shell`, `task_tracker`, and
+`web_search` were absent. The stream contained exactly one tool-use event:
+
+```json
+{
+  "name": "mcp__coursetools__test_runner",
+  "input": {
+    "role": "tester",
+    "suite": "backend/tests/test_config_startup.py"
+  },
+  "caller": {
+    "type": "direct"
+  }
+}
+```
+
+The exact tool response was:
+
+```json
+{"result":"PASS: dummy test suite 'backend/tests/test_config_startup.py' completed successfully."}
+```
+
+Event counts were one initialization event, one `test_runner` request, one
+matching tool result, zero prohibited-tool events, one successful final result,
+and zero permission denials. The Tester session ran from
+`2026-08-02T19:47:34Z` through `2026-08-02T19:47:47Z` and exited 0.
+
+### Complete Tester Output and Limitation
+
+~~~~text
+# Focused Test Result
+
+## Test target
+
+`backend/tests/test_config_startup.py`
+
+## Result
+
+`Pass`
+
+## Tool response
+
+Bounded course-tool result from a single invocation of `mcp__coursetools__test_runner` (role: `tester`, suite: `backend/tests/test_config_startup.py`):
+
+```json
+{"result":"PASS: dummy test suite 'backend/tests/test_config_startup.py' completed successfully."}
+```
+
+This is a dummy/simulated course-tool response, not real pytest output.
+
+## Failures
+
+None reported by the tool.
+
+## Scope limitations
+
+- This result reflects only the bounded course `mcp__coursetools__test_runner` dummy representation for the single named target. It does not constitute or imply full pytest execution, full backend test suite health, deployment verification, or integration health of any kind.
+- No other test target was run or considered; only `backend/tests/test_config_startup.py` was invoked, matching the sole permitted later-run target.
+- This result does not independently verify documentation content accuracy — that was the Reviewer's responsibility, whose Pass verdict is taken as given input, not re-derived here.
+- No repair, retry, or secondary invocation was performed; the tool was called exactly once per gate conditions.
+
+## Boundary compliance
+
+- `mcp__coursetools__test_runner` was invoked exactly once, with the exact supplied role (`tester`) and suite (`backend/tests/test_config_startup.py`) — no alternate or additional target was run.
+- No files were read or written by this subagent beyond reporting the provided handoff context.
+- No shell, task tracker, web search, or other tool was used.
+- No application code, test file, or documentation was modified, edited, or repaired.
+- No other agent was invoked.
+- No commit or push action was taken.
+- Per the no-retry/no-loop-back constraint, this Focused Test Result is returned once to the Orchestrator with no further action taken by this subagent.
+
+Result `Pass` — the Orchestrator may proceed toward the final human approval checkpoint per the standard sequence.
+~~~~
+
+The Tester explicitly identified the response as dummy and simulated. It is not
+real pytest output and does not establish full backend test-suite, deployment,
+or integration health.
+
+### Final Human Checkpoint
+
+Only after validating the actual Tester MCP request and response, Run 5
+displayed:
+
+```text
+RUN 5 FINAL APPROVAL REQUIRED
+
+Reply `APPROVE_RUN5_FINAL` to authorize one separate Project Manager process to
+update only controlled dummy issue COURSE-FITGPT-001.
+```
+
+The human then supplied the exact current-run token:
+
+```text
+APPROVE_RUN5_FINAL
+```
+
+No earlier-run approval token was accepted or reused. Before this exact approval,
+Run 5 had made zero `task_tracker` calls.
+
+### Complete Project Manager Handoff
+
+The following is the complete external handoff supplied after approval:
+
+~~~~text
+Handoff: Orchestrator to Subagent
+
+Workflow identity: Backend onboarding documentation orchestration
+Issue: COURSE-FITGPT-001
+Workflow run: Run 5
+Subagent: project-manager
+Agent version: 1.0.0
+Explicit current approval: APPROVE_RUN5_FINAL
+Requested status: Done
+Concise note: Backend onboarding documentation clarified and independently reviewed; bounded course test verification passed.
+
+Required action:
+Invoke mcp__coursetools__task_tracker exactly once with:
+- role exactly project-manager
+- ticket_id exactly COURSE-FITGPT-001
+- status exactly Done
+- note exactly Backend onboarding documentation clarified and independently reviewed; bounded course test verification passed.
+
+Reviewer Pass evidence follows exactly:
+
+# Review Result
+
+## Verdict
+
+Pass
+
+## Evidence checked
+
+- `README.md` (full file, current committed content) — Tech Stack blurb, "How to Run the Backend Locally" step 4, "Environment Variables" table + `DATABASE_URL` note.
+- `backend/.env.example` (full file, current committed content) — `DATABASE_URL` comment block.
+- `backend/app/config.py` (full file, current committed content) — `_default_sqlite_url`, `_normalize_database_url`, `DATABASE_URL` assignment, `PRODUCTION_ENVIRONMENTS`, `validate_runtime_configuration()`.
+- `backend/tests/test_config_startup.py` (full file, current committed content) — all six test functions.
+
+## Findings
+
+None at high severity. No unresolved findings.
+
+Verification notes (not defects, confirming accuracy):
+
+- **Criterion 1** — README's `Environment Variables` table row for `DATABASE_URL` reads: "PostgreSQL connection string. Optional for local development (see note below); required in a production-flagged environment." This matches the acceptance criterion exactly.
+- **Criterion 2** — Step 4 of "How to Run the Backend Locally" now reads: "You can leave `DATABASE_URL` blank/unset for local development ... Fill in the other values as needed for the features you plan to use." This no longer implies every variable must be filled in before the server starts, and it is accurate: `config.py`'s `get_env()` defaults mean every other variable (SECRET_KEY, GROQ_API_KEY, etc.) also has a working default outside production mode.
+- **Criterion 3** — `backend/.env.example`'s comment: "Optional for local development — if left unset/blank, the backend automatically falls back to a local SQLite database (backend/fitgpt.db). Required and must be a PostgreSQL connection string when ENVIRONMENT=production." This no longer reads as an unconditional Postgres requirement and communicates the local-optional/production-required distinction correctly.
+- **Criterion 4** — Neither `README.md` nor `backend/.env.example` mentions `test_config_startup.py` at all, so no claim is made (correctly or incorrectly) that this test verifies local SQLite fallback. Confirmed by reading the test file directly: all six tests exercise `collect_optional_config_warnings`, `resolve_google_client_id`, `get_list_env`, and `validate_runtime_configuration` under `ENVIRONMENT="production"` monkeypatches (requiring `DATABASE_URL`, rejecting SQLite unless `ALLOW_SQLITE_IN_PRODUCTION` is set). None of the tests exercise the default/local (non-production) fallback path.
+- **Criterion 5** — Only `README.md` and `backend/.env.example` contents were read as changed evidence; `backend/app/config.py` and `backend/tests/test_config_startup.py` were read only to verify accuracy of claims, and their contents are pure application code/test logic with no documentation-style edits, consistent with being unmodified.
+- **Criterion 6** — README's variable table lists only the original seven rows (`DATABASE_URL`, `SECRET_KEY`, `GROQ_API_KEY`, `GMAIL_ADDRESS`, `GMAIL_APP_PASSWORD`, `FRONTEND_URL`, `OPENWEATHER_API_KEY`). `ENVIRONMENT` and `ALLOW_SQLITE_IN_PRODUCTION` appear only in the explanatory prose note, not as new formal rows. `FITGPT_LOCAL_BACKEND` is not mentioned anywhere, which is acceptable since it is not required to satisfy the distinction being documented. `backend/.env.example` adds no new lines for any of these three variables.
+- **Criterion 7** — Verified against `config.py` directly: `DATABASE_URL` defaults to `sqlite:///.../fitgpt.db` when `DATABASE_URL` env var is unset/blank (matches README/`.env.example` fallback claim). `validate_runtime_configuration()` confirms: in `PRODUCTION_ENVIRONMENTS = {"prod", "production"}`, it raises if `_DATABASE_URL_FROM_ENV` is empty ("DATABASE_URL must be set in production") and raises if the resolved `DATABASE_URL` starts with `sqlite` unless `ALLOW_SQLITE_IN_PRODUCTION` is true. The README note's description of this logic, including the override, is accurate.
+
+## Scope and boundary check
+
+Approved-path check: the two files evaluated as changed evidence (`README.md`, `backend/.env.example`) are both within the approved `{README.md, backend/.env.example}` set. `backend/app/config.py` and `backend/tests/test_config_startup.py` were read only for verification and show no documentation-style additions — no evidence of out-of-scope modification. No application code or test file content changes are implied by anything in the two documentation files. No scope violation identified.
+
+## Open questions
+
+None. No required evidence path was missing; all four files needed for this review were readable and sufficient to confirm every acceptance criterion.
+
+
+Tester Pass evidence follows exactly:
+
+# Focused Test Result
+
+## Test target
+
+`backend/tests/test_config_startup.py`
+
+## Result
+
+`Pass`
+
+## Tool response
+
+Bounded course-tool result from a single invocation of `mcp__coursetools__test_runner` (role: `tester`, suite: `backend/tests/test_config_startup.py`):
+
+```json
+{"result":"PASS: dummy test suite 'backend/tests/test_config_startup.py' completed successfully."}
+```
+
+This is a dummy/simulated course-tool response, not real pytest output.
+
+## Failures
+
+None reported by the tool.
+
+## Scope limitations
+
+- This result reflects only the bounded course `mcp__coursetools__test_runner` dummy representation for the single named target. It does not constitute or imply full pytest execution, full backend test suite health, deployment verification, or integration health of any kind.
+- No other test target was run or considered; only `backend/tests/test_config_startup.py` was invoked, matching the sole permitted later-run target.
+- This result does not independently verify documentation content accuracy — that was the Reviewer's responsibility, whose Pass verdict is taken as given input, not re-derived here.
+- No repair, retry, or secondary invocation was performed; the tool was called exactly once per gate conditions.
+
+## Boundary compliance
+
+- `mcp__coursetools__test_runner` was invoked exactly once, with the exact supplied role (`tester`) and suite (`backend/tests/test_config_startup.py`) — no alternate or additional target was run.
+- No files were read or written by this subagent beyond reporting the provided handoff context.
+- No shell, task tracker, web search, or other tool was used.
+- No application code, test file, or documentation was modified, edited, or repaired.
+- No other agent was invoked.
+- No commit or push action was taken.
+- Per the no-retry/no-loop-back constraint, this Focused Test Result is returned once to the Orchestrator with no further action taken by this subagent.
+
+Result `Pass` — the Orchestrator may proceed toward the final human approval checkpoint per the standard sequence.
+
+Prohibited actions:
+- Do not read or write repository files.
+- Do not run tests or shell commands.
+- Do not search the repository or web.
+- Do not update an alternate or test ticket.
+- Do not invoke task_tracker a second time.
+- Do not invoke any other tool or agent.
+- Do not commit, push, retry, resume, or continue.
+
+Required output:
+Return the Issue Update Result once. Preserve the actual tracker response and state the dummy-tool limitation. If the one tracker call fails, report failure and stop without retry.
+~~~~
+
+### Exact Project Manager Direct Invocation and Tool Boundary
+
+The repository and authentication credential volume were both mounted
+read-only. Exactly one fresh Project Manager process was launched:
+
+```text
+docker run --rm --name fitgpt-orchestration-run-005-project-manager --entrypoint /bin/bash -v /Users/muhammad/course-projects/FitGPT-Agentic-Engineering:/workspace:ro -v /tmp/fitgpt-orchestration-run-005-20260802T154530-Hn8V47:/logs -v claude-auth:/claude-auth:ro -w /workspace agentic_engineer_3:latest /logs/project-manager-stage/run.sh
+```
+
+Its supported Claude Code invocation was:
+
+```text
+claude --agent project-manager --permission-mode dontAsk --allowedTools mcp__coursetools__task_tracker --disallowedTools Read,Glob,Grep,Bash,Edit,Write,WebFetch,WebSearch,NotebookEdit,Agent,mcp__coursetools__file_read,mcp__coursetools__file_write,mcp__coursetools__codebase_search,mcp__coursetools__shell,mcp__coursetools__test_runner,mcp__coursetools__web_search --mcp-config /workspace/.mcp.json --strict-mcp-config --no-chrome --setting-sources project,local --no-session-persistence --output-format stream-json --verbose --name fitgpt-orchestration-run-005-project-manager --print
+```
+
+Again, `MCP_CONNECTION_NONBLOCKING=0` was set, unsupported
+`--max-turns` was omitted, and no retry, resume, continue, replacement
+process, or global `--tools` filter was used.
+
+The actual initialization event reported:
+
+```json
+{
+  "tools": [
+    "mcp__coursetools__task_tracker"
+  ],
+  "mcp_servers": [
+    {
+      "name": "coursetools",
+      "status": "connected"
+    }
+  ],
+  "permissionMode": "dontAsk",
+  "claude_code_version": "2.1.220"
+}
+```
+
+All repository, test, shell, web, and alternate course tools were absent. The
+Project Manager made exactly one tool call:
+
+```json
+{
+  "name": "mcp__coursetools__task_tracker",
+  "input": {
+    "role": "project-manager",
+    "ticket_id": "COURSE-FITGPT-001",
+    "status": "Done",
+    "note": "Backend onboarding documentation clarified and independently reviewed; bounded course test verification passed."
+  },
+  "caller": {
+    "type": "direct"
+  }
+}
+```
+
+The exact controlled dummy response was:
+
+```json
+{"result":"Ticket COURSE-FITGPT-001 updated to Done. Note: Backend onboarding documentation clarified and independently reviewed; bounded course test verification passed."}
+```
+
+Event counts were one initialization event, one `task_tracker` request, one
+matching tool result, zero prohibited-tool events, one successful final result,
+and zero permission denials. The Project Manager session ran from
+`2026-08-02T22:31:46Z` through `2026-08-02T22:31:59Z` and exited 0.
+
+### Complete Project Manager Output
+
+~~~~text
+# Issue Update Result
+
+## Issue
+
+`COURSE-FITGPT-001` (Workflow: Backend onboarding documentation orchestration, Run 5)
+
+## Approval evidence received
+
+- Reviewer result: `Pass` (no unresolved high-severity findings; scope confirmed limited to `README.md` and `backend/.env.example`; all acceptance criteria verified against evidence).
+- Tester result: `Pass` for exactly `backend/tests/test_config_startup.py` via bounded course test tool (dummy/simulated result — see limitation below).
+- Explicit current-run final human-approval token: `APPROVE_RUN5_FINAL`, matching Run 5 of this workflow.
+- Requested status: `Done`. Issue identifier confirmed to match exactly.
+
+## New status
+
+`Done`
+
+## Update confirmation
+
+`mcp__coursetools__task_tracker` invoked exactly once with role `project-manager`, ticket_id `COURSE-FITGPT-001`, status `Done`, and the exact supplied note.
+
+Tool response (verbatim): `{"result":"Ticket COURSE-FITGPT-001 updated to Done. Note: Backend onboarding documentation clarified and independently reviewed; bounded course test verification passed."}`
+
+## Failure or escalation
+
+None. The single controlled-issue update succeeded on the first and only invocation. No retry was needed or performed.
+
+**Limitation noted for the record:** The Tester's `Pass` reflects only a bounded/simulated course-tool response for `backend/tests/test_config_startup.py`, not real pytest execution, full backend test suite health, or deployment/integration verification. This limitation does not affect the validity of this controlled dummy-ticket update, which was gated solely on the presence of Reviewer `Pass`, Tester `Pass`, and explicit current-run human approval — all of which were satisfied.
+~~~~
+
+### Role and Tool Matrix
+
+| Role or process | Runtime tools exposed | Actual Run 5 tool calls | Boundary result |
+|---|---|---|---|
+| Orchestrator | No course tool used directly | None | Pass |
+| Planner v1.0.0 | Not rerun; preserved Run 3 evidence | None in Run 5 | Preserved |
+| Implementer v1.0.0 | Not rerun; preserved Run 3 evidence | None in Run 5 | Preserved |
+| Reviewer v1.0.0 | Not rerun; exact Run 3 Pass reused | None in Run 5 | Preserved Pass |
+| Tester v1.0.0 | `file_read`, `test_runner` | One `test_runner` call | Pass |
+| Project Manager v1.0.0 | `task_tracker` only | One `task_tracker` call | Pass |
+
+### Gate Results
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Run 4 preservation | Pass | Commit `ef35b7cb2186003bbca0f12a3721f0b2f13adbb0` retains Blocked verdict |
+| Reviewer-approved checksum continuity | Pass | Both documentation hashes matched at every boundary |
+| Complete Tester handoff | Pass | Mechanical equality and mandatory-field checks passed |
+| Tester runtime exposure | Pass | Connected server; exact two-tool array |
+| Actual focused course-tool request | Pass | One exact `test_runner` request and response |
+| Tester result | Pass with dummy limitation | Controlled dummy response only |
+| Final checkpoint | Pass | Displayed only after technical Tester validation |
+| Current human approval | Pass | Exact `APPROVE_RUN5_FINAL` received |
+| Complete Project Manager handoff | Pass | Exact gates, issue, approval, status, and note supplied |
+| Project Manager runtime exposure | Pass | Connected server; `task_tracker` only |
+| Controlled issue target | Pass | Only `COURSE-FITGPT-001` targeted |
+| Tracker invocation count | Pass | Exactly one |
+| Repository protection | Pass | Read-only mounts and matching manifests |
+| Retry prohibition | Pass | One Tester and one Project Manager process only |
+
+### Repository and External Effects
+
+- `README.md` and `backend/.env.example` remained byte-identical to the
+  Reviewer-approved state until their authorized documentation commit.
+- No application code, test, MCP configuration, memory file, agent definition,
+  or unrelated documentation changed.
+- Run 4 remained preserved as Blocked.
+- The Project Manager used the local controlled dummy `task_tracker`; no real
+  external tracker or other external service was contacted.
+- No Git remote operation occurred and nothing was pushed.
+- No sensitive authentication material was recorded.
+- Both disposable direct-agent containers exited and were removed.
+- The only Run 5 repository record added before the authorized commits was this
+  Iteration Log entry.
+
+### Evidence Paths and Checksums
+
+- Evidence root:
+  `/tmp/fitgpt-orchestration-run-005-20260802T154530-Hn8V47`.
+- Run 3 exact Reviewer Pass:
+  `outputs/run3-reviewer-pass.txt`;
+  SHA-256 `095cc406153a7d343a9560a42d57c268c2fe3b61aa98953ea95eda2e867dd8a0`.
+- Tester handoff:
+  `tester-stage/handoff.md`;
+  SHA-256 `cc757cea1ac6873c57b7ad740ff51aae6f3777dae47aefb0507a9f76b84f3d9b`.
+- Tester handoff validation:
+  `tester-stage/handoff-validation.txt`;
+  SHA-256 `6b7f8e52b9317e0ac57a1deb87d4a528c2e735b94bc44649f0ba9dd1f92c1041`.
+- Tester tool-isolation check:
+  `tester-stage/tool-isolation-check.txt`;
+  SHA-256 `4d946dfa961ddc5122a3feedd139a2504488e044464000e6b2f9dd541bf79b73`.
+- Tester wrapper:
+  `tester-stage/run.sh`;
+  SHA-256 `84b47a310a1b10f741a0e049e4d417fcaab3482b5699f6c2484ad1ceeccc9a5d`.
+- Complete Tester stream:
+  `tester-stage/session.jsonl`;
+  SHA-256 `7f1912b1064388978def98ec9b647774869bb10f358aa652a526aa513b1f99fd`.
+- Project Manager handoff:
+  `project-manager-stage/handoff.md`;
+  SHA-256 `5f6342972b5ec6f2d729a21a80474d5db7a5cc274621d4b9de5674702e613c93`.
+- Project Manager wrapper:
+  `project-manager-stage/run.sh`;
+  SHA-256 `470bdcb64cf9a0216f4359fe91ed3ebec4b8fcfe517e2481fcbfd98bdd2f3920`.
+- Complete Project Manager stream:
+  `project-manager-stage/session.jsonl`;
+  SHA-256 `ace731062930e75594a8c0d9bff93a6fa07229ba8e1b9143127483b3dd85da14`.
+
+### Verdict and Limitation
+
+`Pass`
+
+Run 5 completed the preserved workflow with actual, explicitly authorized MCP
+events and no retry. Tester called only the controlled dummy test runner for the
+single named target. After the exact new final approval, Project Manager called
+only the controlled dummy tracker for `COURSE-FITGPT-001`.
+
+The test result and issue update are deterministic course-tool simulations.
+They are not real pytest execution, do not prove full backend health, and did
+not contact or mutate a real external issue tracker.
