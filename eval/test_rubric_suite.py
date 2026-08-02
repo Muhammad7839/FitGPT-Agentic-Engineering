@@ -25,6 +25,19 @@ JUDGE_KEYS = {
     "evidence",
     "limitations",
 }
+JUDGE_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "dimension": {"type": "string"},
+        "score": {"type": "integer", "minimum": 1, "maximum": 4},
+        "passed": {"type": "boolean"},
+        "justification": {"type": "string", "minLength": 1},
+        "evidence": {"type": "array", "items": {"type": "string"}},
+        "limitations": {"type": "array", "items": {"type": "string"}},
+    },
+    "required": sorted(JUDGE_KEYS),
+    "additionalProperties": False,
+}
 DISALLOWED_TOOLS = ",".join(
     [
         "Read",
@@ -189,6 +202,16 @@ def parse_judge_reply(reply, dimension):
     return value
 
 
+def extract_judge_reply(envelope):
+    structured = envelope.get("structured_output")
+    if isinstance(structured, dict):
+        return json.dumps(structured)
+    reply = envelope.get("result")
+    if not isinstance(reply, str):
+        raise RuntimeError("Claude envelope has no structured output or string result")
+    return reply
+
+
 def call_judge(prompt, dimension_name):
     with tempfile.TemporaryDirectory(prefix="fitgpt-eval-judge-") as judge_dir:
         empty_mcp = Path(judge_dir) / "empty-mcp.json"
@@ -198,6 +221,8 @@ def call_judge(prompt, dimension_name):
             "--print",
             "--output-format",
             "json",
+            "--json-schema",
+            json.dumps(JUDGE_SCHEMA, separators=(",", ":")),
             "--permission-mode",
             "dontAsk",
             "--tools",
@@ -234,10 +259,7 @@ def call_judge(prompt, dimension_name):
             raise RuntimeError(f"Claude envelope is not JSON: {exc}") from exc
         if envelope.get("is_error"):
             raise RuntimeError(f"Claude judge returned an error: {envelope.get('result')}")
-        reply = envelope.get("result")
-        if not isinstance(reply, str):
-            raise RuntimeError("Claude envelope has no string result")
-        return reply
+        return extract_judge_reply(envelope)
 
 
 def deterministic_gate(transcript):
@@ -315,9 +337,13 @@ def run_self_tests():
         ("rubric schema", len(rubric["dimensions"]) == 4),
         ("deterministic fixture gate", gate_passed and counts["FAIL"] == 0),
         ("strict valid judge JSON", parse_judge_reply(json.dumps(valid), dimension) == valid),
+        (
+            "structured Claude envelope",
+            extract_judge_reply({"structured_output": valid}) == json.dumps(valid),
+        ),
     ]
     try:
-        parse_judge_reply(f"\`\`\`json\n{json.dumps(valid)}\n\`\`\`", dimension)
+        parse_judge_reply(f"```json\n{json.dumps(valid)}\n```", dimension)
         fenced_rejected = False
     except ValueError:
         fenced_rejected = True
