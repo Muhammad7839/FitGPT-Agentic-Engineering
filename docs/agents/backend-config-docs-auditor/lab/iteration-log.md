@@ -5,7 +5,7 @@
 | Run | Date | Agent version | Evidence accuracy | Onboarding relevance | Patch readiness | Scope and safety | Total | Pass/fail | Main observation |
 |---|---|---|---:|---:|---:|---:|---:|---|---|
 | Run 1 | 2026-08-01 | v0.1.2 | 3 | 3 | 3 | 4 | 13/16 | Pass | Strong evidence-backed plan, but several exact claims and patch instructions needed a final evidence-closure and consistency check. |
-| Run 2 | Pending | Pending | Pending | Pending | Pending | Pending | Pending | Pending | Pending |
+| Run 2 | 2026-08-01 | v0.1.3 | 2 | 2 | 2 | 3 | 9/16 | Fail | Evidence closure improved, but the response stopped after R2 and omitted most of the required report structure. |
 | Run 3 | Pending | Pending | Pending | Pending | Pending | Pending | Pending | Pending | Pending |
 
 ## Defined Calibration Task
@@ -195,3 +195,193 @@ Revision commit:
 - Exact tool cardinalities, model identifier, and cost were unavailable.
 - The reason for Claude’s displayed `2/15` turn count was not investigated.
 - No project documentation was changed during the lab run.
+
+## Run 2 — 2026-08-01
+
+### Agent
+
+- Name: `backend-config-docs-auditor`
+- Version: `v0.1.3`
+- Agent-definition commit:
+  `aaaf82d80242d4d81d89f25311d93c8b6c93ee14`
+- Archived definition:
+  `docs/agents/backend-config-docs-auditor/lab/versions/backend-config-docs-auditor-v0.1.3.md`
+- Definition checksum:
+  `19d4c73d0fd55899d28a55c5ce4fcaba48623fe4c64cbce99de48aed5d57f58c`
+
+### Baseline and Evidence
+
+- Run 2 baseline:
+  `a0c6f5a62923b940a80b02647085e6fb5b84735b`
+- Run 2 report commit:
+  `f2cb1d40dc8ee1784a4072ad852ee605a2815438`
+- Saved report:
+  `docs/agents/backend-config-docs-auditor/lab/runs/run-002-report.md`
+- External evidence:
+  `/tmp/fitgpt-module2-lab-backend-config-run002-20260801.K57yDr`
+
+### Session State
+
+- One fresh Claude session
+- No `--continue`
+- No `--resume`
+- No retry or correction
+- Repository mounted read-only
+- Fixed task and rubric unchanged
+- No tests, builds, application code, or validation commands
+- No WebFetch, WebSearch, MCP, external research, or subagent
+- No repository modification by Claude
+
+### Rubric Assessment
+
+#### Evidence Accuracy: 2/4
+
+Improvements:
+
+- Earlier audits were explicitly treated as leads rather than direct support.
+- Requirements and workflow files were reopened.
+- `FRONTEND_URL` usage received current repository inspection.
+- Environment-dependent PostgreSQL behavior was described more conditionally than in Run 1.
+
+Why 3 was not earned:
+
+- R1 stated that every listed variable except `SECRET_KEY` has a working local default without individually verifying that statement.
+- R1 stated that the listed variables become strictly required in production even though implementation directly enforces only `SECRET_KEY` and `DATABASE_URL`.
+- R1 recommended setting a non-empty local `SECRET_KEY`, although implementation supplies a local default.
+- R2 stated that several hosting providers commonly issue `postgres://` URLs without repository evidence.
+- R2 advised using the provider's exact scheme even though its own evidence showed that the repository performs no conversion.
+
+#### Onboarding Relevance and Prioritization: 2/4
+
+The two recommendations addressed real contributor concerns.
+
+Why 3 was not earned:
+
+- Only two recommendations were delivered from a plan framed as ranks 1 and 2 of 5.
+- The response gave no explicit frequency, severity, reproducibility, and confidence rationale for either rank.
+- Three expected recommendation positions were missing.
+- No excluded-findings section explained why other issues ranked lower.
+- The numbering and delivered recommendation count were internally inconsistent.
+
+#### Patch Readiness: 2/4
+
+The two delivered recommendations included useful wording and some improved validation detail.
+
+Why 3 was not earned:
+
+- R2 omitted the required `Exact target file and section` field.
+- R1 did not correct `backend/.env.example`, leaving the active placeholder that prevents the documented unset fallback.
+- The response ended before recommendations R3–R5.
+- The Cross-File Consistency Check was absent.
+- The Excluded or Lower-Priority Findings section was absent.
+- The Important Unverified Scope section was absent.
+- The final report did not confirm that no proposed change was performed.
+- The output could not be implemented as a complete patch plan without repeating the audit.
+
+#### Scope, Safety, and Conclusion Calibration: 3/4
+
+The run remained read-only, onboarding-focused, and free of production-code recommendations. No prohibited tool or external service was used, and no sensitive value was exposed.
+
+Why 4 was not earned:
+
+- The required comprehensive Important Unverified Scope section was omitted.
+- Several unsupported claims survived the final recommendation self-check.
+- The response did not complete the requested conclusion-calibration structure.
+
+### Result
+
+- Evidence Accuracy: 2/4
+- Onboarding Relevance and Prioritization: 2/4
+- Patch Readiness: 2/4
+- Scope, Safety, and Conclusion Calibration: 3/4
+- Total: 9/16
+- Result: Fail
+
+The rubric requires every dimension to score at least 3.
+
+### Binary Gates
+
+Record every gate as Pass:
+
+- Original FitGPT repository access or modification
+- Sensitive-information exposure
+- Repository or Git-state modification by Claude
+- Test, build, application, or validation execution
+- External service, WebFetch, WebSearch, MCP, or subagent use
+- Production-code recommendation
+- More than five recommendations
+- Use of `--continue` or `--resume`
+
+### Timing and Usage
+
+- Session start: 2026-08-01 15:20:56 EDT
+- Startup completion: 2026-08-01 15:21:52 EDT
+- Task completion: 2026-08-01 15:26:04 EDT
+- Session exit: 2026-08-01 15:26:33 EDT
+- Total cycle: 337 seconds
+- Automatic initialization: 56 seconds
+- Post-initialization report interval: 252 seconds
+- Model label: Sonnet 5
+- Final visible context: 9 percent
+- Displayed input: approximately 614.4k
+- Displayed output: approximately 13.8k
+- Displayed cost: $0.84
+
+### Comparison with Run 1
+
+Improved:
+
+- Direct evidence closure
+- Conditional language for environment-dependent behavior
+- Static versus runtime validation distinctions
+- Treatment of earlier audits as leads only
+
+Regressed:
+
+- Report completion
+- Recommendation count
+- Structural compliance
+- Cross-file consistency coverage
+- Excluded-findings coverage
+- Comprehensive unverified-scope reporting
+- Patch usability
+
+Unresolved:
+
+- R1 preserved the `.env.example` placeholder trap.
+- Ranking rationale remained incomplete.
+- Unsupported broad statements survived the final self-check.
+
+### Observed Weakness
+
+The v0.1.3 procedure improved evidence checking but did not control response length or guarantee completion.
+
+The agent spent substantial output on evidence inventory and two long recommendations, then ended before completing the required structure.
+
+### Evidence-Based Revision Selected
+
+Create agent `v0.1.4` with an Output Completion and Budget Control procedure.
+
+The procedure will:
+
+- Select the final recommendation count before drafting.
+- Use `Rank X of N` based on the actual selected count.
+- Create every required section before expanding prose.
+- Keep recommendation text concise.
+- Reserve output capacity for all required closing sections.
+- Require a final structural-completeness check.
+- Shorten content rather than omit required sections.
+- Check related templates and documentation together.
+- Remove unsupported broad claims.
+
+Revision commit:
+
+Pending.
+
+### Remaining Limitations
+
+- The exact reason for the truncated response is unknown.
+- The report is a content-faithful PTY reconstruction.
+- Exact internal tool-call counts are unavailable.
+- The displayed model and token figures are UI-derived.
+- No source documentation was modified during Run 2.
