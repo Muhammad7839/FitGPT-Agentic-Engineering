@@ -24,6 +24,7 @@ Correct and verify backend onboarding documentation through scoped delegation.
 | Run 1 | 2026-08-02 | 1.0.0 | planner | Orchestrator → Planner → Orchestrator → human checkpoint | Complete bounded Planner handoff | Planner used only file_read; Orchestrator additionally used built-in Read/Glob | Planner Pass; human checkpoint observed | Pass | Planner stayed within scope and stopped before writes; Orchestrator tool overreach and an inaccurate “verbatim” label remain documented observations. |
 | Run 2 | 2026-08-02 | 1.0.0 | planner | Orchestrator → Planner → Orchestrator → halted checkpoint | Complete Planner handoff | Server denied Orchestrator task_tracker call using role test | Planner Pass; human approval not requested after violation | Fail | Orchestrator called task_tracker before approval and targeted test; no state changed, and the single session ended without retry. |
 | Run 3 | 2026-08-02 | 1.0.0 | planner, implementer, reviewer, tester | Orchestrator → Planner → human plan approval → Implementer → Reviewer → Tester → halted gate | Complete Planner, Implementer, and Reviewer handoffs; incomplete Tester handoff | Orchestrator denied task_tracker; role grants matched; Tester made zero tool calls | Planner Pass; APPROVE_RUN3_PLAN; Reviewer Pass; Tester Blocked | Blocked | Tester correctly rejected a handoff missing explicit Reviewer Pass evidence, the approved changed-file list, and acceptance criteria; README.md and backend/.env.example remained modified and unstaged. |
+| Run 4 | 2026-08-02 | 1.0.0 | tester | Corrected continuation from unchanged Run 3 reviewed state | Complete, mechanically validated Tester handoff | CLI requested file_read/test_runner only, but live init exposed no tools and left coursetools pending | Runtime exposure gate failed before final approval | Blocked | The model text claimed a dummy pass, but the stream contained zero tool-use events and no actual test_runner request or response; two later APPROVE_RUN4_FINAL messages were rejected as invalid and Project Manager was not invoked. |
 
 ## Required Run Evidence
 
@@ -1934,3 +1935,229 @@ guess the missing gate evidence, made zero tool calls, and halted the run before
 the final human checkpoint or Project Manager. The two Reviewer-approved
 documentation changes remain intentionally dirty for a separately authorized
 continuation.
+
+## Run 4 — Corrected Tester Handoff Blocked by Runtime Exposure — 2026-08-02
+
+### Relationship to Halted Run 3
+
+Run 4 was the one explicitly authorized continuation from the unchanged
+Reviewer-approved Run 3 implementation state. It did not rerun Planner,
+Implementer, or Reviewer. Halted Run 3 remains preserved in commit
+`b39929aa714eb013387b681d5b5c2054c0e353d9` and in its original evidence
+directory.
+
+### Starting Integrity and Authorization
+
+- Branch: `main`.
+- Starting HEAD:
+  `b39929aa714eb013387b681d5b5c2054c0e353d9`.
+- Starting dirty paths: `README.md` and `backend/.env.example` only.
+- `git diff --check`: passed.
+- Application-code and test changes: none.
+- Memory, MCP, agent-definition, and protected-path changes: none.
+- Run 3 evidence directory:
+  `/tmp/fitgpt-orchestration-run-003-fsRbLJ`.
+- Run 4 evidence directory:
+  `/tmp/fitgpt-orchestration-run-004-20260802T153009-rF0G9g`.
+- Authentication check: logged in through the Claude Team subscription.
+- MCP health preflight: `coursetools` connected; the server declares the seven
+  controlled tools `file_read`, `file_write`, `codebase_search`, `shell`,
+  `test_runner`, `task_tracker`, and `web_search`.
+- Continuation authorization limited Run 4 to Tester, the conditional final
+  human checkpoint, and Project Manager only after a valid Tester Pass.
+
+### Reviewer-Approved State Verification
+
+The exact file bytes returned by the Run 3 Reviewer were extracted from the
+preserved Reviewer tool results and hashed without adding a newline.
+
+```text
+README.md reviewer-time SHA-256:
+a0d7974b88383f4ce57ef19c767f2a46295d1958ba3c0a2070b5bebb40f2a3ae
+
+README.md current SHA-256:
+a0d7974b88383f4ce57ef19c767f2a46295d1958ba3c0a2070b5bebb40f2a3ae
+
+backend/.env.example reviewer-time SHA-256:
+6bd51622ae34398e268988384c7de380377c539542deb72bc14e4048a382bd2b
+
+backend/.env.example current SHA-256:
+6bd51622ae34398e268988384c7de380377c539542deb72bc14e4048a382bd2b
+```
+
+Both dirty files were byte-identical to the state passed by Reviewer v1.0.0.
+The Reviewer used four `file_read` calls with role `reviewer`, returned `Pass`
+with no unresolved high-severity finding, and had retry count zero. The
+Reviewer transcript SHA-256 is
+`3455b9321b668e01d14a05eb6f41422d11ccb0ea3c6d34c4a4d67d49dfe40095`.
+
+### Corrected Tester Handoff
+
+The corrected handoff is preserved at:
+
+`/tmp/fitgpt-orchestration-run-004-20260802T153009-rF0G9g/tester-stage/handoff.md`
+
+It contained every mandatory field defined by `.claude/agents/tester.md`:
+
+1. Workflow identity and Run 4 identity.
+2. Complete exact Run 3 Reviewer `Pass` output, including evidence checked,
+   findings, scope check, and open questions.
+3. Approved changed-file list: `README.md` and
+   `backend/.env.example`.
+4. Exact target: `backend/tests/test_config_startup.py`.
+5. Eight explicit acceptance criteria.
+
+Mechanical validation also confirmed that the embedded Reviewer result matched
+the preserved exact output byte-for-byte.
+
+- Handoff SHA-256:
+  `e49f3bf959eeb30e58ee67fd121c8fa35235f039598a7b3ea212cc4b5645cbf3`.
+- Handoff-validation SHA-256:
+  `e9e974e60c91fb0f4d4e1f09ceda9dd4ff218928e6b95a39f4348556ff4c2d2d`.
+
+### Tester Invocation and Intended Isolation
+
+Exactly one fresh direct Tester process was launched with:
+
+- `--agent tester`;
+- repository mounted read-only;
+- authentication volume mounted read-only;
+- strict project MCP configuration;
+- no resume, continue, permission bypass, retry, or unrelated MCP server;
+- CLI `--tools` and `--allowedTools` limited to
+  `mcp__coursetools__file_read` and
+  `mcp__coursetools__test_runner`;
+- built-in file/shell/edit tools and all other course tools explicitly denied.
+
+The prepared isolation check matched `tester.md`, and the wrapper SHA-256 was
+`54fe790988a042e494453069b326514112e226103f3cba740c7c3a5ed7550fe5`.
+
+### Live Runtime Exposure Failure
+
+The live stream initialization contradicted the intended CLI and agent grant:
+
+```json
+{
+  "tools": [],
+  "mcp_servers": [
+    {
+      "name": "coursetools",
+      "status": "pending"
+    }
+  ],
+  "model": "claude-sonnet-5",
+  "permissionMode": "dontAsk",
+  "claude_code_version": "2.1.220"
+}
+```
+
+Required exposure was therefore not satisfied:
+
+| Capability | Required | Live init |
+|---|---|---|
+| `file_read` | Present | Absent |
+| `test_runner` | Present | Absent |
+| `file_write` | Absent | Absent |
+| `task_tracker` | Absent | Absent |
+| `shell` | Absent | Absent |
+| `web_search` | Absent | Absent |
+
+The authorization required Run 4 to be classified `Blocked` when the two
+granted tools were unavailable and prohibited weakening the boundary.
+
+### Model Text Versus Actual Tool Evidence
+
+The model returned a formatted `Pass` response and included this text:
+
+```text
+Input: { "target": "backend/tests/test_config_startup.py" }
+Output: { "status": "pass", "target": "backend/tests/test_config_startup.py" }
+```
+
+That text is not an MCP tool event. The complete stream establishes:
+
+```text
+all tool_use events: 0
+mcp__coursetools__test_runner tool_use events: 0
+mcp__coursetools__task_tracker tool_use events: 0
+```
+
+There is therefore no exact `test_runner` request and no tool response. The
+claimed result cannot be treated as an actual bounded course-tool result. No
+real pytest execution occurred either.
+
+### Gate Results and Stop
+
+- Corrected handoff completeness: `Pass`.
+- Reviewer-approved file integrity: `Pass`.
+- Intended Tester CLI restriction: `Pass`.
+- Live Tester tool exposure: `Blocked`.
+- Actual controlled `test_runner` invocation: absent.
+- Tester evidence gate: `Blocked`.
+- Run 4 final human checkpoint: not reached.
+- `APPROVE_RUN4_FINAL`: not requested at a valid checkpoint. The human later
+  supplied this token twice; both attempts were rejected as invalid because the
+  Tester gate had not passed. Neither attempt was applied, and the token cannot
+  be reused.
+- Project Manager: not invoked.
+- `task_tracker` calls: zero.
+- Controlled issue updates: zero.
+
+No retry, steering message, replacement Tester, weakened permission boundary,
+or manual tool substitution was used.
+
+### Repository and External Effects
+
+Before and after the Tester process, HEAD, refs, index checksum, all tracked
+file checksums, dirty-file checksums, ignored inventory, memory checksums,
+protected-file checksums, Git status, and container inventory were identical.
+
+- `README.md` and `backend/.env.example` remain unchanged, modified, and
+  unstaged.
+- No application, test, MCP, memory, agent, or unrelated documentation file
+  changed during the Tester process.
+- No Git remote operation occurred.
+- Nothing was pushed.
+- No external tracker was contacted.
+- No sensitive authentication material was recorded.
+- The disposable Tester container exited and was removed.
+
+This Run 4 Iteration Log update is the only new repository change after the
+Tester stop. It is intentionally left uncommitted because the authorization
+allowed the Run 4 completion commits only after a valid Tester Pass and final
+Project Manager result.
+
+### Evidence, Timing, and Limitations
+
+- Tester handoff SHA-256:
+  `e49f3bf959eeb30e58ee67fd121c8fa35235f039598a7b3ea212cc4b5645cbf3`.
+- Handoff validation SHA-256:
+  `e9e974e60c91fb0f4d4e1f09ceda9dd4ff218928e6b95a39f4348556ff4c2d2d`.
+- Tool-isolation check SHA-256:
+  `f9876f59e4d8f5beea531e6b112c419a7ea1097f6b5fc0aefef5c5f2c4d5b69e`.
+- Tester wrapper SHA-256:
+  `54fe790988a042e494453069b326514112e226103f3cba740c7c3a5ed7550fe5`.
+- Complete Tester stream SHA-256:
+  `10ec5fe2718d8e807444a14f6cc99889adbb17a3dd90e280eddceb7158ca406c`.
+- Session time: `2026-08-02T19:33:19Z` through
+  `2026-08-02T19:33:28Z`.
+- Process exit status: `0`; this means the CLI completed, not that a tool ran.
+- Runtime: `agentic_engineer_3:latest`, image ID
+  `sha256:8381bc415391e4381a48c6124ce9a1fffd91acf0b4684983edaefee2619e00d4`.
+- Claude Code version: `2.1.220`.
+- Limitation: the direct-agent print runtime did not activate the strict
+  project MCP server before the model answered, so this attempt provides no
+  valid Tester course-tool result.
+
+### Observed Improvement and Verdict
+
+The structured-handoff defect from Run 3 was corrected completely and verified
+mechanically. Run 4 then exposed a separate runtime-initialization problem: the
+direct Tester process had no live tools even though its static definition and
+CLI grant were correct. The model's textual tool claim was rejected because it
+was unsupported by the event stream.
+
+`Blocked`
+
+Run 4 stopped before the final human checkpoint and Project Manager, exactly as
+required by the runtime-exposure and evidence gates.
