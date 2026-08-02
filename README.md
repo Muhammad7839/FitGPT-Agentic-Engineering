@@ -55,10 +55,11 @@ The production app is live at: https://fitgpt.tech
    pip install -r requirements.txt
    ```
 
-4. Copy the environment variable template and fill in your values:
+4. Copy the environment variable template:
    ```
    cp .env.example .env
    ```
+   You can leave `DATABASE_URL` blank/unset for local development — the backend automatically falls back to a local SQLite database file, so no Postgres instance is needed just to start the server. Fill in `DATABASE_URL` only if you intentionally want to connect to a local or remote PostgreSQL instance. Fill in the other values as needed for the features you plan to use.
 
 5. Start the server:
    ```
@@ -111,17 +112,19 @@ The Android app talks to the same backend as the web app. Update the base URL in
 
 ## Environment Variables
 
-Create a `.env` file in the `backend/` folder. Use `backend/.env.example` as the template. The required variables are:
+Create a `.env` file in the `backend/` folder. Use `backend/.env.example` as the template. The variables are:
 
 | Variable | Description |
 |---|---|
-| DATABASE_URL | PostgreSQL connection string |
+| DATABASE_URL | PostgreSQL connection string. Optional for local development (see note below); required in a production-flagged environment |
 | SECRET_KEY | Secret key for signing JWT tokens |
 | GROQ_API_KEY | API key from console.groq.com |
 | GMAIL_ADDRESS | Gmail address used for sending reset emails |
 | GMAIL_APP_PASSWORD | Gmail app password (not your account password) |
 | FRONTEND_URL | URL of the frontend, used for CORS (e.g. http://localhost:3000) |
 | OPENWEATHER_API_KEY | API key from openweathermap.org |
+
+**Note on `DATABASE_URL`:** Locally, if `DATABASE_URL` is omitted or left blank, the backend automatically falls back to a local SQLite database file (`backend/fitgpt.db`) — no Postgres instance is needed to start the server for local development. In a production-flagged environment (`ENVIRONMENT=production` or `ENVIRONMENT=prod`), `DATABASE_URL` is enforced as required and must point to a PostgreSQL instance; SQLite is rejected in that mode unless the existing `ALLOW_SQLITE_IN_PRODUCTION` override is explicitly set.
 
 Never commit your `.env` file. It is listed in `.gitignore`.
 
