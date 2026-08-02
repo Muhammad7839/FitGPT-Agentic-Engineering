@@ -935,7 +935,8 @@ Final live-agent selection:
 
 Selection commit:
 
-Pending.
+- `93333cd3ddb43b1d966f43c8f494689ac906d4f3`
+- `lab: select backend-config auditor v0.1.2 as best calibrated version`
 
 ### Remaining Limitations
 
