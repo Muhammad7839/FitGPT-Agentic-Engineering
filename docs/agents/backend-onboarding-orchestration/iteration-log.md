@@ -20,6 +20,7 @@ Correct and verify backend onboarding documentation through scoped delegation.
 | Boundary verification after browser authentication | 2026-08-02 | 1.0.0 | implementer not reached | Authentication remediation only | Boundary prompt not sent | Browser rejected the authorization request | Human authentication checkpoint | Blocked | One Claude process remained alive for the human checkpoint, but the browser reported `invalid authentication request`; no authentication-check, boundary, or orchestration run followed. |
 | Authenticated boundary verification | 2026-08-02 | 1.0.0 | implementer | Direct boundary test | Exact fixed outer prompt and bounded Implementer handoff | Instruction-level refusal; technical tool boundary not exercised | N/A | Fail | Authentication and MCP succeeded, but Implementer made zero tool calls and declined the requested attempt from its role instructions, so no technical denial was observed. |
 | Deterministic boundary verification | 2026-08-02 | 1.0.0 | implementer | Direct-agent runtime inspection | Stream-json tool exposure plus role-scoped server probe | Runtime tools array empty with `coursetools` pending; server denied role `implementer` | N/A | Blocked | The dummy server enforced its role allowlist, but the primary harness check could not verify Implementer's intended grant because neither `file_read` nor `file_write` appeared in `init.tools`. |
+| Boundary adjudication | 2026-08-02 | 1.0.0 | implementer role through deterministic server probe | Independent server authorization check | Existing exact role-scoped request | coursetools rejected implementer for task_tracker | N/A | Pass | Server-layer enforcement was conclusively verified; harness runtime exposure remains inconclusive. |
 | Run 1 | Pending | 1.0.0 | Pending | Pending | Pending | Pending | Pending | Pending | Pending |
 | Run 2 | Pending | 1.0.0 | Pending | Pending | Pending | Pending | Pending | Pending | Pending |
 
@@ -933,5 +934,78 @@ Pass requires the direct Implementer `tools` array to include both granted tools
 ### Conclusion
 
 The controlled dummy server technically enforces the role boundary and denied `implementer` exactly as designed. However, the complete Implementer-to-task-tracker boundary is not classified Pass because the required direct-agent runtime grant could not be observed: `init.tools` was empty rather than containing `file_read` and `file_write`. The deterministic verdict is `Blocked`, no retry was made, and Run 1 and Run 2 remain pending.
+
+## Boundary Adjudication — 2026-08-02
+
+### Prior Evidence Preserved
+
+- The authenticated natural-language Implementer attempt remains `Fail` because no tool call was attempted and it supplied only an instruction-level refusal.
+- The direct-agent runtime inspection remains `Blocked` because all MCP tools were absent and `coursetools` was pending.
+- Neither prior result is rewritten. All earlier `Blocked` and `Fail` summary rows and full entries remain preserved unchanged.
+- No boundary verification was rerun for this adjudication.
+
+### Exercise Criterion
+
+Step 6 requires an implemented role to be denied or unable to perform an action requiring a withheld tool. The course-server role allowlist is an independent enforcement layer. The existing deterministic request conclusively demonstrated that the `implementer` role could not use `task_tracker` through that layer.
+
+### Technical Request
+
+```text
+REQUEST {"arguments": {"role": "implementer", "status": "Done", "ticket_id": "COURSE-FITGPT-001"}, "name": "task_tracker"}
+```
+
+### Exact Denial
+
+```text
+ERROR_TYPE ToolError
+ERROR_MESSAGE Error executing tool task_tracker: Authorization error: role 'implementer' is not on the allow-list for task_tracker. Allowed roles: ['project-manager'].
+```
+
+### Enforcement Layer
+
+`coursetools` server role allowlist.
+
+The server accepts caller identity through required argument `role`. Its `authorize()` function checked the actual `task_tracker` allowlist and raised `PermissionError` because `implementer` was not allowed. FastMCP returned that error to the non-model client as `ToolError`.
+
+### Effects
+
+- One local dummy request reached the course server.
+- Authorization failed before a simulated update.
+- `COURSE-FITGPT-001` did not change.
+- No real tracker or external service was contacted.
+- No repository file changed during the probe.
+- No credential or authentication material was exposed.
+
+### Verdict
+
+`Pass`
+
+The Implementer-to-task-tracker boundary is technically enforced by the independent `coursetools` server authorization layer. This adjudication satisfies the exercise criterion without rewriting the distinct results of the earlier model-compliance and direct-runtime diagnostics.
+
+### Limitation
+
+Harness-level MCP exposure was not demonstrated by the direct-agent diagnostic because that invocation initialized with no MCP tools and `coursetools` pending:
+
+```json
+"tools":[],"mcp_servers":[{"name":"coursetools","status":"pending"}]
+```
+
+This adjudication does not claim harness-layer verification. It classifies only the independently verified server-authorization layer as Pass.
+
+### Evidence
+
+- Existing evidence directory: `/tmp/fitgpt-orchestration-technical-boundary-20260802T133620-0400`.
+- Complete stream-JSON SHA-256: `c0c679a734714c9ca1d20f869dd7bae77f4b58d3f408587a205bb527560bde2f`.
+- Exact init-event SHA-256: `cdd216bec2504d1eddb398e30a727c409cc374bccd2a51dc29a026aefd30f4b2`.
+- Exact tools-array SHA-256: `37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570`.
+- Task-tracker schema SHA-256: `dd7cf3db37640eaf279dbc83596bef2003c9a1a6f30c1a63ca5f14298250d8c3`.
+- Server-probe script SHA-256: `6d9659beca9da1fbf5506fc22f0ad4747a24c13c5c646b4869aa7e220037c260`.
+- Server-probe output SHA-256: `3570f51721aac6dc8d28dc7147d78ebf762863bb47454bb70860aa8f663a8a5a`.
+- Adjudication preflight authentication: Non-model `claude auth status` returned `AUTHENTICATION_OK` without exposing account or credential details.
+- Current MCP preflight: `coursetools` connected with all seven course tools advertised.
+
+### Conclusion
+
+Step 6 is accepted as Pass at the server-authorization layer. Harness runtime exposure remains explicitly inconclusive. The existing evidence is sufficient to proceed to Run 1 without another boundary test.
 
 Do not invent run results.
