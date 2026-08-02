@@ -567,7 +567,8 @@ The revised procedure will:
 
 Revision commit:
 
-Pending.
+- `f267affc89e204e66c7f116839d73058b79c62f4`
+- `agent: backend-config-docs-auditor v0.1.5 -- simplify to compact complete patch plans, refs lab run 3`
 
 ### Remaining Limitations
 
