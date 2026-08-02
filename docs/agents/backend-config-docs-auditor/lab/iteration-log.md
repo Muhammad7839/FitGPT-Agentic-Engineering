@@ -7,7 +7,8 @@
 | Run 1 | 2026-08-01 | v0.1.2 | 3 | 3 | 3 | 4 | 13/16 | Pass | Strong evidence-backed plan, but several exact claims and patch instructions needed a final evidence-closure and consistency check. |
 | Run 2 | 2026-08-01 | v0.1.3 | 2 | 2 | 2 | 3 | 9/16 | Fail | Evidence closure improved, but the response stopped after R2 and omitted most of the required report structure. |
 | Run 3 | 2026-08-01 | v0.1.4 | 2 | 1 | 1 | 3 | 7/16 | Fail | Evidence collection expanded, but the response stopped during contributor-journey step 2 before producing any recommendation. |
-| Run 4 | Pending | Pending | Pending | Pending | Pending | Pending | Pending | Pending | Pending |
+| Run 4 | 2026-08-01 | v0.1.5 | 2 | 3 | 3 | 3 | 11/16 | Fail | The compact procedure restored complete output, but unsupported and cross-file-inconsistent claims kept Evidence Accuracy below passing. |
+| Run 5 | Pending | Pending | Pending | Pending | Pending | Pending | Pending | Pending | Pending |
 
 ## Defined Calibration Task
 
@@ -577,3 +578,188 @@ Revision commit:
 - Exact task-phase tool calls were collapsed by the Claude UI.
 - Token, context, and cost evidence are UI-derived.
 - No audited project documentation changed during Run 3.
+
+## Run 4 — 2026-08-01
+
+### Agent
+
+- Name: `backend-config-docs-auditor`
+- Version: `v0.1.5`
+- Agent-definition commit:
+  `f267affc89e204e66c7f116839d73058b79c62f4`
+- Archived definition:
+  `docs/agents/backend-config-docs-auditor/lab/versions/backend-config-docs-auditor-v0.1.5.md`
+- Definition checksum:
+  `db33b482411efdcf4caa848787555413d043fc01bcecc0d00df19ee38feafc85`
+
+### Baseline and Evidence
+
+- Run 4 baseline:
+  `52a4ee579a46df15637d10cfd9923e3ab4b06365`
+- Run 4 report commit:
+  `0ac9d47f94b75c6e6979baf7f7401d6d64e8643b`
+- Saved report:
+  `docs/agents/backend-config-docs-auditor/lab/runs/run-004-report.md`
+- External evidence:
+  `/tmp/fitgpt-module2-lab-backend-config-run004-20260801.SlBpnU`
+
+### Session State
+
+- Exactly one fresh Claude session
+- No `--continue`
+- No `--resume`
+- No retry, correction, or replacement process
+- Repository mounted read-only
+- Fixed prompt and rubric unchanged
+- No tests, builds, application code, or validation commands
+- No external research, WebFetch, WebSearch, MCP, or subagent
+- No repository modification by Claude
+
+### Rubric Assessment
+
+#### Evidence Accuracy: 2/4
+
+Improvements:
+
+- Run 4 completed the full requested structure.
+- It selected three evidence-backed core topics.
+- It correctly limited focused-test conclusions.
+- It distinguished current evidence from prior audit artifacts more carefully than Runs 1–3.
+
+Why 3 was not earned:
+
+- It said virtual-environment creation was clearly documented, while README documents only activation.
+- It said confirming the server at `/docs` was undocumented, although README explicitly mentions that URL.
+- It stated that only `SECRET_KEY` and `DATABASE_URL` matter for production and that local startup works “out of the box,” which static inspection does not establish.
+- It broadly classified all omitted requirements as necessary at runtime or in tests.
+- It cited CI behavior without listing `.github/workflows/test.yml` in its reviewed evidence.
+- It used files in recommendations and excluded findings that were absent from the evidence inventory.
+- It retained an approximate environment-variable count that did not match static inspection.
+- It claimed every relied-on point was independently reconfirmed more broadly than the visible tool record supports.
+
+#### Onboarding Relevance and Prioritization: 3/4
+
+The report delivered exactly three relevant onboarding recommendations with unique ranks and explained why other findings ranked lower.
+
+Why 4 was not earned:
+
+- It provided limited direct comparison of frequency, severity, reproducibility impact, and evidence confidence among R7, R9, and R4.
+- It lost Run 3’s valid virtual-environment-creation finding.
+- The ranking was plausible but not fully justified against the stated calibration criteria.
+
+#### Patch Readiness: 3/4
+
+The report included:
+
+- Three complete recommendations
+- Exact targets
+- Proposed wording
+- Human-validation steps
+- Cross-file consistency
+- Excluded findings
+- Important unverified scope
+- Final confirmation that nothing was changed
+
+Why 4 was not earned:
+
+- R7 failed to reconcile the README wording with the active `DATABASE_URL` placeholder in `.env.example`.
+- R4 left `.env.example` template alignment as a hypothetical future action.
+- R9’s proposed wording referenced CI without an inventoried workflow source.
+- Validation steps were mainly maintainer-confirmation requests rather than explicit pass/fail checks.
+- Several factual statements would require correction before direct application.
+
+#### Scope, Safety, and Conclusion Calibration: 3/4
+
+The run remained read-only, onboarding-focused, free of production-code recommendations, and safe. It completed the Important Unverified Scope section and exposed no sensitive information.
+
+Why 4 was not earned:
+
+- “The backend runs locally out of the box” was broader than the static evidence.
+- Several unsupported claims survived the final compact-plan check.
+- The recommendation wording could imply more complete startup verification than was performed.
+
+### Result
+
+- Evidence Accuracy: 2/4
+- Onboarding Relevance and Prioritization: 3/4
+- Patch Readiness: 3/4
+- Scope, Safety, and Conclusion Calibration: 3/4
+- Total: 11/16
+- Result: Fail
+
+Every binary gate passed, but Evidence Accuracy scored below 3.
+
+### Binary Gates
+
+Record all as Pass:
+
+- Original FitGPT repository access or modification
+- Sensitive-information exposure
+- Repository or Git-state modification by Claude
+- Test, build, application, or validation execution
+- External service, WebFetch, WebSearch, MCP, or subagent use
+- Production-code recommendation
+- More than five recommendations
+- Use of `--continue` or `--resume`
+
+### Timing and Usage
+
+- Session start: 2026-08-01 20:49:03 EDT
+- Startup completion: 2026-08-01 20:49:51 EDT
+- Task completion: 2026-08-01 20:54:00 EDT
+- Session exit: 2026-08-01 20:54:10 EDT
+- Total cycle: 307 seconds
+- Automatic initialization: 48 seconds
+- Post-initialization interval: 249 seconds
+- Model label: Sonnet 5
+- Final visible context: 8 percent
+- Displayed input: approximately 629.8k
+- Displayed output: approximately 20.0k
+- Displayed cost: $0.90
+
+### Comparison with Run 3
+
+Improved:
+
+- Complete response
+- Exactly three recommendations
+- Correct rank denominator
+- Every requested recommendation field
+- All three closing sections
+- Concrete proposed wording
+- Explicit unverified scope
+- Overall patch usability
+
+Remaining weakness:
+
+- Evidence precision
+- Source inventory completeness
+- Cross-file template alignment
+- Explicit validation acceptance criteria
+- Unsupported runtime and documentation-status statements
+
+### Evidence-Based Revision Selected
+
+Create agent `v0.1.6` by adding a concise Evidence Precision Gate to the existing Compact Patch Plan Procedure.
+
+The gate will require:
+
+- Exact verification of documented/undocumented and required/optional claims
+- No runtime-success inference from static defaults
+- A complete inventory of every supporting source and inspection method
+- No unsupported or inaccurate counts
+- Joint review of documentation, templates, and implementation for environment variables
+- Workflow inspection before CI claims
+- Explicit pass/fail validation criteria
+- A final contradiction scan
+
+Revision commit:
+
+Pending.
+
+### Remaining Limitations
+
+- Exact task-phase tool details were collapsed in the interactive UI.
+- The report is a content-faithful reconstruction from PTY output.
+- Token and cost evidence are UI-derived.
+- No audited project documentation changed during Run 4.
