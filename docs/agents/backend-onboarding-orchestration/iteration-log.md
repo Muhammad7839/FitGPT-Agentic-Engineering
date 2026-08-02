@@ -17,6 +17,7 @@ Correct and verify backend onboarding documentation through scoped delegation.
 | Boundary test | 2026-08-02 | 1.0.0 | None; blocked before Implementer invocation | Not started | None | Not reached | Project MCP approval | Blocked | Claude accepted the one-server choice but could not save it on the required read-only workspace; `coursetools` remained pending. |
 | Boundary verification | 2026-08-02 | 1.0.0 | implementer not reached | Direct boundary test | Exact fixed prompt | Authentication expired before delegation | N/A | Blocked | MCP approval persisted and seven tools were live, but Claude rejected the sole boundary task because the saved login had expired. |
 | Boundary verification after login | 2026-08-02 | 1.0.0 | implementer not reached | Direct boundary test not started | Exact fixed prompt not sent | Authentication refresh failed before the authentication check and delegation | N/A | Blocked | The single supported login flow did not open its browser authorization page and was interrupted; no authentication-check or boundary session was started. |
+| Boundary verification after browser authentication | 2026-08-02 | 1.0.0 | implementer not reached | Authentication remediation only | Boundary prompt not sent | Browser rejected the authorization request | Human authentication checkpoint | Blocked | One Claude process remained alive for the human checkpoint, but the browser reported `invalid authentication request`; no authentication-check, boundary, or orchestration run followed. |
 | Run 1 | Pending | 1.0.0 | Pending | Pending | Pending | Pending | Pending | Pending | Pending |
 | Run 2 | Pending | 1.0.0 | Pending | Pending | Pending | Pending | Pending | Pending | Pending |
 
@@ -409,5 +410,103 @@ The one permitted login-refresh session failed before the authentication check, 
 ### Conclusion
 
 The Implementer-to-task-tracker boundary remains not technically verified. The single allowed login refresh did not complete, so the mandatory authentication check and fresh boundary session were not started. No retry, resume, replacement role, direct task-tracker call, issue update, application change, or protected-file change occurred.
+
+## Boundary Verification After Browser Authentication — 2026-08-02
+
+### Relationship to Prior Attempts
+
+- Attempt 1 remains `Blocked` by MCP approval persistence.
+- Attempt 2 remains `Blocked` by expired Claude authentication.
+- Attempt 3 remains `Blocked` because its login flow was interrupted before authentication completed.
+- All three prior summary rows and full entries remain preserved unchanged.
+
+### Preflight State
+
+- Repository path: `/Users/muhammad/course-projects/FitGPT-Agentic-Engineering`
+- Branch: `main`
+- Starting HEAD: `617350a19bfffbb5e980b5dba06cbfaceb242274`
+- Starting status: Clean.
+- Runtime MCP status: `coursetools` connected when checked with the existing authentication volume and trusted project context.
+- Live-advertised tools:
+  - `mcp__coursetools__file_read`
+  - `mcp__coursetools__file_write`
+  - `mcp__coursetools__codebase_search`
+  - `mcp__coursetools__shell`
+  - `mcp__coursetools__test_runner`
+  - `mcp__coursetools__task_tracker`
+  - `mcp__coursetools__web_search`
+- Implementer version: 1.0.0.
+- Implementer grants remained only `mcp__coursetools__file_read` and `mcp__coursetools__file_write`; `mcp__coursetools__task_tracker` remained explicitly disallowed.
+
+### Authentication Attempt
+
+- Interactive Claude process count: 1.
+- Repository mount: Read-only at `/workspace`.
+- Authentication mount: Existing `claude-auth` volume using the course runtime's credential-persistence arrangement.
+- Project MCP configuration: `/workspace/.mcp.json` with strict project MCP configuration.
+- Login method: Claude subscription authentication through `/login`.
+- Browser checkpoint: The authorization request was opened directly in the human's browser without printing or preserving the URL.
+- Human-observed result:
+
+```text
+invalid authentication request
+```
+
+- Terminal success confirmation: None.
+- Process exit: Claude was exited normally with status 0 after the human reported the failure. This process exit status does not indicate successful authentication.
+- Retry status: No second Claude process, authentication-check process, boundary process, resumed session, or continued session was started. While relaying the non-logging browser handoff, the `/login` interface was reopened within the same Claude process; this is retained as a limitation rather than represented as a successful or technically conclusive authentication attempt.
+
+### Downstream Sessions
+
+- Authentication-check session count: 0.
+- Authentication-check output: Not applicable.
+- Fresh Implementer boundary-session count: 0.
+- Implementer invocation: None.
+- Run 1 session count: 0.
+- Run 2 session count: 0.
+- Reason: The human-reported authentication failure triggered the mandatory stop rule before every downstream phase.
+
+### Tool Boundary
+
+- Intended attempted tool: `mcp__coursetools__task_tracker` through Implementer.
+- Expected: Denied or unavailable because only `project-manager` owns task tracking.
+- Actual: The boundary task was not sent and no subagent was invoked.
+- Enforcement layer: Browser authentication failed before the Implementer MCP allowlist, Claude Code permissions, or coursetools role allowlist could enforce the boundary.
+- Technical boundary verdict: Not reached.
+
+### Repository and External Effects
+
+- Repository reads: Claude startup loaded project configuration from the read-only workspace. No model task or subagent repository read occurred.
+- Repository writes during authentication: None.
+- Git-state changes during authentication: None. HEAD, refs, index, all tracked-file checksums, ignored-file inventory, `.claude` checksums, memory checksums, protected-file checksums, and Git status were identical before and after.
+- Task-tracker call: None.
+- Issue update: None; `COURSE-FITGPT-001` was not changed.
+- External activity: Only the supported Claude browser-authentication request was opened. No Slack, Gmail, Google Drive, Zapier, WebFetch, WebSearch, Git remote, workflow, or unrelated MCP integration was invoked.
+- Sensitive evidence: The authorization URL, callback values, codes, tokens, cookies, and authentication-volume contents were not printed or preserved in repository or external evidence. Authentication-volume contents were not inspected.
+
+### Verdict
+
+`Blocked`
+
+The browser rejected the authorization request, so authentication could not be verified and the technical Implementer-to-task-tracker boundary was not reached.
+
+### Evidence
+
+- Evidence root: `/tmp/fitgpt-orchestration-final-exercise-20260802T124834-0400`
+- Sanitized authentication evidence: `/tmp/fitgpt-orchestration-final-exercise-20260802T124834-0400/authentication`
+- Baseline and post-authentication manifests: `/tmp/fitgpt-orchestration-final-exercise-20260802T124834-0400/manifests`
+- Authentication-check evidence: Not applicable; no session ran.
+- Boundary evidence: Not applicable; no session ran.
+- Raw authentication transcript: Not retained because it contained sensitive authorization material.
+- Login container timing: 2026-08-02 12:49:49 to 13:03:52 EDT (approximately 14 minutes 3 seconds).
+- Login process exit status: 0 after normal coordinator exit.
+- Runtime: `docker.io/library/agentic_engineer_3:latest`, image ID `sha256:8381bc415391e4381a48c6124ce9a1fffd91acf0b4684983edaefee2619e00d4`, Linux arm64, Python 3.12.13, Claude Code 2.1.220.
+- Container cleanup: The disposable authentication container was removed. No authentication, authentication-check, boundary, Run 1, or Run 2 container remains.
+- Warning: The course image uses Node 20.19.2 while npm reports that Claude Code 2.1.220 expects Node 22 or newer. The CLI and login interface started, so this warning was not established as the cause of the browser rejection.
+- Limitation: The browser message alone does not establish whether the request was malformed, stale, rejected by the authentication service, or affected by another condition. No cause is inferred without additional evidence.
+
+### Conclusion
+
+The Implementer-to-task-tracker boundary remains not technically verified. Authentication failed at the required human browser checkpoint, so the workflow stopped without an authentication check, subagent invocation, MCP task call, issue update, Run 1, Run 2, application change, or protected-file change.
 
 Do not invent run results.
