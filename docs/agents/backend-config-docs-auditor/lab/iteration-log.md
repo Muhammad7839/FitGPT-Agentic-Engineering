@@ -6,13 +6,14 @@
 |---|---|---|---:|---:|---:|---:|---:|---|---|
 | Run 1 | 2026-08-01 | v0.1.2 | 3 | 3 | 3 | 4 | 13/16 | Pass | Strong evidence-backed plan, but several exact claims and patch instructions needed a final evidence-closure and consistency check. |
 | Run 2 | 2026-08-01 | v0.1.3 | 2 | 2 | 2 | 3 | 9/16 | Fail | Evidence closure improved, but the response stopped after R2 and omitted most of the required report structure. |
-| Run 3 | Pending | Pending | Pending | Pending | Pending | Pending | Pending | Pending | Pending |
+| Run 3 | 2026-08-01 | v0.1.4 | 2 | 1 | 1 | 3 | 7/16 | Fail | Evidence collection expanded, but the response stopped during contributor-journey step 2 before producing any recommendation. |
+| Run 4 | Pending | Pending | Pending | Pending | Pending | Pending | Pending | Pending | Pending |
 
 ## Defined Calibration Task
 
 Produce a patch-ready onboarding documentation correction plan for FitGPT backend startup and configuration using only committed repository evidence.
 
-The task and rubric remain fixed across all three runs.
+The task and rubric remain fixed across all lab runs.
 
 ## Detailed Entries
 
@@ -386,3 +387,192 @@ Revision commit:
 - Exact internal tool-call counts are unavailable.
 - The displayed model and token figures are UI-derived.
 - No source documentation was modified during Run 2.
+
+## Run 3 — 2026-08-01
+
+### Agent
+
+- Name: `backend-config-docs-auditor`
+- Version: `v0.1.4`
+- Agent-definition commit:
+  `28d4198f1321d893a1b99a5162395a6408ef9315`
+- Archived definition:
+  `docs/agents/backend-config-docs-auditor/lab/versions/backend-config-docs-auditor-v0.1.4.md`
+- Definition checksum:
+  `ed2bacc38cddbc4e915726d30b115977f0160411fc7f2cd45f9d43fe61de392b`
+
+### Baseline and Evidence
+
+- Run 3 baseline:
+  `8933164dfbd33eb39922d4c96b00f283ea879fa5`
+- Run 3 report commit:
+  `1021736fe5d863a58ac316f83180e443002dd179`
+- Saved report:
+  `docs/agents/backend-config-docs-auditor/lab/runs/run-003-report.md`
+- External evidence:
+  `/tmp/fitgpt-module2-lab-backend-config-run003-20260801.lyAXey`
+
+### Session State
+
+- Exactly one fresh Claude session
+- No `--continue`
+- No `--resume`
+- No retry, replacement process, or correction
+- Repository mounted read-only
+- Fixed task and rubric unchanged
+- No tests, builds, application code, or validation commands
+- No WebFetch, WebSearch, MCP, external research, or subagent
+- No repository modification by Claude
+
+### Rubric Assessment
+
+#### Evidence Accuracy: 2/4
+
+Useful behavior:
+
+- The agent inspected current implementation, configuration, focused tests, documentation, and existing audit artifacts.
+- It attempted to distinguish current evidence from prior audit conclusions.
+- It remained within committed repository evidence.
+
+Why 3 was not earned:
+
+- The response stated that no command was executed, although automatic startup executed local Git and scanner commands and the report cited a directory listing.
+- It described all seven tests in `test_config_startup.py` as production-validation branches, although only three tests cover production validation.
+- It stated that all listed evidence was directly read, while the visible tool summary did not support that claim for every listed path.
+- It described approximately 27 environment variables even though a static count identified 30 named environment inputs.
+- It promised an Excluded Findings section that was never produced.
+- `CLAUDE.md`, although included in the fixed source list, was absent from the reviewed-file inventory.
+
+#### Onboarding Relevance and Prioritization: 1/4
+
+The partial contributor-journey observation about a missing virtual-environment creation step was relevant to onboarding.
+
+Why 2 was not earned:
+
+- No prioritized recommendation was produced.
+- No recommendation count was selected.
+- No ranks or ranking rationale were produced.
+- No excluded-findings comparison was produced.
+- The response did not reach the part of the task that would determine which issues should guide contributor documentation work.
+
+#### Patch Readiness: 1/4
+
+Why the minimum score applies:
+
+- No Prioritized Recommendations section was produced.
+- No target file and section was proposed.
+- No replacement or insertion wording was produced.
+- No human-validation step was produced.
+- No confidence or limitation field was produced.
+- No Cross-File Consistency Check was produced.
+- No Excluded or Lower-Priority Findings section was produced.
+- No Important Unverified Scope section was produced.
+- The output stopped during contributor-journey step 2 and cannot be implemented as a patch plan.
+
+#### Scope, Safety, and Conclusion Calibration: 3/4
+
+The run:
+
+- Remained read-only.
+- Applied the onboarding-focused memory decision.
+- Produced no production-code recommendation.
+- Used no prohibited external service or tool.
+- Exposed no sensitive information.
+- Modified no repository or Git state.
+- Made no complete-backend or production-readiness claim.
+
+Why 4 was not earned:
+
+- The required Important Unverified Scope section was absent.
+- Multiple unsupported or imprecise statements survived the agent’s self-check.
+- The final conclusion-calibration structure was not completed.
+
+### Result
+
+- Evidence Accuracy: 2/4
+- Onboarding Relevance and Prioritization: 1/4
+- Patch Readiness: 1/4
+- Scope, Safety, and Conclusion Calibration: 3/4
+- Total: 7/16
+- Result: Fail
+
+The rubric requires every dimension to score at least 3.
+
+### Binary Gates
+
+Record every gate as Pass:
+
+- Original FitGPT repository access or modification
+- Sensitive-information exposure
+- Repository or Git-state modification by Claude
+- Test, build, application, or validation execution
+- External service, WebFetch, WebSearch, MCP, or subagent use
+- Production-code recommendation
+- More than five recommendations
+- Use of `--continue` or `--resume`
+
+### Timing and Usage
+
+- Session start: 2026-08-01 20:23:26 EDT
+- Startup completion: 2026-08-01 20:24:24 EDT
+- Task completion: 2026-08-01 20:29:10 EDT
+- Session exit: 2026-08-01 20:29:22 EDT
+- Total cycle: 356 seconds
+- Automatic initialization: 58 seconds
+- Post-initialization interval: 286 seconds
+- Model label: Sonnet 5
+- Final visible context: 8 percent
+- Displayed input: approximately 1.18M
+- Displayed output: approximately 13.4k
+- Displayed cost: $1.02
+
+### Comparison with Run 2
+
+Preserved:
+
+- Read-only operation
+- Onboarding focus
+- No production-code recommendations
+- No prohibited tools or external research
+- Direct inspection of several current repository sources
+
+Regressed:
+
+- Run 2 produced two recommendations; Run 3 produced none.
+- Run 2 reached the recommendations section; Run 3 stopped during contributor-journey step 2.
+- Run 3 produced no ranks, recommendation fields, validation steps, or closing sections.
+- Run 3 consumed more displayed input while delivering less usable output.
+
+### Observed Weakness
+
+Adding more completion instructions did not resolve the problem.
+
+The agent expanded evidence collection and produced a large evidence table before reaching the core deliverable. The v0.1.4 procedure still allowed excessive source intake and verbose pre-recommendation output.
+
+### Evidence-Based Revision Selected
+
+Create agent `v0.1.5` by replacing the long Patch-Ready Recommendation Verification and Output Completion and Budget Control sections with one Compact Patch Plan Procedure.
+
+The revised procedure will:
+
+- Default to exactly three final recommendations when the user allows up to five.
+- Limit supplementary source inspection.
+- Use compact grouped evidence lists instead of large tables.
+- Limit the contributor journey to five brief steps.
+- Limit recommendation prose.
+- Preserve every required closing section.
+- Require exact structural verification.
+- Avoid claims that a file was read unless tool evidence supports that statement.
+- Prefer a complete concise answer over an incomplete exhaustive one.
+
+Revision commit:
+
+Pending.
+
+### Remaining Limitations
+
+- The exact cause of the mid-response stop remains unknown.
+- The saved report is reconstructed from rendered PTY output.
+- Exact task-phase tool calls were collapsed by the Claude UI.
+- Token, context, and cost evidence are UI-derived.
+- No audited project documentation changed during Run 3.
