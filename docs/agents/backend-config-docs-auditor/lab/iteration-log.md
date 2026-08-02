@@ -376,7 +376,8 @@ The procedure will:
 
 Revision commit:
 
-Pending.
+- `28d4198f1321d893a1b99a5162395a6408ef9315`
+- `agent: backend-config-docs-auditor v0.1.4 -- add output completion and budget control, refs lab run 2`
 
 ### Remaining Limitations
 
