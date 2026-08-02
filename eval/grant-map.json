@@ -1,0 +1,22 @@
+{
+  "orchestrator": [
+    "Agent"
+  ],
+  "planner": [
+    "mcp__coursetools__file_read"
+  ],
+  "implementer": [
+    "mcp__coursetools__file_read",
+    "mcp__coursetools__file_write"
+  ],
+  "reviewer": [
+    "mcp__coursetools__file_read"
+  ],
+  "tester": [
+    "mcp__coursetools__file_read",
+    "mcp__coursetools__test_runner"
+  ],
+  "project-manager": [
+    "mcp__coursetools__task_tracker"
+  ]
+}

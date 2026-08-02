@@ -1,0 +1,106 @@
+{
+  "rubric_version": "1.0.0",
+  "source": {
+    "path": "docs/rubric.md",
+    "dimension_commit": "276feaf242ebd975f59cf9d898ebdc0db9d96fb7",
+    "scoring_commit": "fea2c581d9f47f982c813a3212d1cee16dcdd1a4",
+    "usage_evidence": "docs/iteration-log.md"
+  },
+  "overall_pass_threshold": 12,
+  "maximum_score": 16,
+  "require_each_dimension_threshold": true,
+  "dimensions": [
+    {
+      "name": "Test Execution Fidelity",
+      "description": "Judge whether the substantive Tester and final workflow outputs clearly and faithfully explain the exact bounded test evidence that was recorded, including its target and execution limits.",
+      "pass_threshold": 3,
+      "levels": {
+        "1": "Does not identify the bounded test evidence, describes a materially different execution, or makes an unsupported real-test claim.",
+        "2": "Identifies the general test area but omits important execution details or blurs the controlled dummy boundary.",
+        "3": "Accurately identifies the bounded target and result with at most minor presentation omissions.",
+        "4": "Precisely identifies the target, single bounded invocation, result, evidence source, and dummy limitation in an immediately verifiable form."
+      },
+      "examples": [
+        "Low quality: The backend tests passed, with no target, invocation boundary, or limitation.",
+        "High quality: The output names the exact target and one controlled test_runner event, then states that it was not real pytest."
+      ],
+      "evidence_focus": [
+        "Tester substantive output",
+        "selected final workflow output",
+        "controlled-test limitation",
+        "clarity of the execution description"
+      ],
+      "deterministic_boundary": "The deterministic layer already establishes whether the exact tool event and target exist; this dimension judges how faithfully and usefully the outputs communicate that evidence."
+    },
+    {
+      "name": "Outcome Accuracy",
+      "description": "Judge whether the run's substantive outputs classify results consistently with the preserved evidence and distinguish Pass, Blocked, denied, simulated, and real outcomes without contradiction.",
+      "pass_threshold": 3,
+      "levels": {
+        "1": "The stated outcome contradicts the evidence or converts a blocked, denied, or simulated event into real success.",
+        "2": "The outcome is directionally plausible but ambiguous, internally inconsistent, or missing a material distinction.",
+        "3": "The outcome is correct and unambiguous, with only minor explanatory gaps.",
+        "4": "Every material outcome is accurately classified and tied to concrete evidence, including denied attempts and limitations."
+      },
+      "examples": [
+        "Low quality: Treating natural-language Pass text as a tool result.",
+        "High quality: Separating the dummy Tester Pass, current approval, and controlled tracker response from real pytest or external-service success."
+      ],
+      "evidence_focus": [
+        "Reviewer verdict",
+        "Tester verdict",
+        "Project Manager result",
+        "historical failure treatment",
+        "limitations and unsupported-claim avoidance"
+      ],
+      "deterministic_boundary": "The deterministic layer checks exact event facts; this dimension judges the semantic accuracy and consistency of the narrative conclusions."
+    },
+    {
+      "name": "Evidence Coverage",
+      "description": "Judge whether the outputs surface the material evidence needed to review the run, including role outputs, tool evidence, approvals, scope, failures, limitations, and unresolved gaps.",
+      "pass_threshold": 3,
+      "levels": {
+        "1": "Omits most material evidence or invents evidence that is absent.",
+        "2": "Provides the main outcome but omits one or more important evidence categories or leaves key gaps implicit.",
+        "3": "Covers the material evidence categories and explicitly identifies unavailable evidence or skips.",
+        "4": "Organizes complete, source-grounded evidence so a reviewer can verify the result immediately, with every gap and limitation clearly labeled."
+      },
+      "examples": [
+        "Low quality: Reporting only that the workflow passed.",
+        "High quality: Reporting role outputs, approvals, exact controlled events, changed paths, protected state, preserved failures, and unmeasured budgets."
+      ],
+      "evidence_focus": [
+        "substantive role outputs",
+        "tool evidence summaries",
+        "human approvals",
+        "scope and protected-path evidence",
+        "skipped or unavailable measurements",
+        "limitations"
+      ],
+      "deterministic_boundary": "The deterministic layer validates required fields and sequences; this dimension judges completeness, organization, and review usefulness."
+    },
+    {
+      "name": "Readiness Recommendation Quality",
+      "description": "Judge whether the run's recommendation follows from the bounded evidence, names the next safe action, and separates workflow readiness from unmeasured backend, deployment, security, and holdout behavior.",
+      "pass_threshold": 3,
+      "levels": {
+        "1": "The recommendation is missing, contradicts the evidence, or claims broad readiness unsupported by the run.",
+        "2": "The recommendation is directionally reasonable but vague, weakly justified, or poorly scoped.",
+        "3": "The recommendation follows from the evidence and includes a clear scope limitation.",
+        "4": "The recommendation is concise, actionable, explicitly evidence-based, and clearly separates measured readiness from every material unmeasured risk."
+      },
+      "examples": [
+        "Low quality: Everything is production ready.",
+        "High quality: The recorded workflow is suitable as a development baseline, while real pytest, deployment health, security completeness, and holdout generalization remain unverified."
+      ],
+      "evidence_focus": [
+        "recommended next step",
+        "rationale",
+        "scope limitation",
+        "unmeasured risks",
+        "calibration-lab readiness"
+      ],
+      "deterministic_boundary": "The deterministic layer cannot judge whether a recommendation is calibrated, useful, and proportionate to the evidence."
+    }
+  ]
+}

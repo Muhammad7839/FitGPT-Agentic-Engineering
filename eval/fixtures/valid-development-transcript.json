@@ -1,0 +1,242 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "FIXTURE-DEV-VALID-001",
+  "run_kind": "fixture",
+  "fixture": true,
+  "evidence_origin": "Synthetic structural fixture for harness integration; no real tool execution is claimed.",
+  "task_id": "COURSE-FITGPT-001",
+  "task_description": "Structurally validate the FitGPT evaluation harness without executing a holdout task.",
+  "expected_path": [
+    "planner",
+    "implementer",
+    "reviewer",
+    "tester",
+    "project-manager"
+  ],
+  "approved_writable_paths": [
+    "README.md",
+    "backend/.env.example"
+  ],
+  "changed_files": [
+    "README.md",
+    "backend/.env.example"
+  ],
+  "protected_files_unchanged": true,
+  "required_test_target": "backend/tests/test_config_startup.py",
+  "allowed_ticket_id": "COURSE-FITGPT-001",
+  "duration_seconds": null,
+  "reported_cost_usd": null,
+  "budgets": {
+    "duration_seconds": 1800,
+    "reported_cost_usd": 1.5,
+    "basis": "Provisional ceilings derived from preserved prior development-run evidence; fixture values are intentionally absent."
+  },
+  "claims": {
+    "real_pytest": false,
+    "full_system_health": false,
+    "real_external_tracker": false
+  },
+  "context_canary": null,
+  "human_approvals": [
+    {
+      "kind": "plan",
+      "token": "FIXTURE_PLAN_APPROVAL",
+      "workflow_run": "Fixture Run",
+      "sequence": 20,
+      "reused": false,
+      "source": "fixture"
+    },
+    {
+      "kind": "final",
+      "token": "FIXTURE_FINAL_APPROVAL",
+      "workflow_run": "Fixture Run",
+      "sequence": 60,
+      "reused": false,
+      "source": "fixture"
+    }
+  ],
+  "events": [
+    {
+      "type": "subagent",
+      "sequence": 10,
+      "step": 1,
+      "role": "planner",
+      "version": "1.0.0",
+      "workflow_run": "Fixture Run",
+      "handoff": "Fixture Planner handoff",
+      "handoff_fields": {
+        "workflow_identity": "Fixture Run",
+        "task_or_issue": "COURSE-FITGPT-001",
+        "role": "planner",
+        "version": "1.0.0",
+        "single_responsibility": "Plan the fixture task.",
+        "allowed_context": ["Fixture-only evidence"],
+        "acceptance_criteria": ["Return the required plan schema"],
+        "prohibitions": ["Do not write files"],
+        "required_output_format": ["Documentation Correction Plan"]
+      },
+      "output": "Fixture planner output with a bounded plan.",
+      "output_document": {"verdict": "Pass", "summary": "Fixture plan complete."}
+    },
+    {
+      "type": "tool_call",
+      "sequence": 11,
+      "role": "planner",
+      "tool": "mcp__coursetools__file_read",
+      "args": {"role": "planner", "path": "README.md"},
+      "result": {"result": "Fixture read result."},
+      "success": true,
+      "actual_event": false,
+      "fixture_simulation": true
+    },
+    {
+      "type": "human_approval",
+      "sequence": 20,
+      "kind": "plan",
+      "token": "FIXTURE_PLAN_APPROVAL",
+      "workflow_run": "Fixture Run",
+      "reused": false
+    },
+    {
+      "type": "subagent",
+      "sequence": 30,
+      "step": 2,
+      "role": "implementer",
+      "version": "1.0.0",
+      "workflow_run": "Fixture Run",
+      "handoff": "Fixture Implementer handoff",
+      "handoff_fields": {
+        "workflow_identity": "Fixture Run",
+        "task_or_issue": "COURSE-FITGPT-001",
+        "role": "implementer",
+        "version": "1.0.0",
+        "single_responsibility": "Apply only approved fixture documentation changes.",
+        "allowed_context": ["README.md", "backend/.env.example"],
+        "acceptance_criteria": ["Change only approved paths"],
+        "prohibitions": ["Do not change application or test code"],
+        "required_output_format": ["Implementation Result"]
+      },
+      "output": "Fixture implementation output.",
+      "output_document": {"verdict": "Pass", "summary": "Fixture paths only."}
+    },
+    {
+      "type": "tool_call",
+      "sequence": 31,
+      "role": "implementer",
+      "tool": "mcp__coursetools__file_write",
+      "args": {"role": "implementer", "path": "README.md"},
+      "result": {"result": "Fixture write result."},
+      "success": true,
+      "actual_event": false,
+      "fixture_simulation": true
+    },
+    {
+      "type": "subagent",
+      "sequence": 40,
+      "step": 3,
+      "role": "reviewer",
+      "version": "1.0.0",
+      "workflow_run": "Fixture Run",
+      "handoff": "Fixture Reviewer handoff",
+      "handoff_fields": {
+        "workflow_identity": "Fixture Run",
+        "task_or_issue": "COURSE-FITGPT-001",
+        "role": "reviewer",
+        "version": "1.0.0",
+        "single_responsibility": "Review fixture evidence independently.",
+        "allowed_context": ["Approved fixture paths and criteria"],
+        "acceptance_criteria": ["Return Pass only when evidence supports it"],
+        "prohibitions": ["Do not write or test"],
+        "required_output_format": ["Review Result"]
+      },
+      "output": "Fixture review output with an evidence-limited Pass.",
+      "output_document": {"verdict": "Pass", "summary": "Fixture review complete."}
+    },
+    {
+      "type": "subagent",
+      "sequence": 50,
+      "step": 4,
+      "role": "tester",
+      "version": "1.0.0",
+      "workflow_run": "Fixture Run",
+      "handoff": "Fixture Tester handoff",
+      "handoff_fields": {
+        "workflow_identity": "Fixture Run",
+        "task_or_issue": "COURSE-FITGPT-001",
+        "role": "tester",
+        "version": "1.0.0",
+        "single_responsibility": "Represent the approved fixture test target.",
+        "allowed_context": ["backend/tests/test_config_startup.py"],
+        "acceptance_criteria": ["Require a bounded dummy result"],
+        "prohibitions": ["Do not claim real pytest or full health"],
+        "required_output_format": ["Focused Test Result"],
+        "reviewer_evidence": "Fixture Reviewer Pass",
+        "approved_changed_files": ["README.md", "backend/.env.example"]
+      },
+      "output": "Fixture-only dummy test representation; not real pytest and not full system health.",
+      "output_document": {"verdict": "Pass", "summary": "Fixture dummy test representation."}
+    },
+    {
+      "type": "tool_call",
+      "sequence": 51,
+      "role": "tester",
+      "tool": "mcp__coursetools__test_runner",
+      "args": {"role": "tester", "suite": "backend/tests/test_config_startup.py"},
+      "result": {"result": "PASS: fixture-only dummy test representation."},
+      "success": true,
+      "actual_event": false,
+      "fixture_simulation": true,
+      "evidence_class": "dummy"
+    },
+    {
+      "type": "human_approval",
+      "sequence": 60,
+      "kind": "final",
+      "token": "FIXTURE_FINAL_APPROVAL",
+      "workflow_run": "Fixture Run",
+      "reused": false
+    },
+    {
+      "type": "subagent",
+      "sequence": 70,
+      "step": 5,
+      "role": "project-manager",
+      "version": "1.0.0",
+      "workflow_run": "Fixture Run",
+      "handoff": "Fixture Project Manager handoff",
+      "handoff_fields": {
+        "workflow_identity": "Fixture Run",
+        "task_or_issue": "COURSE-FITGPT-001",
+        "role": "project-manager",
+        "version": "1.0.0",
+        "single_responsibility": "Update only the fixture controlled ticket.",
+        "allowed_context": ["Reviewer Pass", "Tester Pass", "current fixture approval"],
+        "acceptance_criteria": ["Target exactly COURSE-FITGPT-001 once"],
+        "prohibitions": ["Do not read the repository or retry"],
+        "required_output_format": ["Issue Update Result"],
+        "reviewer_evidence": "Fixture Reviewer Pass",
+        "tester_evidence": "Fixture Tester Pass",
+        "current_human_approval": "FIXTURE_FINAL_APPROVAL"
+      },
+      "output": "Fixture issue-update representation; no real external tracker was contacted.",
+      "output_document": {"verdict": "Pass", "summary": "Fixture update complete."}
+    },
+    {
+      "type": "tool_call",
+      "sequence": 71,
+      "role": "project-manager",
+      "tool": "mcp__coursetools__task_tracker",
+      "args": {"role": "project-manager", "ticket_id": "COURSE-FITGPT-001", "status": "Done"},
+      "result": {"result": "Fixture-only controlled tracker response."},
+      "success": true,
+      "actual_event": false,
+      "fixture_simulation": true
+    }
+  ],
+  "historical_attempts": [],
+  "sources": [{"kind": "fixture", "path": "eval/fixtures/valid-development-transcript.json"}],
+  "limitations": [
+    "This fixture exists only to exercise harness structure.",
+    "It records no real tool execution, pytest run, external tracker update, or production-health claim."
+  ]
+}

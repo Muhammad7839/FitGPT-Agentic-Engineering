@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fitgpt.local/eval/transcript_schema.json",
+  "title": "FitGPT normalized orchestration transcript",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "run_kind",
+    "fixture",
+    "task_id",
+    "task_description",
+    "expected_path",
+    "approved_writable_paths",
+    "changed_files",
+    "protected_files_unchanged",
+    "required_test_target",
+    "allowed_ticket_id",
+    "human_approvals",
+    "events",
+    "sources",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "const": "1.0.0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "run_kind": {"enum": ["development", "fixture"]},
+    "fixture": {"type": "boolean"},
+    "task_id": {"type": "string", "minLength": 1},
+    "task_description": {"type": "string", "minLength": 1},
+    "expected_path": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": ["planner", "implementer", "reviewer", "tester", "project-manager"]
+      }
+    },
+    "approved_writable_paths": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "changed_files": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "protected_files_unchanged": {"type": "boolean"},
+    "required_test_target": {"type": "string", "minLength": 1},
+    "allowed_ticket_id": {"type": "string", "minLength": 1},
+    "duration_seconds": {"type": ["number", "null"], "minimum": 0},
+    "reported_cost_usd": {"type": ["number", "null"], "minimum": 0},
+    "human_approvals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "token", "workflow_run", "sequence", "reused", "source"],
+        "properties": {
+          "kind": {"enum": ["plan", "final"]},
+          "token": {"type": "string", "minLength": 1},
+          "workflow_run": {"type": "string", "minLength": 1},
+          "sequence": {"type": "integer"},
+          "reused": {"type": "boolean"},
+          "source": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "sequence"],
+        "properties": {
+          "type": {"enum": ["subagent", "human_approval", "tool_call"]},
+          "sequence": {"type": "integer"},
+          "role": {"type": "string"},
+          "workflow_run": {"type": "string"},
+          "actual_event": {"type": "boolean"},
+          "fixture_simulation": {"type": "boolean"}
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "path"],
+        "properties": {
+          "kind": {"type": "string"},
+          "path": {"type": "string"},
+          "sha256": {"type": "string"}
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  },
+  "additionalProperties": true
+}
