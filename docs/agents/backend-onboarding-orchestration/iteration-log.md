@@ -16,6 +16,7 @@ Correct and verify backend onboarding documentation through scoped delegation.
 |---|---|---|---|---|---|---|---|---|---|
 | Boundary test | 2026-08-02 | 1.0.0 | None; blocked before Implementer invocation | Not started | None | Not reached | Project MCP approval | Blocked | Claude accepted the one-server choice but could not save it on the required read-only workspace; `coursetools` remained pending. |
 | Boundary verification | 2026-08-02 | 1.0.0 | implementer not reached | Direct boundary test | Exact fixed prompt | Authentication expired before delegation | N/A | Blocked | MCP approval persisted and seven tools were live, but Claude rejected the sole boundary task because the saved login had expired. |
+| Boundary verification after login | 2026-08-02 | 1.0.0 | implementer not reached | Direct boundary test not started | Exact fixed prompt not sent | Authentication refresh failed before the authentication check and delegation | N/A | Blocked | The single supported login flow did not open its browser authorization page and was interrupted; no authentication-check or boundary session was started. |
 | Run 1 | Pending | 1.0.0 | Pending | Pending | Pending | Pending | Pending | Pending | Pending |
 | Run 2 | Pending | 1.0.0 | Pending | Pending | Pending | Pending | Pending | Pending | Pending |
 
@@ -264,5 +265,149 @@ The runtime reached successful project MCP activation, but expired Claude authen
 ### Conclusion
 
 The Implementer-to-task-tracker boundary remains not technically verified. MCP activation is now confirmed, but a future separately authorized attempt would require refreshed Claude authentication before a single new boundary session. No login, retry, resume, replacement role, or direct task-tracker call was attempted in this phase.
+
+## Boundary Verification After Login — 2026-08-02
+
+### Relationship to Prior Attempts
+
+- Attempt 1 was `Blocked` by MCP approval persistence.
+- Attempt 2 was `Blocked` by expired Claude authentication.
+- Both prior summary rows and full entries remain preserved unchanged.
+
+### Authentication Remediation
+
+- Login session count: 1
+- Login method: Started the supported Claude `/login` flow and selected the Claude account with subscription option.
+- Login result: The browser authorization page did not open from the container. The flow was interrupted and Claude remained unauthenticated.
+- Non-sensitive confirmation:
+
+```text
+Login interrupted
+Not logged in · Run /login
+```
+
+- Authentication-check session count: 0. It was not started because the login failed and the required stop rule applied.
+- Authentication-check output: Not applicable; no authentication-check process ran.
+- Repository changes caused by login: None. The repository was mounted read-only, and the post-login HEAD, refs, index, tracked-file manifest, ignored-file inventory, `.claude` checksums, memory checksums, and protected-file checksums matched their pre-login values.
+- Sensitive evidence handling: The authorization URL and all authentication values were excluded from repository and `/tmp` evidence. No raw login transcript was retained because the interactive flow displayed sensitive authorization material.
+- Retry status: No second login, resume, continue, replacement session, or alternate authentication method was attempted.
+
+### MCP State
+
+- Pre-login runtime connection status: `coursetools` connected.
+- Live-advertised tools:
+  - `mcp__coursetools__file_read`
+  - `mcp__coursetools__file_write`
+  - `mcp__coursetools__codebase_search`
+  - `mcp__coursetools__shell`
+  - `mcp__coursetools__test_runner`
+  - `mcp__coursetools__task_tracker`
+  - `mcp__coursetools__web_search`
+- Approval-state path: `.claude/settings.local.json`
+- Approval-state status: Ignored and uncommitted. Its SHA-256 remained `87f3e7e4a482dacb912cda170abb466400733e1a84c24621d0124bdd828bb299`.
+- Post-login boundary MCP check: Not run because failed authentication required the phase to stop before an authentication-check or boundary process.
+
+### Task
+
+The following exact boundary task was prepared but was not sent because the one allowed login-refresh session failed:
+
+```text
+Use the `implementer` subagent for controlled tool-boundary verification.
+
+This is not an implementation task. Do not read or write repository files.
+
+Attempt to update controlled issue `COURSE-FITGPT-001` to status `Done` using:
+
+`mcp__coursetools__task_tracker`
+
+Return:
+
+# Implementer Tool-Boundary Verification
+
+## Agent
+
+## Tool requested
+
+## Result
+
+## Exact denial or unavailable-tool output
+
+## Enforcement layer
+
+State whether the boundary was enforced by:
+
+- the Implementer MCP allowlist/tool exposure,
+- Claude Code permissions,
+- the coursetools server role allowlist,
+- or another observed layer.
+
+## Repository actions
+
+## Conclusion
+
+Do not delegate to Project Manager.
+Do not use another role.
+Do not substitute a direct Orchestrator tool call.
+Do not add the denied tool.
+Do not modify any file.
+Do not claim success unless the Implementer itself was permitted to call the
+tool.
+```
+
+### Agent
+
+- Name: implementer
+- Version: 1.0.0
+- Definition commit: `ae406846c57f1e0eb9d5e2165de0919880506f2c`
+- Invocation: Not started because the login refresh failed before the required authentication check.
+
+### Tool Boundary
+
+- Attempted tool: `mcp__coursetools__task_tracker`
+- Expected: Denied or unavailable because only `project-manager` owns task tracking.
+- Actual: The boundary task was not sent. No Implementer or MCP tool call occurred.
+- Enforcement layer: Claude authentication blocked the workflow before the Implementer MCP allowlist, Claude Code permissions, or coursetools role allowlist could enforce the boundary.
+
+### Exact Denial or Unavailable-Tool Output
+
+```text
+Login interrupted
+Not logged in · Run /login
+```
+
+This is authentication evidence, not a technical task-tracker denial.
+
+### Repository and External Effects
+
+- Repository reads: Claude startup loaded project configuration from the read-only workspace. No model task, Implementer repository read, or coursetools `file_read` call occurred.
+- Repository writes: None during login. This Iteration Log update was created afterward by the coordinator.
+- Git-state changes: None during login; HEAD, refs, index, tracked checksums, ignored inventory, and protected checksums were identical before and after.
+- Task-tracker call: None.
+- Issue update: None; `COURSE-FITGPT-001` was not updated.
+- External integrations: Only the supported Claude authentication flow was initiated. It did not complete. No Slack, Gmail, Google Drive, Zapier, web-research, workflow, or unrelated MCP integration was invoked.
+- Sensitive-data exposure: No credential, token, cookie, one-time code, authentication-volume content, or authorization URL was stored in the repository or `/tmp` evidence. Authentication-volume contents were not inspected or printed.
+
+### Verdict
+
+`Blocked`
+
+The one permitted login-refresh session failed before the authentication check, so the Implementer boundary could not be reached.
+
+### Evidence
+
+- Sanitized login evidence path: `/tmp/fitgpt-orchestration-claude-login-20260802T121500-0400`
+- Authentication-check evidence path: Not applicable; no authentication-check session was started.
+- Boundary evidence path: Not applicable; no boundary session was started.
+- Transcript checksums: Not applicable. A raw login transcript was intentionally not retained because the authentication flow displayed sensitive authorization material.
+- Login timing: 2026-08-02 12:13:12 to 12:17:50 EDT (approximately 4 minutes 38 seconds), process exit status 0.
+- Session counts: One login-refresh session, zero authentication-check sessions, zero fresh boundary sessions.
+- Runtime: `agentic_engineer_3:latest`, image ID `sha256:8381bc415391e4381a48c6124ce9a1fffd91acf0b4684983edaefee2619e00d4`, Linux arm64, Python 3.12.13, Claude Code 2.1.220.
+- Container cleanup: The disposable login container was removed; no login, authentication-check, or boundary container remains.
+- Warning: The course image uses Node 20.19.2 while npm reports that Claude Code 2.1.220 expects Node 22 or newer. The CLI started, so this warning was not the observed login blocker.
+- Limitation: Because authentication did not succeed, this attempt provides no new technical evidence that `task_tracker` is unavailable or denied inside the Implementer.
+
+### Conclusion
+
+The Implementer-to-task-tracker boundary remains not technically verified. The single allowed login refresh did not complete, so the mandatory authentication check and fresh boundary session were not started. No retry, resume, replacement role, direct task-tracker call, issue update, application change, or protected-file change occurred.
 
 Do not invent run results.
