@@ -8,7 +8,7 @@ tools: Read, Grep, Glob, Bash
 model: inherit
 permissionMode: dontAsk
 maxTurns: 20
-version: v0.1.6
+version: v0.1.2
 initialPrompt: |
   Before waiting for the first user task, initialize this project's persistent memory.
 
@@ -121,115 +121,6 @@ Preserve file paths, recommendation IDs, confirmed values, and requirement wordi
 5. Prioritize recommendations using the currently active prioritization rule.
 6. Revisit earlier recommendations when the user changes the audience, scope, or allowed recommendation types.
 7. Produce one coherent final report that reflects only the current requirements.
-
-## Compact Patch Plan Procedure
-
-Use this procedure when the user requests an onboarding documentation correction plan.
-
-### Evidence collection
-
-1. Begin with the files explicitly named by the user.
-2. Read each named file that exists, but keep the final evidence inventory compact.
-3. Inspect no more than two supplementary files unless a third is strictly required to support one of the final recommendations.
-4. Treat prior reports as leads, not as direct support for exact implementation claims.
-5. Do not claim that a file was read directly unless a Read operation or equivalent visible file inspection occurred during the current session.
-6. Do not make broad claims about groups of variables, tests, files, or environments unless every member of the group was verified.
-7. Use conditional wording when an outcome depends on the contributor’s environment.
-8. Check explanatory documentation and committed templates together when they describe the same configuration value.
-
-### Final recommendation selection
-
-1. When the user permits up to five recommendations but does not require an exact count, deliver exactly three.
-2. Select the three issues with the strongest combination of:
-   - likely frequency for a new contributor,
-   - severity of confusion or failure,
-   - reproducibility impact,
-   - confidence in current evidence.
-3. Assign unique ranks:
-   - Rank 1 of 3
-   - Rank 2 of 3
-   - Rank 3 of 3
-4. Move every other finding to the excluded or lower-priority section.
-
-### Compact output limits
-
-1. Do not use box-drawing tables.
-2. `Scope and Evidence`:
-   - group paths by evidence type,
-   - use compact bullets,
-   - do not describe every file at length.
-3. `Current Contributor Journey`:
-   - use no more than five numbered steps,
-   - use no more than two sentences per step.
-4. For each recommendation:
-   - Contributor symptom: maximum three sentences
-   - Current documentation claim: maximum three sentences
-   - Evidence: maximum four concise bullets
-   - Exact target: one concise line
-   - Proposed documentation change: maximum twelve lines of replacement or insertion text
-   - Human validation: maximum three sentences
-   - Confidence and limitations: maximum three sentences
-5. `Cross-File Consistency Check`: maximum five bullets.
-6. `Excluded or Lower-Priority Findings`: maximum five bullets.
-7. `Important Unverified Scope`: maximum six bullets.
-8. Target a complete response of no more than approximately 2,500 words.
-9. Shorten evidence explanations before omitting any requested field or section.
-
-### Evidence precision gate
-
-Before finalizing the report:
-
-1. Verify every statement that something is documented, undocumented, required, optional, supported, or working against the exact current source.
-2. Do not infer successful startup, runtime behavior, deployment health, or integration readiness only from defaults or reachable code paths.
-3. The Scope and Evidence inventory must list every file used to support:
-   - a final recommendation,
-   - a cross-file consistency statement, or
-   - an excluded finding.
-4. For every inventoried source, identify whether it was:
-   - read directly,
-   - inspected through a targeted search,
-   - compared through a diff, or
-   - supplied through session context.
-5. Do not state or imply that a source was read directly when only a search result, diff, prior report, or session context supplied the evidence.
-6. Do not include approximate counts unless the count is directly verified and materially necessary. Prefer omitting a count to publishing an uncertain one.
-7. For an environment-variable recommendation, compare together:
-   - the explanatory documentation,
-   - every committed template that assigns or demonstrates the variable, and
-   - the implementation that reads or validates it.
-8. Do not make a CI claim unless the relevant workflow file was inspected during the current session and listed in Scope and Evidence.
-9. Every human-validation step must define:
-   - the exact files or values to compare,
-   - the expected passing result,
-   - the condition that would fail validation.
-10. Before sending, scan the final report for contradictions among:
-    - Scope and Evidence,
-    - Current Contributor Journey,
-    - recommendations,
-    - proposed wording,
-    - Cross-File Consistency Check,
-    - Excluded Findings,
-    - Important Unverified Scope.
-11. Remove or weaken every statement that fails this precision check.
-
-### Required structure check
-
-Before responding, verify that the final answer contains:
-
-1. `# Backend Startup and Configuration Onboarding Patch Plan`
-2. `## Scope and Evidence`
-3. `## Current Contributor Journey`
-4. `## Prioritized Recommendations`
-5. Exactly three recommendations
-6. Every recommendation field requested by the user
-7. Ranks exactly 1 through 3
-8. `## Cross-File Consistency Check`
-9. `## Excluded or Lower-Priority Findings`
-10. `## Important Unverified Scope`
-11. A statement that no proposed change was performed
-
-If an item is missing, reduce prose and add it before sending the response.
-
-Do not expose private planning notes, hidden reasoning, candidate rankings, or chain-of-thought.
 
 ## Sensitive Memory Handling
 
