@@ -404,3 +404,150 @@ Do not duplicate information merely because it might be useful.
 Never modify file permissions in `.memory/knowledge/` or `.memory/reference/`.
 
 If either directory is not read-only in the current runtime, report the missing protection and do not write to it.
+
+## Backend Onboarding Documentation Orchestrator
+
+### Workflow goal
+
+Resolve controlled issue `COURSE-FITGPT-001` through independently planned, implemented, reviewed, tested, and human-approved documentation work.
+
+Orchestrator version: `1.0.0`.
+
+### Acceptance criteria
+
+- Only approved documentation/template paths change.
+- No application code or test file changes.
+- Documentation accurately distinguishes the local SQLite fallback from production validation.
+- Reviewer returns `Pass` with no unresolved high-severity issue.
+- Tester returns `Pass` for `backend/tests/test_config_startup.py` through the bounded course test tool.
+- Project Manager runs only after explicit final human approval.
+- Every subagent stays within its exact tool grant.
+
+### Standard sequence
+
+1. Planner
+2. Human plan approval
+3. Implementer
+4. Reviewer
+5. Tester
+6. Human final approval
+7. Project Manager
+
+The Orchestrator coordinates this sequence. It does not perform a subagent's responsibility itself.
+
+### Evaluation gates
+
+#### Planner gate
+
+Required output sections:
+
+- `# Documentation Correction Plan`
+- `## Issue understanding`
+- `## Numbered plan`
+- `## Files to modify`
+- `## Evidence to verify`
+- `## Acceptance criteria`
+- `## Open questions`
+
+Pass only when the plan is documentation-only, names exact files, defines evidence and acceptance criteria, and exposes every open question.
+
+#### Implementer gate
+
+Required output sections:
+
+- `# Implementation Result`
+- `## Files changed`
+- `## Approved changes applied`
+- `## Changes not performed`
+- `## Boundary compliance`
+- `## Blockers`
+
+Pass only when every change is approved and the changed paths are a subset of `README.md` and `backend/.env.example`.
+
+#### Reviewer gate
+
+Required output sections:
+
+- `# Review Result`
+- `## Verdict`
+- `## Evidence checked`
+- `## Findings`
+- `## Scope and boundary check`
+- `## Open questions`
+
+Pass only on verdict `Pass`, no unresolved high-severity finding, accurate evidence, and no scope violation.
+
+#### Tester gate
+
+Required output sections:
+
+- `# Focused Test Result`
+- `## Test target`
+- `## Result`
+- `## Tool response`
+- `## Failures`
+- `## Scope limitations`
+- `## Boundary compliance`
+
+Pass only on result `Pass` for exactly `backend/tests/test_config_startup.py`. The dummy course-tool result does not prove full pytest, backend, deployment, or integration health.
+
+#### Project Manager gate
+
+Required output sections:
+
+- `# Issue Update Result`
+- `## Issue`
+- `## Approval evidence received`
+- `## New status`
+- `## Update confirmation`
+- `## Failure or escalation`
+
+Invoke only for `COURSE-FITGPT-001` after Reviewer `Pass`, Tester `Pass`, and explicit current-run final human approval. Pass only when the controlled dummy update is confirmed.
+
+### Branching logic
+
+- Planner incomplete: return missing-field feedback once. A second incomplete result halts and escalates.
+- Human rejects the plan: halt without writing.
+- Reviewer returns `Revise`: return exact findings to Implementer once, then rerun Reviewer.
+- Reviewer still returns `Revise` after the retry: halt and escalate.
+- Tester returns `Fail` or `Blocked`: halt and escalate. Do not allow Implementer to change application code or tests.
+- Human denies or omits final approval: stop before Project Manager and `task_tracker`.
+- Project Manager update failure: return the failure to the Orchestrator and escalate; do not retry automatically.
+
+### Human checkpoints
+
+1. After a complete Planner result and before any `mcp__coursetools__file_write` call.
+2. After Reviewer and Tester both pass and before any `mcp__coursetools__task_tracker` call.
+
+### Context rules
+
+- Use `docs/orchestration/handoff-orchestrator-to-subagent.md` and `docs/orchestration/handoff-subagent-to-orchestrator.md`.
+- Pass only role-specific context and explicitly allowed paths.
+- Do not pass full transcripts.
+- Do not let a subagent infer an approval.
+- Approval must be an explicit human message in the current workflow run.
+- Do not reuse an approval from an earlier run.
+- Keep the issue identifier, run identifier, role version, retry count, and evidence paths in every handoff.
+- Open questions return to the Orchestrator; they are never guessed.
+
+### Tool-boundary rules
+
+- Use only identifiers advertised by the installed `coursetools` server.
+- Orchestrator may use built-in `Agent` for delegation and `mcp__coursetools__file_read` or `mcp__coursetools__file_write` only for handoff documents and final summaries.
+- Orchestrator must never write source files itself.
+- Orchestrator must never run tests itself or invoke `mcp__coursetools__test_runner`.
+- Orchestrator must never invoke `mcp__coursetools__task_tracker`.
+- Implementer must never invoke `mcp__coursetools__task_tracker`.
+- Project Manager must never read or write repository files.
+- No workflow role may use `mcp__coursetools__web_search` or `mcp__coursetools__shell`.
+- `mcp__coursetools__codebase_search` exists but is not granted because this workflow passes exact evidence paths.
+- A denied-tool attempt is evidence to record, not a reason to grant the tool.
+- Do not claim that a boundary is enforced until a later authorized denial test proves it.
+
+### Run-record requirements
+
+Record every authorized run in:
+
+`docs/agents/backend-onboarding-orchestration/iteration-log.md`
+
+Each record must include the exact task, role versions, handoffs, outputs, tool calls, denied attempts, routing, gates, human checkpoints, repository changes, evidence path, commit SHA, and verdict. Do not invent results for a run or boundary test that has not occurred.
