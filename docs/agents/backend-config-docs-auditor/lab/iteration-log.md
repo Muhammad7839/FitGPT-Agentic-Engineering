@@ -755,7 +755,8 @@ The gate will require:
 
 Revision commit:
 
-Pending.
+- `5e6c06651a5b73ba9e7cebbbaa4727ea84af24ed`
+- `agent: backend-config-docs-auditor v0.1.6 -- add evidence precision and source-closure gate, refs lab run 4`
 
 ### Remaining Limitations
 
