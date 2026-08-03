@@ -1,0 +1,50 @@
+{
+  "orchestrator": {
+    "write_entry": true,
+    "read_entry": true,
+    "list_entries": true,
+    "update_entry": true,
+    "delete_entry": false,
+    "audit_read": true
+  },
+  "planner": {
+    "write_entry": false,
+    "read_entry": true,
+    "list_entries": true,
+    "update_entry": false,
+    "delete_entry": false,
+    "audit_read": false
+  },
+  "implementer": {
+    "write_entry": true,
+    "read_entry": true,
+    "list_entries": true,
+    "update_entry": true,
+    "delete_entry": false,
+    "audit_read": false
+  },
+  "reviewer": {
+    "write_entry": false,
+    "read_entry": true,
+    "list_entries": true,
+    "update_entry": false,
+    "delete_entry": false,
+    "audit_read": false
+  },
+  "tester": {
+    "write_entry": false,
+    "read_entry": true,
+    "list_entries": true,
+    "update_entry": false,
+    "delete_entry": false,
+    "audit_read": false
+  },
+  "project-manager": {
+    "write_entry": false,
+    "read_entry": true,
+    "list_entries": true,
+    "update_entry": false,
+    "delete_entry": false,
+    "audit_read": false
+  }
+}

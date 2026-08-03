@@ -1,0 +1,26 @@
+{
+  "orchestrator": {
+    "retrieve": true,
+    "ceiling": "confidential"
+  },
+  "planner": {
+    "retrieve": true,
+    "ceiling": "internal"
+  },
+  "implementer": {
+    "retrieve": true,
+    "ceiling": "internal"
+  },
+  "reviewer": {
+    "retrieve": true,
+    "ceiling": "internal"
+  },
+  "tester": {
+    "retrieve": true,
+    "ceiling": "internal"
+  },
+  "project-manager": {
+    "retrieve": false,
+    "ceiling": "none"
+  }
+}
