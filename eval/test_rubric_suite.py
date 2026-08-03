@@ -345,13 +345,24 @@ def parse_judge_reply(reply, dimension):
     return value
 
 
+def parse_claude_envelope(stdout):
+    try:
+        envelope = json.loads(stdout)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"Claude envelope is not JSON: {exc}") from exc
+    if not isinstance(envelope, dict):
+        raise RuntimeError("Claude envelope must be one JSON object")
+    if envelope.get("is_error"):
+        raise RuntimeError(f"Claude judge returned an error: {envelope.get('result')}")
+    if "result" not in envelope:
+        raise RuntimeError("Claude envelope is missing result")
+    return envelope
+
+
 def extract_judge_reply(envelope):
-    structured = envelope.get("structured_output")
-    if isinstance(structured, dict):
-        return json.dumps(structured)
     reply = envelope.get("result")
     if not isinstance(reply, str):
-        raise RuntimeError("Claude envelope has no structured output or string result")
+        raise RuntimeError("Claude envelope result must be a string")
     return reply
 
 
@@ -371,8 +382,6 @@ def call_judge(prompt, dimension_name, evidence_dir=None):
             "--print",
             "--output-format",
             "json",
-            "--json-schema",
-            json.dumps(schema, separators=(",", ":")),
             "--permission-mode",
             "dontAsk",
             "--tools",
@@ -413,8 +422,6 @@ def call_judge(prompt, dimension_name, evidence_dir=None):
                         "--print",
                         "--output-format",
                         "json",
-                        "--json-schema",
-                        "<dimension-schema>",
                         "--permission-mode",
                         "dontAsk",
                         "--tools",
@@ -455,15 +462,14 @@ def call_judge(prompt, dimension_name, evidence_dir=None):
                 f"judge invocation for {dimension_name} failed: "
                 f"{completed.stderr.strip() or completed.stdout.strip()}"
             )
-        try:
-            envelope = json.loads(completed.stdout)
-        except json.JSONDecodeError as exc:
-            raise RuntimeError(f"Claude envelope is not JSON: {exc}") from exc
-        if envelope.get("is_error"):
-            raise RuntimeError(f"Claude judge returned an error: {envelope.get('result')}")
+        envelope = parse_claude_envelope(completed.stdout)
+        reply = extract_judge_reply(envelope)
         if dimension_dir is not None:
             write_json(dimension_dir / "response-envelope.json", envelope)
-        return extract_judge_reply(envelope)
+            (dimension_dir / "raw-inner-result.txt").write_text(
+                reply, encoding="utf-8"
+            )
+        return reply
 
 
 def deterministic_gate(transcript):
@@ -500,10 +506,24 @@ def evaluate(transcript_path):
     for dimension in rubric["dimensions"]:
         prompt = build_judge_prompt(transcript, dimension, deterministic_results)
         reply = call_judge(prompt, dimension["name"], evidence_dir)
-        parsed = parse_judge_reply(reply, dimension)
-        dimension_results.append(parsed)
         if evidence_dir is not None:
             dimension_dir = evidence_dir / dimension["name"].lower().replace(" ", "-")
+        try:
+            parsed = parse_judge_reply(reply, dimension)
+        except Exception as exc:
+            if evidence_dir is not None:
+                write_json(
+                    dimension_dir / "validation-result.json",
+                    {
+                        "valid": False,
+                        "parser": "parse_judge_reply",
+                        "error_type": type(exc).__name__,
+                        "error": str(exc),
+                    },
+                )
+            raise
+        dimension_results.append(parsed)
+        if evidence_dir is not None:
             write_json(dimension_dir / "parsed-result.json", parsed)
             write_json(
                 dimension_dir / "validation-result.json",
@@ -566,10 +586,6 @@ def run_self_tests():
         ("deterministic fixture gate", gate_passed and counts["FAIL"] == 0),
         ("strict valid judge JSON", parse_judge_reply(json.dumps(valid), dimension) == valid),
         (
-            "structured Claude envelope",
-            extract_judge_reply({"structured_output": valid}) == json.dumps(valid),
-        ),
-        (
             "dimension schema matches parser keys",
             set(dimension_schema(dimension["name"])["properties"]) == JUDGE_KEYS
             and set(dimension_schema(dimension["name"])["required"]) == JUDGE_KEYS
@@ -582,6 +598,21 @@ def run_self_tests():
     except ValueError:
         malformed_rejected = True
     cases.append(("malformed judge JSON rejected", malformed_rejected))
+
+    try:
+        parse_judge_reply(f"Before\n{json.dumps(valid)}", dimension)
+        prose_before_rejected = False
+    except ValueError:
+        prose_before_rejected = True
+    cases.append(("prose before judge JSON rejected", prose_before_rejected))
+
+    try:
+        parse_judge_reply(f"{json.dumps(valid)}\nAfter", dimension)
+        prose_after_rejected = False
+    except ValueError:
+        prose_after_rejected = True
+    cases.append(("prose after judge JSON rejected", prose_after_rejected))
+
     try:
         parse_judge_reply(f"```json\n{json.dumps(valid)}\n```", dimension)
         fenced_rejected = False
@@ -606,6 +637,67 @@ def run_self_tests():
     except ValueError:
         incorrect_type_rejected = True
     cases.append(("incorrect judge field type rejected", incorrect_type_rejected))
+
+    extra = dict(valid)
+    extra["extra"] = "not allowed"
+    try:
+        parse_judge_reply(json.dumps(extra), dimension)
+        extra_rejected = False
+    except ValueError:
+        extra_rejected = True
+    cases.append(("extra judge field rejected", extra_rejected))
+
+    bad_score = dict(valid)
+    bad_score["score"] = 5
+    try:
+        parse_judge_reply(json.dumps(bad_score), dimension)
+        bad_score_rejected = False
+    except ValueError:
+        bad_score_rejected = True
+    cases.append(("judge score outside range rejected", bad_score_rejected))
+
+    wrong_dimension = dict(valid)
+    wrong_dimension["dimension"] = "Wrong Dimension"
+    try:
+        parse_judge_reply(json.dumps(wrong_dimension), dimension)
+        wrong_dimension_rejected = False
+    except ValueError:
+        wrong_dimension_rejected = True
+    cases.append(("incorrect judge dimension rejected", wrong_dimension_rejected))
+
+    threshold_mismatch = dict(valid)
+    threshold_mismatch["passed"] = False
+    try:
+        parse_judge_reply(json.dumps(threshold_mismatch), dimension)
+        threshold_mismatch_rejected = False
+    except ValueError:
+        threshold_mismatch_rejected = True
+    cases.append(("threshold-inconsistent passed rejected", threshold_mismatch_rejected))
+
+    envelope = {"type": "result", "is_error": False, "result": json.dumps(valid)}
+    cases.append(
+        (
+            "valid Claude envelope result extracted",
+            extract_judge_reply(parse_claude_envelope(json.dumps(envelope)))
+            == json.dumps(valid),
+        )
+    )
+
+    try:
+        parse_claude_envelope("{not json")
+        bad_envelope_rejected = False
+    except RuntimeError:
+        bad_envelope_rejected = True
+    cases.append(("malformed Claude envelope rejected", bad_envelope_rejected))
+
+    missing_result = dict(envelope)
+    missing_result.pop("result")
+    try:
+        parse_claude_envelope(json.dumps(missing_result))
+        missing_result_rejected = False
+    except RuntimeError:
+        missing_result_rejected = True
+    cases.append(("Claude envelope missing result rejected", missing_result_rejected))
 
     sanitized = sanitized_evidence(
         fixture, collect_results(fixture), "Evidence Coverage"
