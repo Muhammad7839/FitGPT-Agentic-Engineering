@@ -42,7 +42,7 @@ The only permitted later-run target is `backend/tests/test_config_startup.py`. I
 
 ## Test target
 
-## Status
+## Result
 
 `Pass`, `Fail`, or `Blocked`
 
