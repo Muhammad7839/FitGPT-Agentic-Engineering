@@ -16,7 +16,7 @@ case "$ROLE" in
     WORKSPACE_MODE="rw"
     MEMORY_MODE="omit"
     ;;
-  planner|reviewer|tester|project-manager)
+  planner|reviewer|tester|project-manager|dependency-auditor)
     WORKSPACE_MODE="ro"
     MEMORY_MODE="omit"
     ;;

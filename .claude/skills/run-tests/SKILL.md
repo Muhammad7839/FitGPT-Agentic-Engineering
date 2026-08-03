@@ -11,7 +11,7 @@ description: Run approved focused checks for governed roles that own test execut
 {
   "skill": "run-tests",
   "allowed_roles": ["implementer", "tester"],
-  "denied_roles": ["orchestrator", "planner", "reviewer", "project-manager"],
+  "denied_roles": ["orchestrator", "planner", "reviewer", "project-manager", "dependency-auditor"],
   "reason": "Only Implementer and Tester have policy permission to run focused checks; Reviewer and Project Manager are explicitly denied."
 }
 ACTIVATION_SCOPE_JSON_END -->

@@ -10,7 +10,7 @@ description: Summarize a governed role's own work without expanding authority.
 <!-- ACTIVATION_SCOPE_JSON_START
 {
   "skill": "summarize-session",
-  "allowed_roles": ["orchestrator", "planner", "implementer", "reviewer", "tester", "project-manager"],
+  "allowed_roles": ["orchestrator", "planner", "implementer", "reviewer", "tester", "project-manager", "dependency-auditor"],
   "denied_roles": [],
   "reason": "Every governed role may summarize its own bounded work; this skill does not grant file, storage, retrieval, test, or tracker authority."
 }

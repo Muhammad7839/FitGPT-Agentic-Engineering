@@ -22,5 +22,9 @@
   "project-manager": {
     "retrieve": false,
     "ceiling": "none"
+  },
+  "dependency-auditor": {
+    "retrieve": true,
+    "ceiling": "internal"
   }
 }

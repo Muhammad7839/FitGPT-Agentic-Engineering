@@ -46,5 +46,13 @@
     "update_entry": false,
     "delete_entry": false,
     "audit_read": false
+  },
+  "dependency-auditor": {
+    "write_entry": false,
+    "read_entry": true,
+    "list_entries": true,
+    "update_entry": false,
+    "delete_entry": false,
+    "audit_read": false
   }
 }
