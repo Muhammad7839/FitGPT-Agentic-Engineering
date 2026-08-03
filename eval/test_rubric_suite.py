@@ -26,6 +26,9 @@ JUDGE_KEYS = {
     "evidence",
     "limitations",
 }
+MAX_JUSTIFICATION_CHARS = 2000
+PREFERRED_JUSTIFICATION_MIN_CHARS = 300
+PREFERRED_JUSTIFICATION_MAX_CHARS = 1000
 JUDGE_SCHEMA = {
     "type": "object",
     "properties": {
@@ -35,7 +38,7 @@ JUDGE_SCHEMA = {
         "justification": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 1200,
+            "maxLength": MAX_JUSTIFICATION_CHARS,
         },
         "evidence": {
             "type": "array",
@@ -291,7 +294,9 @@ def build_judge_prompt(transcript, dimension, deterministic_results):
         "- dimension: copy the requested dimension name exactly\n"
         "- score: integer 1 through 4\n"
         "- passed: true exactly when score meets the supplied threshold\n"
-        "- justification: one non-empty string, at most 1200 characters\n"
+        "- justification: one non-empty string, preferably "
+        f"{PREFERRED_JUSTIFICATION_MIN_CHARS}-{PREFERRED_JUSTIFICATION_MAX_CHARS} "
+        f"characters, absolute maximum {MAX_JUSTIFICATION_CHARS} characters\n"
         "- evidence: 1 through 8 non-empty strings, each at most 500 characters\n"
         "- limitations: 0 through 6 non-empty strings, each at most 500 characters\n\n"
         "Bounded excerpts include SHA-256 hashes, character counts, and heading "
@@ -325,9 +330,12 @@ def parse_judge_reply(reply, dimension):
     if (
         not isinstance(value["justification"], str)
         or not value["justification"].strip()
-        or len(value["justification"]) > 1200
+        or len(value["justification"]) > MAX_JUSTIFICATION_CHARS
     ):
-        raise ValueError("judge justification must be non-empty")
+        raise ValueError(
+            "judge justification must be non-empty and at most "
+            f"{MAX_JUSTIFICATION_CHARS} characters"
+        )
     if not isinstance(value["evidence"], list):
         raise ValueError("judge evidence must be a list")
     if not isinstance(value["limitations"], list):
@@ -592,6 +600,34 @@ def run_self_tests():
             and dimension_schema(dimension["name"])["additionalProperties"] is False,
         ),
     ]
+
+    long_valid = dict(valid)
+    long_valid["justification"] = "x" * 1363
+    cases.append(
+        (
+            "1363-character judge justification accepted",
+            parse_judge_reply(json.dumps(long_valid), dimension) == long_valid,
+        )
+    )
+
+    empty_justification = dict(valid)
+    empty_justification["justification"] = ""
+    try:
+        parse_judge_reply(json.dumps(empty_justification), dimension)
+        empty_justification_rejected = False
+    except ValueError:
+        empty_justification_rejected = True
+    cases.append(("empty judge justification rejected", empty_justification_rejected))
+
+    overlong_justification = dict(valid)
+    overlong_justification["justification"] = "x" * (MAX_JUSTIFICATION_CHARS + 1)
+    try:
+        parse_judge_reply(json.dumps(overlong_justification), dimension)
+        overlong_justification_rejected = False
+    except ValueError:
+        overlong_justification_rejected = True
+    cases.append(("overlong judge justification rejected", overlong_justification_rejected))
+
     try:
         parse_judge_reply("{not json", dimension)
         malformed_rejected = False
