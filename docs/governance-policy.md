@@ -69,6 +69,7 @@ The active FitGPT orchestration roles are:
 - `reviewer`
 - `tester`
 - `project-manager`
+- `dependency-auditor`
 
 ### Existing-role summary
 
@@ -80,6 +81,7 @@ The active FitGPT orchestration roles are:
 | reviewer | `.claude/agents/reviewer.md` | read/list only | internal | summarize-session only | low advisory | workspace read-only, memory omitted |
 | tester | `.claude/agents/tester.md` | read/list only | internal | run-tests and summarize-session | low after Reviewer pass | workspace read-only, memory omitted |
 | project-manager | `.claude/agents/project-manager.md` | read/list only | none | draft-pr-description and summarize-session | low after final approval | workspace read-only, memory omitted |
+| dependency-auditor | `.claude/agents/dependency-auditor.md` | read/list only | internal | summarize-session only | low advisory | workspace read-only, memory omitted |
 
 ### Existing-role detailed policy
 
@@ -206,6 +208,25 @@ Every `NO` below is justified by either a recorded risk in `docs/governance-risk
       },
       "autonomy": {"level": "low", "checkpoints": ["explicit current-run final approval"]},
       "container": {"workspace": "read-only", "memory": "omitted", "reason": "Project Manager must not read or write repository files beyond approved handoff context."}
+    },
+    "dependency-auditor": {
+      "defined_in": ".claude/agents/dependency-auditor.md",
+      "mcp_storage": {
+        "write_entry": {"grant": false, "reason": "Protected-path modification risk and least privilege require advisory dependency review to avoid state mutation."},
+        "read_entry": {"grant": true, "reason": "May read approved workflow state needed for dependency-audit context."},
+        "list_entries": {"grant": true, "reason": "May discover approved dependency-audit records."},
+        "update_entry": {"grant": false, "reason": "Unsupported success and state-mutation near-misses require advisory roles to avoid updating governance state."},
+        "delete_entry": {"grant": false, "reason": "Least privilege and audit preservation."},
+        "audit_read": {"grant": false, "reason": "Least privilege; dependency review does not require audit-log access."}
+      },
+      "mcp_retrieval": {"retrieve": true, "ceiling": "internal", "reason": "May retrieve internal dependency guidance but not confidential material."},
+      "skills": {
+        "run-tests": {"grant": false, "reason": "Dependency Auditor is advisory and must not run tests or package managers."},
+        "draft-pr-description": {"grant": false, "reason": "Least privilege; not a final handoff role."},
+        "summarize-session": {"grant": true, "reason": "May summarize its own dependency-audit findings."}
+      },
+      "autonomy": {"level": "low", "checkpoints": ["human approval required before any dependency remediation"]},
+      "container": {"workspace": "read-only", "memory": "omitted", "reason": "Dependency Auditor inspects manifests only and must not modify dependency files."}
     }
   }
 }
