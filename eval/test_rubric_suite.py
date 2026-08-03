@@ -6,6 +6,7 @@ Usage:
 """
 
 import json
+import hashlib
 import os
 import subprocess
 import sys
@@ -31,13 +32,30 @@ JUDGE_SCHEMA = {
         "dimension": {"type": "string"},
         "score": {"type": "integer", "minimum": 1, "maximum": 4},
         "passed": {"type": "boolean"},
-        "justification": {"type": "string", "minLength": 1},
-        "evidence": {"type": "array", "items": {"type": "string"}},
-        "limitations": {"type": "array", "items": {"type": "string"}},
+        "justification": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1200,
+        },
+        "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 8,
+            "items": {"type": "string", "minLength": 1, "maxLength": 500},
+        },
+        "limitations": {
+            "type": "array",
+            "maxItems": 6,
+            "items": {"type": "string", "minLength": 1, "maxLength": 500},
+        },
     },
     "required": sorted(JUDGE_KEYS),
     "additionalProperties": False,
 }
+MAX_ROLE_EXCERPT_CHARS = 2400
+MAX_GENERAL_ROLE_EXCERPT_CHARS = 1200
+MAX_HISTORY_EXCERPT_CHARS = 600
+EVIDENCE_DIR_ENV = "FITGPT_RUBRIC_EVIDENCE_DIR"
 DISALLOWED_TOOLS = ",".join(
     [
         "Read",
@@ -104,7 +122,78 @@ def validate_rubric(rubric):
     return rubric
 
 
-def sanitized_evidence(transcript, deterministic_results):
+def sha256_text(value):
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def bounded_text(value, limit):
+    if not isinstance(value, str):
+        return value
+    record = {
+        "sha256": sha256_text(value),
+        "characters": len(value),
+        "markdown_headings": [
+            line.strip()
+            for line in value.splitlines()
+            if line.lstrip().startswith("#")
+        ],
+    }
+    if len(value) <= limit:
+        record["truncated"] = False
+        record["text"] = value
+        return record
+    half = limit // 2
+    record["truncated"] = True
+    record["head"] = value[:half]
+    record["tail"] = value[-half:]
+    return record
+
+
+def bounded_history(attempt):
+    result = {}
+    for key, value in attempt.items():
+        if key in {"output", "model_text"}:
+            result[key] = bounded_text(value, MAX_HISTORY_EXCERPT_CHARS)
+        else:
+            result[key] = value
+    return result
+
+
+def summarize_tool_evidence(tool_evidence):
+    counts = {}
+    for item in tool_evidence:
+        key = (item["role"], item["tool"])
+        current = counts.setdefault(
+            key, {"calls": 0, "successful": 0, "actual_events": 0}
+        )
+        current["calls"] += 1
+        current["successful"] += item["success"] is True
+        current["actual_events"] += item["actual_event"] is True
+    return {
+        "counts": [
+            {"role": role, "tool": tool, **values}
+            for (role, tool), values in sorted(counts.items())
+        ],
+        "non_read_events": [
+            item
+            for item in tool_evidence
+            if not item["tool"].endswith("file_read")
+        ],
+    }
+
+
+def dimension_schema(dimension_name):
+    schema = json.loads(json.dumps(JUDGE_SCHEMA))
+    schema["properties"]["dimension"]["enum"] = [dimension_name]
+    return schema
+
+
+def sanitized_evidence(transcript, deterministic_results, dimension_name=None):
+    role_excerpt_limit = (
+        MAX_ROLE_EXCERPT_CHARS
+        if dimension_name == "Test Execution Fidelity"
+        else MAX_GENERAL_ROLE_EXCERPT_CHARS
+    )
     subagents = []
     for event in transcript.get("events", []):
         if event.get("type") != "subagent" or not event.get("selected_for_path", True):
@@ -114,7 +203,9 @@ def sanitized_evidence(transcript, deterministic_results):
                 "role": event.get("role"),
                 "workflow_run": event.get("workflow_run"),
                 "verdict": (event.get("output_document") or {}).get("verdict"),
-                "substantive_output": event.get("output"),
+                "substantive_output": bounded_text(
+                    event.get("output"), role_excerpt_limit
+                ),
                 "output_document": event.get("output_document"),
             }
         )
@@ -134,7 +225,7 @@ def sanitized_evidence(transcript, deterministic_results):
                 "evidence_class": event.get("evidence_class"),
             }
         )
-    return {
+    evidence = {
         "run_kind": transcript.get("run_kind"),
         "fixture": transcript.get("fixture"),
         "evidence_origin": transcript.get("evidence_origin"),
@@ -146,7 +237,10 @@ def sanitized_evidence(transcript, deterministic_results):
         "human_approvals": transcript.get("human_approvals"),
         "changed_files": transcript.get("changed_files"),
         "protected_files_unchanged": transcript.get("protected_files_unchanged"),
-        "historical_attempts": transcript.get("historical_attempts"),
+        "historical_attempts": [
+            bounded_history(attempt)
+            for attempt in transcript.get("historical_attempts") or []
+        ],
         "claims": transcript.get("claims"),
         "limitations": transcript.get("limitations"),
         "deterministic_results": [
@@ -158,21 +252,55 @@ def sanitized_evidence(transcript, deterministic_results):
             for item in deterministic_results
         ],
     }
+    if dimension_name == "Test Execution Fidelity":
+        evidence["subagent_outputs"] = [
+            item for item in subagents if item["role"] == "tester"
+        ]
+        evidence["tool_evidence"] = [
+            item for item in tool_evidence if item["tool"].endswith("test_runner")
+        ]
+        evidence.pop("historical_attempts", None)
+    elif dimension_name in {"Outcome Accuracy", "Evidence Coverage"}:
+        evidence["tool_evidence"] = summarize_tool_evidence(tool_evidence)
+    elif dimension_name == "Readiness Recommendation Quality":
+        evidence["tool_evidence"] = summarize_tool_evidence(
+            [
+                item
+                for item in tool_evidence
+                if item["tool"].endswith(("test_runner", "task_tracker"))
+            ]
+        )
+        evidence.pop("historical_attempts", None)
+    return evidence
 
 
 def build_judge_prompt(transcript, dimension, deterministic_results):
-    evidence = sanitized_evidence(transcript, deterministic_results)
+    evidence = sanitized_evidence(
+        transcript, deterministic_results, dimension["name"]
+    )
     return (
         "You are an isolated agent-as-judge. Score one quality dimension for a "
         "FitGPT orchestration development run. You have no repository, shell, "
         "MCP, test, tracker, file, or web tools. Use only the task, dimension, "
         "levels, and sanitized evidence below. Do not infer missing facts.\n\n"
-        "Return strict JSON only, with exactly these fields:\n"
+        "Return exactly one JSON object and no other text. Do not use Markdown "
+        "fences. Use exactly these fields:\n"
         '{"dimension":"...", "score":1, "passed":false, '
         '"justification":"...", "evidence":["..."], "limitations":["..."]}\n\n'
+        "Mechanical response limits:\n"
+        "- dimension: copy the requested dimension name exactly\n"
+        "- score: integer 1 through 4\n"
+        "- passed: true exactly when score meets the supplied threshold\n"
+        "- justification: one non-empty string, at most 1200 characters\n"
+        "- evidence: 1 through 8 non-empty strings, each at most 500 characters\n"
+        "- limitations: 0 through 6 non-empty strings, each at most 500 characters\n\n"
+        "Bounded excerpts include SHA-256 hashes, character counts, and heading "
+        "inventories. A truncated excerpt is evidence only for the text shown; "
+        "do not infer omitted content.\n\n"
         f"TASK:\n{json.dumps({'task_id': transcript.get('task_id'), 'description': transcript.get('task_description')}, indent=2)}\n\n"
         f"DIMENSION:\n{json.dumps(dimension, indent=2)}\n\n"
-        f"SANITIZED EVIDENCE:\n{json.dumps(evidence, indent=2)}\n"
+        "SANITIZED EVIDENCE:\n"
+        f"{json.dumps(evidence, ensure_ascii=False, separators=(',', ':'))}\n"
     )
 
 
@@ -187,18 +315,33 @@ def parse_judge_reply(reply, dimension):
         raise ValueError(f"judge response keys must be exactly {sorted(JUDGE_KEYS)}")
     if value["dimension"] != dimension["name"]:
         raise ValueError("judge dimension does not match requested dimension")
-    if not isinstance(value["score"], int) or not 1 <= value["score"] <= 4:
+    if type(value["score"]) is not int or not 1 <= value["score"] <= 4:
         raise ValueError("judge score must be an integer from 1 to 4")
+    if type(value["passed"]) is not bool:
+        raise ValueError("judge passed must be a boolean")
     expected_pass = value["score"] >= dimension["pass_threshold"]
     if value["passed"] is not expected_pass:
         raise ValueError("judge passed value contradicts the dimension threshold")
-    if not isinstance(value["justification"], str) or not value["justification"].strip():
+    if (
+        not isinstance(value["justification"], str)
+        or not value["justification"].strip()
+        or len(value["justification"]) > 1200
+    ):
         raise ValueError("judge justification must be non-empty")
+    if not isinstance(value["evidence"], list):
+        raise ValueError("judge evidence must be a list")
+    if not isinstance(value["limitations"], list):
+        raise ValueError("judge limitations must be a list")
+    if not 1 <= len(value["evidence"]) <= 8:
+        raise ValueError("judge evidence must contain 1 through 8 items")
+    if len(value["limitations"]) > 6:
+        raise ValueError("judge limitations must contain at most 6 items")
     for field in ("evidence", "limitations"):
         if not isinstance(value[field], list) or not all(
-            isinstance(item, str) for item in value[field]
+            isinstance(item, str) and item.strip() and len(item) <= 500
+            for item in value[field]
         ):
-            raise ValueError(f"judge {field} must be a list of strings")
+            raise ValueError(f"judge {field} must be a bounded list of strings")
     return value
 
 
@@ -212,17 +355,24 @@ def extract_judge_reply(envelope):
     return reply
 
 
-def call_judge(prompt, dimension_name):
+def write_json(path, value):
+    path.write_text(
+        json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
+
+
+def call_judge(prompt, dimension_name, evidence_dir=None):
     with tempfile.TemporaryDirectory(prefix="fitgpt-eval-judge-") as judge_dir:
         empty_mcp = Path(judge_dir) / "empty-mcp.json"
         empty_mcp.write_text('{"mcpServers": {}}\n', encoding="utf-8")
+        schema = dimension_schema(dimension_name)
         command = [
             "claude",
             "--print",
             "--output-format",
             "json",
             "--json-schema",
-            json.dumps(JUDGE_SCHEMA, separators=(",", ":")),
+            json.dumps(schema, separators=(",", ":")),
             "--permission-mode",
             "dontAsk",
             "--tools",
@@ -239,6 +389,48 @@ def call_judge(prompt, dimension_name):
         ]
         environment = os.environ.copy()
         environment["MCP_CONNECTION_NONBLOCKING"] = "0"
+        dimension_dir = None
+        if evidence_dir is not None:
+            dimension_dir = evidence_dir / dimension_name.lower().replace(" ", "-")
+            dimension_dir.mkdir(parents=True, exist_ok=False)
+            (dimension_dir / "prompt.txt").write_text(prompt, encoding="utf-8")
+            write_json(
+                dimension_dir / "request-metadata.json",
+                {
+                    "dimension": dimension_name,
+                    "prompt_sha256": sha256_text(prompt),
+                    "prompt_characters": len(prompt),
+                    "prompt_bytes": len(prompt.encode("utf-8")),
+                    "schema_sha256": sha256_text(
+                        json.dumps(schema, separators=(",", ":"))
+                    ),
+                    "schema": schema,
+                    "model_selection": "unchanged default; no --model flag",
+                    "available_tools": [],
+                    "mcp_servers": {},
+                    "command": [
+                        "<claude>",
+                        "--print",
+                        "--output-format",
+                        "json",
+                        "--json-schema",
+                        "<dimension-schema>",
+                        "--permission-mode",
+                        "dontAsk",
+                        "--tools",
+                        "",
+                        "--disallowedTools",
+                        "<complete-disallowed-list>",
+                        "--mcp-config",
+                        "<temporary-empty-mcp.json>",
+                        "--strict-mcp-config",
+                        "--no-chrome",
+                        "--setting-sources",
+                        "user",
+                        "--no-session-persistence",
+                    ],
+                },
+            )
         completed = subprocess.run(
             command,
             input=prompt,
@@ -248,6 +440,16 @@ def call_judge(prompt, dimension_name):
             timeout=240,
             env=environment,
         )
+        if dimension_dir is not None:
+            (dimension_dir / "stdout.txt").write_text(
+                completed.stdout, encoding="utf-8"
+            )
+            (dimension_dir / "stderr.txt").write_text(
+                completed.stderr, encoding="utf-8"
+            )
+            (dimension_dir / "exit-code.txt").write_text(
+                f"{completed.returncode}\n", encoding="utf-8"
+            )
         if completed.returncode != 0:
             raise RuntimeError(
                 f"judge invocation for {dimension_name} failed: "
@@ -259,6 +461,8 @@ def call_judge(prompt, dimension_name):
             raise RuntimeError(f"Claude envelope is not JSON: {exc}") from exc
         if envelope.get("is_error"):
             raise RuntimeError(f"Claude judge returned an error: {envelope.get('result')}")
+        if dimension_dir is not None:
+            write_json(dimension_dir / "response-envelope.json", envelope)
         return extract_judge_reply(envelope)
 
 
@@ -288,12 +492,23 @@ def evaluate(transcript_path):
         return 1
 
     print("RUBRIC_GATE=OPEN")
+    evidence_dir = None
+    if os.environ.get(EVIDENCE_DIR_ENV):
+        evidence_dir = Path(os.environ[EVIDENCE_DIR_ENV]).resolve()
+        evidence_dir.mkdir(parents=True, exist_ok=False)
     dimension_results = []
     for dimension in rubric["dimensions"]:
         prompt = build_judge_prompt(transcript, dimension, deterministic_results)
-        reply = call_judge(prompt, dimension["name"])
+        reply = call_judge(prompt, dimension["name"], evidence_dir)
         parsed = parse_judge_reply(reply, dimension)
         dimension_results.append(parsed)
+        if evidence_dir is not None:
+            dimension_dir = evidence_dir / dimension["name"].lower().replace(" ", "-")
+            write_json(dimension_dir / "parsed-result.json", parsed)
+            write_json(
+                dimension_dir / "validation-result.json",
+                {"valid": True, "parser": "parse_judge_reply"},
+            )
         print(
             f"[{'PASS' if parsed['passed'] else 'FAIL'}] {parsed['dimension']}: "
             f"{parsed['score']}/4 - {parsed['justification']}"
@@ -317,6 +532,19 @@ def evaluate(transcript_path):
         "after deterministic gating; it does not establish full system, security, "
         "deployment, backend, or holdout-task health."
     )
+    if evidence_dir is not None:
+        write_json(
+            evidence_dir / "aggregate-result.json",
+            {
+                "judge_calls": len(dimension_results),
+                "dimension_results": dimension_results,
+                "score": total,
+                "maximum_score": rubric["maximum_score"],
+                "threshold": rubric["overall_pass_threshold"],
+                "each_dimension_required": True,
+                "passed": overall,
+            },
+        )
     return 0 if overall else 1
 
 
@@ -341,7 +569,19 @@ def run_self_tests():
             "structured Claude envelope",
             extract_judge_reply({"structured_output": valid}) == json.dumps(valid),
         ),
+        (
+            "dimension schema matches parser keys",
+            set(dimension_schema(dimension["name"])["properties"]) == JUDGE_KEYS
+            and set(dimension_schema(dimension["name"])["required"]) == JUDGE_KEYS
+            and dimension_schema(dimension["name"])["additionalProperties"] is False,
+        ),
     ]
+    try:
+        parse_judge_reply("{not json", dimension)
+        malformed_rejected = False
+    except ValueError:
+        malformed_rejected = True
+    cases.append(("malformed judge JSON rejected", malformed_rejected))
     try:
         parse_judge_reply(f"```json\n{json.dumps(valid)}\n```", dimension)
         fenced_rejected = False
@@ -358,7 +598,18 @@ def run_self_tests():
         missing_rejected = True
     cases.append(("missing judge field rejected", missing_rejected))
 
-    sanitized = sanitized_evidence(fixture, collect_results(fixture))
+    incorrect_type = dict(valid)
+    incorrect_type["score"] = "3"
+    try:
+        parse_judge_reply(json.dumps(incorrect_type), dimension)
+        incorrect_type_rejected = False
+    except ValueError:
+        incorrect_type_rejected = True
+    cases.append(("incorrect judge field type rejected", incorrect_type_rejected))
+
+    sanitized = sanitized_evidence(
+        fixture, collect_results(fixture), "Evidence Coverage"
+    )
     cases.append(
         (
             "judge evidence excludes handoffs and source paths",
@@ -366,6 +617,13 @@ def run_self_tests():
             and "sources" not in sanitized,
         )
     )
+    bounded = all(
+        output["substantive_output"]["characters"]
+        <= MAX_GENERAL_ROLE_EXCERPT_CHARS
+        or output["substantive_output"]["truncated"]
+        for output in sanitized["subagent_outputs"]
+    )
+    cases.append(("dimension evidence uses bounded role text", bounded))
 
     for name, passed in cases:
         print(f"[{'PASS' if passed else 'FAIL'}] {name}")
