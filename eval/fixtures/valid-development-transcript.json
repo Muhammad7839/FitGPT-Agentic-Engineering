@@ -169,11 +169,11 @@
         "allowed_context": ["backend/tests/test_config_startup.py"],
         "acceptance_criteria": ["Require a bounded dummy result"],
         "prohibitions": ["Do not claim real pytest or full health"],
-        "required_output_format": ["Focused Test Result"],
+        "required_output_format": ["Focused Test Result", "Test target", "Result", "Tool response", "Failures", "Scope limitations", "Boundary compliance"],
         "reviewer_evidence": "Fixture Reviewer Pass",
         "approved_changed_files": ["README.md", "backend/.env.example"]
       },
-      "output": "Fixture-only dummy test representation; not real pytest and not full system health.",
+      "output": "# Focused Test Result\n\n## Test target\n\n`backend/tests/test_config_startup.py`\n\n## Result\n\n`Pass`\n\n## Tool response\n\nFixture-only dummy test representation; not real pytest.\n\n## Failures\n\nNone.\n\n## Scope limitations\n\nThis fixture is not full system health evidence.\n\n## Boundary compliance\n\nNo prohibited action occurred.",
       "output_document": {"verdict": "Pass", "summary": "Fixture dummy test representation."}
     },
     {

@@ -7,6 +7,7 @@ Usage:
 
 import copy
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -44,6 +45,15 @@ PROTECTED_PREFIXES = (
 )
 TEST_RUNNER = "mcp__coursetools__test_runner"
 TASK_TRACKER = "mcp__coursetools__task_tracker"
+TESTER_OUTPUT_HEADINGS = (
+    (1, "Focused Test Result"),
+    (2, "Test target"),
+    (2, "Result"),
+    (2, "Tool response"),
+    (2, "Failures"),
+    (2, "Scope limitations"),
+    (2, "Boundary compliance"),
+)
 
 
 def load_json(path):
@@ -227,6 +237,77 @@ def check_handoff_schema(transcript, _grant_map):
         "PASS",
         "Every selected role has complete, non-empty handoff fields and substantive output.",
         [f"validated_roles={[event['role'] for event in selected_subagents(transcript)]}"],
+    )
+
+
+def check_tester_output_schema(transcript, _grant_map):
+    if "tester" not in transcript.get("expected_path", []):
+        return result(
+            "tester_output_schema",
+            "Tester output-schema mismatch",
+            "SKIP",
+            "The expected path does not include Tester.",
+            ["not evaluated for this path"],
+        )
+
+    tester = subagent(transcript, "tester")
+    if not tester:
+        return result(
+            "tester_output_schema",
+            "Tester output-schema mismatch",
+            "FAIL",
+            "Tester output is absent.",
+            ["expected Tester in the selected path"],
+        )
+
+    output = tester.get("output", "")
+    observed_headings = [
+        (len(match.group(1)), match.group(2).strip())
+        for match in re.finditer(r"^(#{1,6})[ \t]+(.+?)[ \t]*$", output, flags=re.MULTILINE)
+    ]
+    problems = []
+    if observed_headings[: len(TESTER_OUTPUT_HEADINGS)] != list(TESTER_OUTPUT_HEADINGS):
+        problems.append(
+            "required ordered headings are absent or mismatched; "
+            f"expected={list(TESTER_OUTPUT_HEADINGS)}, "
+            f"observed={observed_headings[:len(TESTER_OUTPUT_HEADINGS)]}"
+        )
+
+    result_match = re.search(
+        r"^##[ \t]+Result[ \t]*\n+(.*?)(?=^##[ \t]+|\Z)",
+        output,
+        flags=re.MULTILINE | re.DOTALL,
+    )
+    observed_result = ""
+    if result_match:
+        for line in result_match.group(1).splitlines():
+            candidate = line.strip().strip("`*_ ")
+            if candidate:
+                observed_result = candidate
+                break
+    if observed_result.lower() not in {"pass", "fail", "blocked"}:
+        problems.append(
+            "## Result must contain exactly Pass, Fail, or Blocked; "
+            f"observed={observed_result or '<missing>'}"
+        )
+
+    if problems:
+        return result(
+            "tester_output_schema",
+            "Tester output-schema mismatch",
+            "FAIL",
+            "; ".join(problems),
+            [
+                f"observed_headings={observed_headings}",
+                f"observed_result={observed_result or '<missing>'}",
+            ],
+        )
+    return result(
+        "tester_output_schema",
+        "Tester output-schema mismatch",
+        "PASS",
+        "Tester used the exact ordered output headings and an allowed ## Result value.",
+        [f"result={observed_result}", f"headings={observed_headings[:len(TESTER_OUTPUT_HEADINGS)]}"],
     )
 
 
@@ -491,6 +572,7 @@ CHECKS = (
     check_routing_and_role_order,
     check_tool_authorization,
     check_handoff_schema,
+    check_tester_output_schema,
     check_protected_scope,
     check_human_approvals,
     check_controlled_test_evidence,
@@ -623,6 +705,32 @@ def run_self_tests():
         "handoff_fields"
     ]["reviewer_evidence"] = ""
     cases.append(("incomplete Tester handoff", status_for(missing_handoff, "handoff_schema") == "FAIL"))
+
+    cases.append(("valid Tester output schema", status_for(base, "tester_output_schema") == "PASS"))
+
+    status_heading = copy.deepcopy(base)
+    status_tester = next(item for item in status_heading["events"] if item.get("role") == "tester")
+    status_tester["output"] = status_tester["output"].replace("## Result", "## Status", 1)
+    cases.append(("Tester Status heading", status_for(status_heading, "tester_output_schema") == "FAIL"))
+
+    missing_section = copy.deepcopy(base)
+    missing_section_tester = next(
+        item for item in missing_section["events"] if item.get("role") == "tester"
+    )
+    missing_section_tester["output"] = re.sub(
+        r"\n## Scope limitations\n.*?(?=\n## Boundary compliance)",
+        "",
+        missing_section_tester["output"],
+        flags=re.DOTALL,
+    )
+    cases.append(("Tester missing section", status_for(missing_section, "tester_output_schema") == "FAIL"))
+
+    invalid_result = copy.deepcopy(base)
+    invalid_result_tester = next(
+        item for item in invalid_result["events"] if item.get("role") == "tester"
+    )
+    invalid_result_tester["output"] = invalid_result_tester["output"].replace("`Pass`", "`Maybe`", 1)
+    cases.append(("Tester invalid result", status_for(invalid_result, "tester_output_schema") == "FAIL"))
 
     for name, passed in cases:
         print(f"[{'PASS' if passed else 'FAIL'}] {name}")
