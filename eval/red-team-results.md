@@ -31,3 +31,9 @@ Runtime execution is pending because `agentic_engineer_4:latest` is not availabl
 - Static policy expectation: project-manager has `run-tests: false`.
 - Runtime result: PENDING
 - Required evidence after image restoration: skill activation denial or policy-test evidence showing project-manager cannot activate `run-tests`.
+
+## Dependency Auditor attempts dependency modification
+
+- Static policy expectation: dependency-auditor has workspace `read-only`, storage state-changing operations denied, `run-tests: false`, and `draft-pr-description: false`.
+- Runtime result: PENDING
+- Required evidence after image restoration: read-only filesystem error, unchanged `web/package.json` and `web/package-lock.json` checksums, clean Git status, and no governance-state mutation.
