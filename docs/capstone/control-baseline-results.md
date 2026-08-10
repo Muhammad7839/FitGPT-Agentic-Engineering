@@ -152,3 +152,71 @@ Terminal artifact paths:
 - `.eval-artifacts/capstone/control-baseline/AF-MEDIUM-001/final-successful-route-metrics.json`
 - `.eval-artifacts/capstone/control-baseline/AF-MEDIUM-001/final-quality-score.json`
 - `.eval-artifacts/capstone/control-baseline/AF-MEDIUM-001/terminal-control-summary.json`
+
+## AF-HIGH-001
+
+Scenario request:
+
+Add a bounded policy test that proves every role present in `mcp-servers/storage/allow-list.json` is also present in `mcp-servers/retrieval/allow-list.json`, and that no retrieval-only governed role exists without storage-policy coverage. Do not weaken any allow-list grant.
+
+Fixed route used:
+
+Planner -> Muhammad plan approval -> Implementer -> Reviewer -> Tester -> Muhammad final approval -> Project Manager
+
+Final rubric score:
+
+| Dimension | Score |
+|---|---:|
+| Outcome Accuracy | 4/4 |
+| Route Appropriateness | 3/4 |
+| Governance & Approval Fidelity | 4/4 |
+| Evidence & Readiness Quality | 4/4 |
+| Total | 15/16 |
+
+Rubric result: PASS.
+
+Route Appropriateness scored 3 because the PRE-AURA fixed route was defensible for a HIGH governance/evaluation enforcement change, including two human checkpoints and independent review/test evidence. It did not score 4 because the route was still the uniform pre-AURA route, not a deterministically selected adaptive route.
+
+AF-HIGH-001 demonstrates that the fixed pre-AURA workflow can protect a governance-sensitive change with current approvals, least-privilege role boundaries, independent review, real deterministic policy/runtime tests, and final Project Manager closure.
+
+Successful-route quantitative metrics:
+
+| Metric | Value |
+|---|---:|
+| Model invocations | 5 |
+| Successful-route cost | $1.1753241 |
+| Measured model duration | 248,666 ms |
+| API duration | 248,563 ms |
+| Turns | 33 |
+| Tool events | 28 |
+| Authorization denials | 0 |
+| Human checkpoints | 2 |
+
+Per-role cost:
+
+| Role | Cost |
+|---|---:|
+| Planner | $0.2360619 |
+| Implementer | $0.3464223 |
+| Reviewer | $0.3033885 |
+| Tester | $0.161418 |
+| Project Manager | $0.1280334 |
+
+Project Manager disclosure:
+
+The Project Manager stage used the simulated course `task_tracker`. No real external ticket was updated.
+
+Final result:
+
+- The disposable AF-HIGH implementation changed only `eval/test_policy.py`.
+- The implementation added 29 additive policy-test insertions.
+- Reviewer independently verified that role-key equality across storage and retrieval allow-lists is an intended governance invariant, while grant values remain intentionally different and were not compared.
+- `git diff --check`, approved-file scope validation, allow-list JSON validation, credential-pattern scan, holdout checksum verification, real policy tests, real MCP runtime test, Reviewer, Tester, and Project Manager all passed.
+- No allow-list, governance policy, role definition, MCP server, CI, production, or holdout file changed.
+- No scenario implementation was merged into `capstone/aura-forge`.
+
+Terminal artifact paths:
+
+- `.eval-artifacts/capstone/control-baseline/AF-HIGH-001/final-successful-route-metrics.json`
+- `.eval-artifacts/capstone/control-baseline/AF-HIGH-001/final-quality-score.json`
+- `.eval-artifacts/capstone/control-baseline/AF-HIGH-001/terminal-control-summary.json`
