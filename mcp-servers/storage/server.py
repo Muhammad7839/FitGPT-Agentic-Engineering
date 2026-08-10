@@ -4,8 +4,6 @@ This server is for the Module 4 governance exercise. It stores synthetic course
 state under .governance-data and does not connect to FitGPT production systems.
 """
 
-from __future__ import annotations
-
 import json
 import os
 from datetime import datetime, timezone

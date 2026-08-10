@@ -3,8 +3,6 @@
 The corpus is synthetic and exists only to verify role classification ceilings.
 """
 
-from __future__ import annotations
-
 import json
 import os
 from datetime import datetime, timezone
