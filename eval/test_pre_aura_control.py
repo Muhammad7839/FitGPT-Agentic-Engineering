@@ -13,6 +13,15 @@ from pre_aura_control import (
 )
 
 
+AGENT_PROMPTS = (
+    Path(".claude/agents/planner.md"),
+    Path(".claude/agents/implementer.md"),
+    Path(".claude/agents/reviewer.md"),
+    Path(".claude/agents/tester.md"),
+    Path(".claude/agents/project-manager.md"),
+)
+
+
 def scenario_payload(risk_label="LOW", worktree=None):
     return {
         "scenario_id": "AF-LOW-001",
@@ -125,3 +134,8 @@ def test_plan_approval_packet_preserves_human_checkpoint():
     assert packet.startswith("# Plan Approval Required")
     assert "Approve or reject the plan before the Implementer role runs." in packet
     assert "Risk label is measurement metadata only" in packet
+
+
+def test_fixed_route_agent_prompts_do_not_require_legacy_ticket():
+    for prompt in AGENT_PROMPTS:
+        assert "COURSE-FITGPT-001" not in prompt.read_text(encoding="utf-8")
