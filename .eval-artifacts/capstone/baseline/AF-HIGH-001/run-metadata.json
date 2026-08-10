@@ -1,0 +1,27 @@
+{
+  "scenario_id": "AF-HIGH-001",
+  "expected_tier": "HIGH",
+  "generated_at_utc": "2026-08-10T16:54:51Z",
+  "scoping_commit": "72c48e3e09f96e1d3e3b99fdbfedc6f4a7796ad5",
+  "worktree_path": "/Users/muhammad/course-projects/aura-forge-baseline/AF-HIGH-001",
+  "worktree_head": "72c48e3e09f96e1d3e3b99fdbfedc6f4a7796ad5",
+  "worktree_mode": "detached",
+  "worktree_status": "clean",
+  "scenario_reference": "docs/capstone/representative-scenarios.md#af-high-001",
+  "baseline_status": "blocked",
+  "failure_classification": "engineered-system workflow-fit gap",
+  "actual_pre_aura_route": "not executed; existing route is fixed to COURSE-FITGPT-001",
+  "model_or_agent_invocations": 0,
+  "tool_events": 0,
+  "authorization_denials": 0,
+  "human_checkpoints": 0,
+  "cycle_time": "not available",
+  "review_latency": "not available",
+  "cost": "not reliably measurable",
+  "quality_score": "not scored",
+  "sanitization": "no secrets, authentication material, production data, or transcript content stored",
+  "notes": [
+    "The current pre-AURA workflow cannot safely accept this governance-policy scenario without adaptation.",
+    "No implementation was attempted in the disposable worktree."
+  ]
+}
