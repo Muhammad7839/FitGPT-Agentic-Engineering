@@ -4,7 +4,7 @@ Repository: https://github.com/Muhammad7839/FitGPT-Agentic-Engineering
 
 Branch: `capstone/aura-forge`
 
-Final known engineering CI run: https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/31517900793
+Verified submission-package CI run: https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/31520499134
 
 Final presentation path: `docs/capstone/submission/AURA_Forge_Final_Presentation.pptx`
 

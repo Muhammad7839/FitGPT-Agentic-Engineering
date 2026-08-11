@@ -106,9 +106,9 @@ Sources:
 
 Goal: Show that the project is eval-gated.
 
-What to say: The repository did not stop at local files. The final branch passed GitHub Actions. The advisory review also behaved safely: when the AI secret was unavailable, it skipped gracefully instead of failing open.
+What to say: The repository did not stop at local files. The verified submission-package CI run passed GitHub Actions. The advisory review also behaved safely: when the AI secret was unavailable, it skipped gracefully instead of failing open.
 
-What to point at: Point to final run 31517900793 and the green job list.
+What to point at: Point to verified submission-package CI run 31520499134 and the green job list.
 
 Transition: Next, show how all of this evidence is packaged.
 

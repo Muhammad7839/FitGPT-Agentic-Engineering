@@ -67,11 +67,11 @@ Backup: `docs/capstone/risk-classifier.md` and `docs/capstone/adaptive-routing.m
 
 ## 4:10-5:05 - GitHub Actions evidence
 
-Window/file: browser at `https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/31517900793` or PowerPoint slide 8.
+Window/file: browser at `https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/31520499134` or PowerPoint slide 8.
 
-Say: "The final branch passed permanent gates: change classification, policy tests, evaluation gate, pipeline integrity, and audit trail. Advisory review skipped safely because the AI secret was unavailable."
+Say: "The verified submission-package CI run passed permanent gates: change classification, policy tests, evaluation gate, pipeline integrity, and audit trail. Advisory review skipped safely because the AI secret was unavailable."
 
-Expected result: final run `31517900793` is visible or summarized.
+Expected result: verified submission-package CI run `31520499134` is visible or summarized.
 
 Backup: `docs/capstone/governance-ci-results.md` and `docs/capstone/submission/assets/github-ci-summary.png`.
 
