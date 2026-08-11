@@ -215,6 +215,21 @@ def test_observed_higher_risk_path_requires_escalation():
     assert escalation.reason.startswith("Observed changed paths")
 
 
+def test_low_route_observing_high_sensitive_path_fails_closed_with_escalation():
+    planned = route_for(["docs/features/accessibility.md"])
+    escalation = check_for_escalation(
+        planned,
+        ["docs/features/accessibility.md", "mcp/coursetools_server.py"],
+    )
+
+    assert planned.escalation_policy.required_output == "ESCALATION REQUIRED"
+    assert escalation is not None
+    assert escalation.original_tier == "LOW"
+    assert escalation.observed_tier == "HIGH"
+    assert escalation.required_higher_tier == "HIGH"
+    assert "mcp/coursetools_server.py" in escalation.newly_observed_paths
+
+
 def test_observed_same_tier_path_does_not_escalate():
     planned = route_for(["web/src/utils/feedbackPrompts.js"])
 
