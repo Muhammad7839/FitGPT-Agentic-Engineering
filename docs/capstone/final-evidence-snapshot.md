@@ -8,7 +8,7 @@ This snapshot records the verified submission evidence baseline. The final grade
 | Verified submission CI commit | `35cade1fa0265633cfbb4f067000ea54daebf77e` |
 | Verified submission CI run | `31517695449` |
 | Final CI result at that baseline | `success` |
-| Rubric score | `47 / 52` |
+| Rubric score after final submission package | `49 / 52` |
 | Control vs AURA quality | `44/48 -> 48/48` |
 | Control vs AURA successful-route cost | `$2.6912478 -> $2.1739407`, `-19.22%` |
 | Model roles | `15 -> 10`, `-33.33%` |
