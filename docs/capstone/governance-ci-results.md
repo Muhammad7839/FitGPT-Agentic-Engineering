@@ -76,7 +76,7 @@ YAML_OK
 holdout checksum matched
 ```
 
-## Final Green GitHub CI Run
+## First Repaired Green GitHub CI Run
 
 Run ID: `31513173735`
 
@@ -129,11 +129,57 @@ Integrity result: PASS
 Advisory result: SKIPPED
 ```
 
+## Terminal Current Green GitHub CI Run
+
+Run ID: `31513596822`
+
+Commit: `c5e2e5323f6ab46d7eb4003d7112ff41ecf6e72e`
+
+Result: `success`
+
+URL:
+
+`https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/31513596822`
+
+This later run exists because commit `c5e2e53 docs: record real governance CI results` documented the first repaired green CI result and then validated that final governance-CI documentation state.
+
+Observed terminal job results:
+
+| Job | Result |
+|---|---|
+| `change-classifier` | success |
+| `policy-tests` | success |
+| `evaluation-gate` | success |
+| `pipeline-integrity` | success |
+| `advisory-review` | success with `SKIPPED` artifact |
+| `audit-trail` | success |
+
+Terminal policy artifact:
+
+```text
+18 passed in 0.73s
+```
+
+Terminal evaluation artifact:
+
+```text
+60 passed in 0.13s
+```
+
+Terminal audit artifact:
+
+```text
+Policy result: success
+Evaluation result: success
+Integrity result: PASS
+Advisory result: SKIPPED
+```
+
 ## Advisory Review
 
 The advisory-review job is non-blocking by design.
 
-The final green run produced a real graceful-degradation artifact:
+The terminal green run produced a real graceful-degradation artifact:
 
 ```text
 SKIPPED - AI SECRET UNAVAILABLE
@@ -155,7 +201,7 @@ The audit trail contains no secrets and marks unavailable producer data honestly
 
 ## Pipeline Integrity Protection
 
-The final green GitHub run reported pipeline integrity as:
+The terminal green GitHub run reported pipeline integrity as:
 
 ```text
 PASS
@@ -203,11 +249,11 @@ A CI-backed terminal Passport was generated from real producers for `AF-HIGH-001
 
 Local ignored output:
 
-`.eval-artifacts/capstone/change-passports/AF-HIGH-001-with-ci.json`
+`.eval-artifacts/capstone/change-passports/AF-HIGH-001-with-final-ci.json`
 
 Real CI fields included:
 
-- CI commit: `92d60c438039b65e6229eefd7abc607c73393a0f`
+- CI commit: `c5e2e5323f6ab46d7eb4003d7112ff41ecf6e72e`
 - policy status: `success`
 - evaluation status: `success`
 - integrity status: `success`
@@ -241,7 +287,7 @@ If production deployment steps, broad write permissions, or secret exposure are 
 
 Permanent gates are green on GitHub for `capstone/aura-forge`.
 
-The first failed run is preserved, the repair is committed, and the final run proves:
+The first failed run and first repaired green run are preserved. The terminal current green run proves:
 
 - policy gate passes;
 - evaluation gate passes;

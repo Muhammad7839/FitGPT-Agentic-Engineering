@@ -1,0 +1,144 @@
+{
+  "change": {
+    "final_readiness_result": "PASS",
+    "quality_score": "16/16",
+    "scenario_id": "AF-HIGH-001"
+  },
+  "ci": {
+    "github_actions": {
+      "advisory_reason": "AI SECRET UNAVAILABLE",
+      "advisory_status": "SKIPPED",
+      "artifact_names": [
+        "advisory-review/advisory-review.json",
+        "advisory-review/advisory-review.md",
+        "audit-trail/audit-trail.json",
+        "audit-trail/audit-trail.md",
+        "change-classification/change-classification.json",
+        "evaluation-gate/evaluation-gate.txt",
+        "pipeline-integrity/pipeline-integrity.json",
+        "policy-tests/policy-tests.txt"
+      ],
+      "artifact_references": [
+        {
+          "path": ".eval-artifacts/capstone/github-ci/31513596822/artifacts/advisory-review/advisory-review.json",
+          "sha256": "036e28c56d8f2ae700d3faac02793b82eaee9938a1d85b41ca204d1a40ba8205"
+        },
+        {
+          "path": ".eval-artifacts/capstone/github-ci/31513596822/artifacts/advisory-review/advisory-review.md",
+          "sha256": "158b173620b9509224ccae36191bbddb3b740bf3d0d41c2f165a9388952bd052"
+        },
+        {
+          "path": ".eval-artifacts/capstone/github-ci/31513596822/artifacts/audit-trail/audit-trail.json",
+          "sha256": "1c9390c09b10a00548781383839c83e23ee2e570b1a861457d4010ba06e94d32"
+        },
+        {
+          "path": ".eval-artifacts/capstone/github-ci/31513596822/artifacts/audit-trail/audit-trail.md",
+          "sha256": "ef336f6bc7f938d4bfc9ad2acb1992d239f55a168b39fa31c7ec7a7ff962b5be"
+        },
+        {
+          "path": ".eval-artifacts/capstone/github-ci/31513596822/artifacts/change-classification/change-classification.json",
+          "sha256": "786db7add5c5efc7220d7e232373820658c08485c75fe8c843b536ceabca9b91"
+        },
+        {
+          "path": ".eval-artifacts/capstone/github-ci/31513596822/artifacts/evaluation-gate/evaluation-gate.txt",
+          "sha256": "b40f7074b5c83beb3dfff0891b029118d9fc58ace31af2619271fdc35cab43e3"
+        },
+        {
+          "path": ".eval-artifacts/capstone/github-ci/31513596822/artifacts/pipeline-integrity/pipeline-integrity.json",
+          "sha256": "6ed11d44fd7dda6df22774053689e5708769f3415c06869745f36c903ea6f316"
+        },
+        {
+          "path": ".eval-artifacts/capstone/github-ci/31513596822/artifacts/policy-tests/policy-tests.txt",
+          "sha256": "37b9f005aea46c2e520ceb7ca8f594b0eb45ee7eb7bfb2d28be510730e1fa62a"
+        }
+      ],
+      "audit_status": "success",
+      "commit_sha": "c5e2e5323f6ab46d7eb4003d7112ff41ecf6e72e",
+      "conclusion": "success",
+      "evaluation_status": "success",
+      "integrity_status": "success",
+      "metadata_reference": {
+        "path": ".eval-artifacts/capstone/github-ci/31513596822/run-view.json",
+        "sha256": "1f2923644f20984775bb4078375ee93cced5cf4f8171d2769d8f186747266553"
+      },
+      "policy_status": "success",
+      "provider": "github_actions",
+      "run_url": "https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/31513596822",
+      "status": "completed",
+      "workflow_run_id": 31513596822
+    }
+  },
+  "classification": {
+    "classifier_version": "aura-risk-v1",
+    "normalized_paths": [
+      "eval/test_policy.py",
+      "mcp-servers/storage/allow-list.json",
+      "mcp-servers/retrieval/allow-list.json",
+      "docs/governance-policy.md"
+    ],
+    "risk_tier": "HIGH",
+    "triggered_rules": [
+      "HIGH_SENSITIVE_EXACT_PATH",
+      "HIGH_SENSITIVE_PREFIX"
+    ]
+  },
+  "deterministic_gates": {
+    "escalation_required": false,
+    "mcp_runtime_test_result": "1 passed",
+    "observed_tier": "HIGH",
+    "policy_test_result": "17 passed"
+  },
+  "evaluation_result": "1 passed",
+  "evidence": [
+    {
+      "path": ".eval-artifacts/capstone/aura-runs/AF-HIGH-001/final-successful-route-metrics.json",
+      "sha256": "dcb3dcad22b0b0aeceb2e2c7ab59f9efee65e8f53dfd8ac3210a3fd25746603f"
+    },
+    {
+      "path": ".eval-artifacts/capstone/aura-runs/AF-HIGH-001/final-quality-score.json",
+      "sha256": "2af0d9f1fd8c1bd4dbc87581acb5752ede57a6c830759efc0787273f1920ec6f"
+    },
+    {
+      "path": ".eval-artifacts/capstone/aura-runs/AF-HIGH-001/precheck-001/classifier-router-output.json",
+      "sha256": "d523e71ae2e71ed92b564cbac1f6778e7c026058b7af7288774dcf175ead60ff"
+    }
+  ],
+  "human_approval_events": [
+    {
+      "approval_type": "final",
+      "approved_after": "Tester",
+      "approved_at_utc": "2026-08-11T13:39:24Z",
+      "approved_before": "Project Manager",
+      "approved_by": "Muhammad Imran",
+      "path": ".eval-artifacts/capstone/aura-runs/AF-HIGH-001/final-approval-001/final-human-approval.json",
+      "sha256": "b9a32cc62a4e9aa3bcd61a436990513d1d42c2e6bb1e6ebf3117fe9c7f274b95"
+    }
+  ],
+  "measurements": {
+    "duration_api_ms": 158329,
+    "duration_ms": 158510,
+    "total_cost_usd": 1.1061042
+  },
+  "policy_result": "17 passed",
+  "route": {
+    "human_checkpoint_count": 2,
+    "ordered_roles": [
+      "Planner",
+      "Implementer",
+      "Reviewer",
+      "Tester",
+      "Project Manager"
+    ],
+    "route_id": "aura-high-v1",
+    "router_version": "aura-router-v1"
+  },
+  "schema_version": "change-passport-v1",
+  "tests": {
+    "mcp_runtime_test_result": "1 passed",
+    "policy_test_result": "17 passed"
+  },
+  "tooling": {
+    "authorization_denial_count": 0,
+    "tool_event_count": 23
+  }
+}

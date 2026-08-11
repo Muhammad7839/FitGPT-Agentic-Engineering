@@ -1,4 +1,103 @@
-# FitGPT
+# AURA Forge — Governed Adaptive Engineering for FitGPT
+
+This is the isolated LaunchCode Agentic Engineering course repository for FitGPT. The original completed FitGPT senior-project repository remains protected and separate at `https://github.com/Muhammad7839/FitGPT.git`.
+
+AURA Forge is an engineering-governance system around FitGPT, not another consumer feature. It decides how much autonomy a software change deserves, routes the change through bounded agents and deterministic gates, and leaves machine-readable evidence for review.
+
+Thesis:
+
+> AURA Forge does not ask how many AI agents can automate a software change. It determines how much autonomy a change actually deserves, then proves that the selected agents stayed within policy, the change passed evaluation, and every important decision is traceable to machine-generated evidence.
+
+## Architecture
+
+```text
+Change
+  -> deterministic risk classifier
+  -> adaptive route
+  -> bounded agents/tools
+  -> deterministic/evaluation gates
+  -> human approval where required
+  -> Change Passport/audit evidence
+```
+
+Key evidence:
+
+- Final rubric audit: `docs/capstone/final-rubric-audit.md`
+- Evidence index: `docs/capstone/evidence-index.md`
+- Reproducibility runbook: `docs/capstone/reproducibility-runbook.md`
+- Architecture diagrams: `docs/capstone/final-architecture.md`
+- Change Passport example: `docs/capstone/evidence/change-passport-AF-HIGH-001.json`
+- Real GitHub CI evidence: `docs/capstone/governance-ci-results.md`
+
+## Measured Impact
+
+Measured across three representative capstone scenarios only:
+
+| Scenario | PRE-AURA quality | AURA quality | Cost change | Model-role change | Human-checkpoint change |
+|---|---:|---:|---:|---:|---:|
+| LOW | `14/16 FAIL` | `16/16 PASS` | `-44.32%` | `-60%` | `-100%` |
+| MEDIUM | `15/16 PASS` | `16/16 PASS` | `-19.71%` | `-40%` | `-50%` |
+| HIGH | `15/16 PASS` | `16/16 PASS` | `-5.89%` | unchanged | unchanged |
+| Aggregate | `44/48` | `48/48` | `-19.22%` | `-33.33%` | `-50%` |
+
+These are measured capstone results only. They are not company-wide or production-wide savings claims.
+
+## Real CI Status Evidence
+
+Terminal verified GitHub Actions run:
+
+`31513596822`
+
+Commit:
+
+`c5e2e5323f6ab46d7eb4003d7112ff41ecf6e72e`
+
+Result:
+
+- `policy-tests`: success, `18 passed`
+- `evaluation-gate`: success, `60 passed`
+- `pipeline-integrity`: success, `PASS`
+- `advisory-review`: success with `SKIPPED - AI SECRET UNAVAILABLE`
+- `audit-trail`: success
+
+## Quick Verification
+
+Fast deterministic checks:
+
+```bash
+pytest -q -p no:cacheprovider eval/test_risk_classifier.py eval/test_adaptive_router.py eval/test_pre_aura_control.py
+pytest -q -p no:cacheprovider eval/test_ci_change_classifier.py eval/test_pipeline_integrity.py eval/test_audit_trail.py eval/test_change_passport.py
+pytest -q -p no:cacheprovider eval/test_config_docs_consistency.py eval/test_governance_overreach.py
+```
+
+Governed Docker verification:
+
+```bash
+docker run --rm -i \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -v "$PWD:/workspace:ro" \
+  -w /workspace \
+  agentic_engineer_4:latest \
+  pytest -q -p no:cacheprovider eval/test_policy.py eval/test_mcp_runtime.py eval/test_coursetools_runtime.py
+```
+
+Pipeline integrity:
+
+```bash
+python3 scripts/check-pipeline-integrity.py .github/workflows/ci.yml
+```
+
+Change Passport:
+
+```bash
+python3 scripts/build-change-passport.py AF-HIGH-001 --output /tmp/aura-passport.json
+```
+
+## Safety Boundaries
+
+AURA Forge does not deploy to production, mutate live FitGPT, contact production databases, use real user data, or require production secrets for deterministic verification. Advisory AI review is optional and safely skips when its secret is unavailable.
+
+## Target Codebase: FitGPT
 
 FitGPT is a cross-platform AI wardrobe assistant. It helps users organize their clothing, get daily outfit recommendations based on weather and personal style, and track what they wear over time. The app is available as a web app and an Android app, both backed by the same FastAPI server.
 
@@ -147,7 +246,7 @@ npm test
 ```
 There are 617 web tests covering components, hooks, and integration flows.
 
-**GitHub Actions** runs both test suites automatically on every push to `main` and on pull requests. The workflow files are in `.github/workflows/`.
+The original product workflow files are in `.github/workflows/`. The capstone governance workflow is `.github/workflows/ci.yml` and runs on `capstone/aura-forge`.
 
 ---
 

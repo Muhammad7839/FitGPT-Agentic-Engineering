@@ -30,12 +30,12 @@ Unavailable optional fields are omitted. The generator does not add placeholder 
 
 ## GitHub CI Evidence
 
-After the first green capstone GitHub Actions run, a CI-backed terminal Passport was generated locally for `AF-HIGH-001`.
+After the terminal green capstone GitHub Actions run, a CI-backed terminal Passport was generated locally for `AF-HIGH-001`.
 
 Real CI producer:
 
-- workflow run: `31513173735`
-- commit: `92d60c438039b65e6229eefd7abc607c73393a0f`
+- workflow run: `31513596822`
+- commit: `c5e2e5323f6ab46d7eb4003d7112ff41ecf6e72e`
 - policy status: `success`
 - evaluation status: `success`
 - pipeline-integrity status: `success`
@@ -44,11 +44,15 @@ Real CI producer:
 
 Local ignored output:
 
-`.eval-artifacts/capstone/change-passports/AF-HIGH-001-with-ci.json`
+`.eval-artifacts/capstone/change-passports/AF-HIGH-001-with-final-ci.json`
+
+Tracked sanitized example:
+
+`docs/capstone/evidence/change-passport-AF-HIGH-001.json`
 
 The GitHub CI fields are derived from downloaded run metadata and artifacts under:
 
-`.eval-artifacts/capstone/github-ci/31513173735/`
+`.eval-artifacts/capstone/github-ci/31513596822/`
 
 ## Generated Local Passports
 
