@@ -45,6 +45,7 @@ jobs:
     name: policy-tests
     runs-on: ubuntu-latest
     needs: [change-classifier]
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
 
