@@ -1,0 +1,171 @@
+name: AURA Forge Governance CI
+
+on:
+  pull_request:
+    branches: [main, capstone/aura-forge]
+  push:
+    branches: [capstone/aura-forge]
+
+permissions:
+  contents: read
+
+jobs:
+  change-classifier:
+    name: change-classifier
+    runs-on: ubuntu-latest
+    outputs:
+      should_run_evaluation: ${{ steps.classify.outputs.should_run_evaluation }}
+      risk_tier: ${{ steps.classify.outputs.risk_tier }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Classify changed files
+        id: classify
+        run: |
+          set -euo pipefail
+          git diff --name-only HEAD~1 HEAD > changed-files.txt || git ls-files > changed-files.txt
+          python eval/ci_change_classifier.py --output change-classification.json $(cat changed-files.txt)
+          python - <<'PY'
+          import json
+          data = json.load(open("change-classification.json", encoding="utf-8"))
+          with open("classification-output.txt", "w", encoding="utf-8") as out:
+              out.write(f"should_run_evaluation={str(data['should_run_evaluation']).lower()}\n")
+              out.write(f"risk_tier={data['risk_tier']}\n")
+          PY
+          cat classification-output.txt >> "$GITHUB_OUTPUT"
+
+      - name: Upload classification artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: change-classification
+          path: change-classification.json
+          retention-days: 90
+
+  policy-tests:
+    name: policy-tests
+    runs-on: ubuntu-latest
+    needs: [change-classifier]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run permanent policy and MCP runtime gates
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          pip install pytest mcp==1.12.0 pydantic==2.9.2
+          pytest -q -p no:cacheprovider eval/test_policy.py eval/test_mcp_runtime.py eval/test_coursetools_runtime.py | tee policy-tests.txt
+
+      - name: Upload policy report
+        uses: actions/upload-artifact@v4
+        with:
+          name: policy-tests
+          path: policy-tests.txt
+          retention-days: 90
+
+  evaluation-gate:
+    name: evaluation-gate
+    runs-on: ubuntu-latest
+    needs: [change-classifier, policy-tests]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run deterministic evaluation gate or explicit skip
+        env:
+          SHOULD_RUN_EVALUATION: ${{ needs.change-classifier.outputs.should_run_evaluation }}
+        run: |
+          set -euo pipefail
+          if [ "$SHOULD_RUN_EVALUATION" = "true" ]; then
+            pytest -q -p no:cacheprovider eval/test_risk_classifier.py eval/test_adaptive_router.py eval/test_pre_aura_control.py | tee evaluation-gate.txt
+          else
+            echo "SKIPPED -- classifier reported no agent/prompt/skill/tool/governance behavior affected" | tee evaluation-gate.txt
+          fi
+
+      - name: Upload evaluation report
+        uses: actions/upload-artifact@v4
+        with:
+          name: evaluation-gate
+          path: evaluation-gate.txt
+          retention-days: 90
+
+  pipeline-integrity:
+    name: pipeline-integrity
+    runs-on: ubuntu-latest
+    needs: [change-classifier, policy-tests, evaluation-gate]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run pipeline integrity check
+        run: |
+          set -euo pipefail
+          python -m pip install pyyaml
+          python scripts/check-pipeline-integrity.py .github/workflows/ci.yml --output pipeline-integrity.json
+
+      - name: Upload integrity report
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-integrity
+          path: pipeline-integrity.json
+          retention-days: 90
+
+  advisory-review:
+    name: advisory-review
+    runs-on: ubuntu-latest
+    needs: [change-classifier]
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Produce advisory artifact or graceful skip
+        env:
+          AURA_ADVISORY_AI_KEY: ${{ secrets.AURA_ADVISORY_AI_KEY }}
+        run: python scripts/run-advisory-review.py --output-dir advisory-review
+
+      - name: Upload advisory artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: advisory-review
+          path: advisory-review/
+          retention-days: 90
+
+  audit-trail:
+    name: audit-trail
+    runs-on: ubuntu-latest
+    needs: [change-classifier, policy-tests, evaluation-gate, pipeline-integrity, advisory-review]
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download available artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: downloaded-artifacts
+
+      - name: Build audit trail
+        run: |
+          set -euo pipefail
+          python scripts/build-audit-trail.py \
+            --classification downloaded-artifacts/change-classification/change-classification.json \
+            --integrity downloaded-artifacts/pipeline-integrity/pipeline-integrity.json \
+            --advisory downloaded-artifacts/advisory-review/advisory-review.json \
+            --policy-status "${{ needs.policy-tests.result }}" \
+            --evaluation-status "${{ needs.evaluation-gate.result }}" \
+            --output-dir audit-trail
+
+      - name: Upload audit trail
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-trail
+          path: audit-trail/
+          retention-days: 90
