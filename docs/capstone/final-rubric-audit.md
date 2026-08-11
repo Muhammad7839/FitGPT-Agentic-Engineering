@@ -1,6 +1,6 @@
 # Final 52-Point Rubric Audit
 
-Official rubric source: Muhammad's saved/uploaded LaunchCode final capstone assignment page, `Agentic Engineer Capstone: Ship Your Agentic Engineering Paved Road`. The local `/Users/muhammad/LaunchCodeAgenticEngineer` repository contains Modules 1-3 only and was not the source of the final rubric.
+Official rubric source: Muhammad's saved/uploaded LaunchCode final capstone assignment page, `Agentic Engineer Capstone: Ship Your Agentic Engineering Paved Road`. The local LaunchCode course reference repository contains Modules 1-3 only and was not the source of the final rubric.
 
 Current audit source of truth: `docs/capstone/official-rubric-reference.md`.
 
@@ -25,6 +25,30 @@ Main gaps were grader discoverability, root README positioning, stakeholder one-
 | Production deployment not performed | NOT SAFE / OUT OF SCOPE | Not closed; deliberate safety boundary. |
 | Sandbox network egress not fully constrained | NOT SAFE / OUT OF SCOPE for this pass | Documented conservatively; not claimed airtight. |
 
+## Final Pre-Video Completion Pass
+
+Current verified state before this pass:
+
+- Presentation-layout commit: `5f91fb2`.
+- Presentation-repair GitHub Actions run: `31527786959`, `success`.
+- Current defensible score before this pass: `49 / 52`.
+
+Autonomous work completed in this pass:
+
+- Created `docs/capstone/pre-video-rubric-gap-table.md`.
+- Created `docs/capstone/adr-evidence-matrix.md`.
+- Strengthened `docs/capstone/right-tool-decision-matrix.md`.
+- Strengthened `docs/capstone/monitoring-incident-runbook.md`.
+- Added LOW-to-HIGH escalation regression coverage in `eval/test_adaptive_router.py`.
+- Created `docs/capstone/GRADER-QUICKSTART.md`.
+- Created `docs/capstone/portfolio-summary.md`.
+- Created `docs/capstone/interview-talking-points.md`.
+- Created `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md`.
+- Created `docs/capstone/submission/VIDEO-EVIDENCE-STAGING.md`.
+- Updated grader navigation in `README.md`, `docs/capstone/evidence-index.md`, `docs/capstone/reproducibility-runbook.md`, and `docs/capstone/submission/README.md`.
+
+The added evidence improves grader discoverability and regression coverage, but it does not honestly close the remaining three non-video 4/4 gaps: airtight network egress, complete historical stale-memory pruning/reflection-score evidence, and an unobserved real regression caught by the eval harness before manual detection.
+
 ## Summary Table
 
 | # | Criterion | Initial | Final | Best evidence | Residual risk |
@@ -36,14 +60,16 @@ Main gaps were grader discoverability, root README positioning, stakeholder one-
 | 5 | Orchestration & MCP Tools | 4 | 4 | `docs/routing-and-tool-grant-map.md`, `mcp/coursetools_server.py` | None material. |
 | 6 | Evaluation & Calibration | 4 | 4 | `eval/*`, `docs/calibration-log.md`, holdout evidence | None material. |
 | 7 | Governance, Security & CI/CD | 4 | 4 | CI run `31513596822`, overreach demo, integrity drill | None material. |
-| 8 | Right-Tool Decisions & ADRs | 3 | 4 | `docs/capstone/right-tool-decision-matrix.md`, `docs/adr/*` | ADRs were formalized late, but cite real evidence. |
-| 9 | Production Integration & Tool-Evolution Drill | 3 | 3 | `docs/capstone/tool-evolution-drill.md`, runbook, CI failure/repair | Intentional fault was manually injected, so it does not satisfy the 4/4 "not caught manually" bullet. |
+| 8 | Right-Tool Decisions & ADRs | 3 | 4 | `docs/capstone/right-tool-decision-matrix.md`, `docs/capstone/adr-evidence-matrix.md`, `docs/adr/*` | ADRs were formalized late, but cite real evidence. |
+| 9 | Production Integration & Tool-Evolution Drill | 3 | 3 | `docs/capstone/tool-evolution-drill.md`, runbook, CI failure/repair, escalation regression | Intentional fault was manually injected, so it does not satisfy the 4/4 "not caught manually" bullet. |
 | 10 | Iteration Narrative & Impact | 3 | 4 | `docs/capstone/iteration-narrative.md`, impact report | None material. |
-| 11 | Stakeholder Communication | 2 | 3 | one-pager, demo/video scripts, final recording kit | Actual final video is human-only and not yet recorded. |
+| 11 | Stakeholder Communication | 2 | 3 | one-pager, demo/video scripts, teleprompter, video staging, final recording kit | Actual final video is human-only and not yet recorded. |
 | 12 | Clarity & Flow | 2 | 4 | final PPTX, speaker notes, video script, recording sequence | Actual spoken delivery still depends on Muhammad, but the deck and script now supply the complete flow. |
 | 13 | Design | 2 | 4 | final PPTX, rendered slide preview, generated charts/visual assets | Actual visual deck now exists; final recorded video still depends on Muhammad. |
 
 Final defensible score after final submission package: `49 / 52`.
+
+Final pre-video defensible score after the autonomous completion pass: `49 / 52`.
 
 ## Detailed Audit
 
@@ -173,7 +199,7 @@ Official 4/4 wording:
 
 Rationale: the final matrix is now explicit; deterministic conversion records `$0` model cost and measured runtime; ADRs cite concrete commits/evals/costs. Some ADRs were formalized late, so the score is defensible but not risk-free.
 
-Evidence: `docs/capstone/right-tool-decision-matrix.md`, `docs/capstone/deterministic-conversion.md`, `scripts/check-config-docs-consistency.py`, `docs/adr/*`.
+Evidence: `docs/capstone/right-tool-decision-matrix.md`, `docs/capstone/adr-evidence-matrix.md`, `docs/capstone/deterministic-conversion.md`, `scripts/check-config-docs-consistency.py`, `docs/adr/*`.
 
 Evidence type: capstone evidence.
 
@@ -190,11 +216,11 @@ Official 4/4 wording:
 
 Rationale: the complete workflow ran in the isolated course repo with real GitHub CI, reliability controls, cost controls, graceful advisory skip, and a documented drill. However, the controlled fault was intentionally injected and manually known, so it does not satisfy the exact "not caught manually" 4/4 bullet.
 
-Evidence: `docs/capstone/tool-evolution-drill.md`, `docs/capstone/monitoring-incident-runbook.md`, `docs/capstone/governance-ci-results.md`, commits `7c666e5`, `4e446f6`, `92d60c4`.
+Evidence: `docs/capstone/tool-evolution-drill.md`, `docs/capstone/monitoring-incident-runbook.md`, `docs/capstone/governance-ci-results.md`, `eval/test_adaptive_router.py`, commits `7c666e5`, `4e446f6`, `92d60c4`.
 
 Evidence type: capstone evidence and real GitHub evidence.
 
-Gap: no safe way to fabricate an unobserved spontaneous regression.
+Gap: no safe way to fabricate an unobserved spontaneous regression. The added LOW-to-HIGH escalation regression strengthens fail-closed coverage but does not convert the intentional drill into a spontaneous regression.
 
 ### 10. Iteration Narrative & Impact - 4/4
 
@@ -222,7 +248,7 @@ Official 4/4 wording:
 
 Rationale: the one-pager, final PPTX, speaker notes, recording script, cheat sheet, submission links file, and deterministic demo helper are grader-ready and sanitized, but the actual recorded video does not exist yet.
 
-Evidence: `docs/capstone/stakeholder-one-pager.md`, `docs/capstone/demo-script.md`, `docs/capstone/video-script.md`, `docs/capstone/evidence-index.md`, `docs/capstone/submission/`.
+Evidence: `docs/capstone/stakeholder-one-pager.md`, `docs/capstone/GRADER-QUICKSTART.md`, `docs/capstone/demo-script.md`, `docs/capstone/video-script.md`, `docs/capstone/evidence-index.md`, `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md`, `docs/capstone/submission/VIDEO-EVIDENCE-STAGING.md`, `docs/capstone/submission/`.
 
 Evidence type: capstone evidence.
 
@@ -264,3 +290,10 @@ Gap: final recorded video composition still depends on Muhammad's screen recordi
 The lowest score is shared by Criteria 2, 4, 9, and 11 at `3/4`.
 
 The most important residual risk is Criterion 11 because the official 4/4 level requires an actual compelling, on-time video that visibly shows governance stopping overreach. Codex can provide the script and evidence, but Muhammad must record the final video.
+
+Unavailable points after this pass:
+
+- Criterion 2: one point remains unavailable because network egress is not proven constrained enough to call the sandbox airtight.
+- Criterion 4: one point remains unavailable because complete stale-memory pruning with documented reasons and before/after reflection scores cannot be reconstructed honestly after the fact.
+- Criterion 9: one point remains unavailable because the tool-evolution drill was intentional fault injection, not an unobserved real regression caught before manual detection.
+- Criterion 11: one point remains unavailable until Muhammad records the actual walkthrough video.

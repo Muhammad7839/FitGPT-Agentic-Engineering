@@ -22,12 +22,16 @@ Change
 
 Key evidence:
 
+- Grader quickstart: `docs/capstone/GRADER-QUICKSTART.md`
 - Final rubric audit: `docs/capstone/final-rubric-audit.md`
 - Evidence index: `docs/capstone/evidence-index.md`
 - Reproducibility runbook: `docs/capstone/reproducibility-runbook.md`
+- Final pre-video verification: `docs/capstone/final-pre-video-verification.md`
 - Architecture diagrams: `docs/capstone/final-architecture.md`
 - Change Passport example: `docs/capstone/evidence/change-passport-AF-HIGH-001.json`
 - Real GitHub CI evidence: `docs/capstone/governance-ci-results.md`
+- ADR evidence matrix: `docs/capstone/adr-evidence-matrix.md`
+- Final presentation: `docs/capstone/submission/AURA_Forge_Final_Presentation.pptx`
 
 ## Measured Impact
 
@@ -59,6 +63,11 @@ Result:
 - `pipeline-integrity`: success, `PASS`
 - `advisory-review`: success with `SKIPPED - AI SECRET UNAVAILABLE`
 - `audit-trail`: success
+
+Additional passed evidence runs:
+
+- `31520499134`: verified submission-package CI evidence used in the final deck.
+- `31527786959`: passed after final presentation visual repair.
 
 ## Quick Verification
 

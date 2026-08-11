@@ -17,6 +17,26 @@ This index is organized for a grader. It points to the strongest evidence withou
 | 9 | Deterministic conversion | `scripts/check-config-docs-consistency.py`, `docs/capstone/deterministic-conversion.md` | `9f9e461` | Right-tool conversion from agentic check to deterministic code. |
 | 10 | Tool-evolution drill | `docs/capstone/tool-evolution-drill.md` | `7c666e5`, `4e446f6` | Eval-gated fault and repair history. |
 
+## Five-Minute Navigation
+
+| Question | Start here |
+|---|---|
+| What problem did Muhammad solve? | `docs/capstone/GRADER-QUICKSTART.md`, `docs/capstone/aura-forge-prd.md` |
+| Why an adaptive agentic system? | `docs/capstone/aura-forge-prd.md`, `docs/capstone/right-tool-decision-matrix.md` |
+| How do LOW/MEDIUM/HIGH work? | `docs/capstone/risk-classifier.md`, `docs/capstone/adaptive-routing.md` |
+| What changed versus baseline? | `docs/capstone/control-baseline-comparison.md`, `docs/capstone/control-vs-aura-impact.md` |
+| What are the measured results? | `docs/capstone/control-vs-aura-impact.md`, `docs/capstone/aura-results.md` |
+| Where is real governance evidence? | `docs/capstone/governance-overreach-demo.md` |
+| Where is CI evidence? | `docs/capstone/governance-ci-results.md` |
+| Where is the Change Passport? | `docs/capstone/evidence/change-passport-AF-HIGH-001.json`, `docs/capstone/change-passport.md` |
+| Where is the deterministic conversion? | `docs/capstone/deterministic-conversion.md` |
+| How do I reproduce core tests? | `docs/capstone/reproducibility-runbook.md` |
+| Where are the ADRs? | `docs/adr/`, `docs/capstone/adr-evidence-matrix.md` |
+| Where is the final presentation? | `docs/capstone/submission/AURA_Forge_Final_Presentation.pptx` |
+| What remains human-only? | `docs/capstone/submission/FINAL-HUMAN-CHECKLIST.md` |
+| Where is the final dry run? | `docs/capstone/reproducibility-dry-run.md`, `docs/capstone/final-pre-video-verification.md` |
+| Where is the sanitization audit? | `docs/capstone/final-security-audit.md` |
+
 ## Criteria Map
 
 | Criterion | Evidence | Commit / run | What it proves |
@@ -28,9 +48,9 @@ This index is organized for a grader. It points to the strongest evidence withou
 | 5. Orchestration & MCP Tools | `docs/orchestration-diagram.md`, `docs/routing-and-tool-grant-map.md`, `mcp/coursetools_server.py`, `eval/test_policy.py` | Module 3/4 and capstone commits | Multi-role route, MCP allow-lists, least privilege. |
 | 6. Evaluation & Calibration | `eval/test_deterministic.py`, `eval/test_rubric_suite.py`, `docs/calibration-log.md`, `docs/holdout-task-set.md` | Module 3 commits | Deterministic/rubric harness, holdout, calibration evidence. |
 | 7. Governance, Security & CI/CD | `.github/workflows/ci.yml`, `scripts/check-pipeline-integrity.py`, `docs/capstone/governance-ci-results.md` | `a102a79`, `92d60c4`, run `31513596822` | Enforced CI gates and audit trail. |
-| 8. Right-Tool Decisions & ADRs | `docs/capstone/right-tool-decision-matrix.md`, `docs/adr/*`, `docs/capstone/deterministic-conversion.md` | `643c455`, `9f9e461` | Agent vs deterministic vs human rationale. |
+| 8. Right-Tool Decisions & ADRs | `docs/capstone/right-tool-decision-matrix.md`, `docs/capstone/adr-evidence-matrix.md`, `docs/adr/*`, `docs/capstone/deterministic-conversion.md` | `643c455`, `9f9e461` | Agent vs deterministic vs human rationale. |
 | 9. Production Integration & Tool-Evolution Drill | `docs/capstone/tool-evolution-drill.md`, `docs/capstone/monitoring-incident-runbook.md`, `docs/capstone/governance-ci-results.md` | `7c666e5`, `4e446f6`, `92d60c4` | Production-like isolated CI, failure handling, drill. |
 | 10. Iteration Narrative & Impact | `docs/capstone/iteration-narrative.md`, `docs/capstone/control-vs-aura-impact.md` | packaging commit, `025bcbf` | Chronological improvement and measured impact. |
-| 11. Stakeholder Communication | `docs/capstone/stakeholder-one-pager.md`, `docs/capstone/demo-script.md`, `docs/capstone/video-script.md` | packaging commit | Non-engineer summary and video plan. |
-| 12. Clarity & Flow | `docs/capstone/presentation-outline.md`, `docs/capstone/demo-script.md` | packaging commit | Presentation sequence. |
-| 13. Design | `docs/capstone/final-architecture.md`, `docs/capstone/presentation-outline.md` | packaging commit | Mermaid diagrams and slide visual plan. |
+| 11. Stakeholder Communication | `docs/capstone/stakeholder-one-pager.md`, `docs/capstone/GRADER-QUICKSTART.md`, `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md`, `docs/capstone/submission/VIDEO-EVIDENCE-STAGING.md` | packaging commits | Non-engineer summary and recording-ready plan; actual video remains human-only. |
+| 12. Clarity & Flow | `docs/capstone/submission/AURA_Forge_Final_Presentation.pptx`, `docs/capstone/submission/AURA_Forge_Speaker_Notes.md` | presentation commits | Complete 10-slide narrative and speaker flow. |
+| 13. Design | `docs/capstone/submission/AURA_Forge_Final_Presentation.pptx`, `docs/capstone/submission/AURA_Forge_Slide_Preview.png` | presentation commits | Final rendered visual deck and contact sheet. |

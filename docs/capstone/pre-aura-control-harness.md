@@ -25,9 +25,7 @@ The input contains only the fields needed for a bounded engineering task:
 - `relevant_paths`
 - optional `risk_label` for measurement metadata only
 
-The worktree must be under:
-
-`/Users/muhammad/course-projects/aura-forge-control/`
+The worktree must be under a disposable sibling control worktree named `aura-forge-control`.
 
 The primary capstone worktree is rejected as a scenario execution target.
 

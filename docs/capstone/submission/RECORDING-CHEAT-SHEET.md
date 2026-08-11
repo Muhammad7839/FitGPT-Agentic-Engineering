@@ -3,9 +3,10 @@
 ## Before recording
 
 - Open `docs/capstone/submission/AURA_Forge_Final_Presentation.pptx`.
-- Open terminal in `/Users/muhammad/course-projects/FitGPT-Agentic-Engineering`.
+- Open terminal at the repository root.
 - Open verified submission-package CI run `31520499134`.
 - Open denial evidence: `docs/capstone/governance-overreach-demo.md`.
+- Keep `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md` available as the read-aloud source.
 - Silence notifications.
 
 ## During recording

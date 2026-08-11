@@ -88,7 +88,7 @@ Static result recorded after dependency-auditor enforcement:
 ============================= test session starts ==============================
 platform darwin -- Python 3.9.6, pytest-8.4.1, pluggy-1.6.0 -- /Applications/Xcode.app/Contents/Developer/usr/bin/python3
 cachedir: .pytest_cache
-rootdir: /Users/muhammad/course-projects/FitGPT-Agentic-Engineering
+rootdir: <repository root>
 configfile: pytest.ini
 plugins: anyio-4.12.1, hydra-core-1.3.2
 collecting ... collected 16 items

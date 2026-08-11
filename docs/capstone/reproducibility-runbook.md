@@ -17,7 +17,7 @@ python3 scripts/build-change-passport.py AF-HIGH-001 --output /tmp/aura-passport
 Expected local result from the final packaging run:
 
 ```text
-81 passed
+82 passed
 ```
 
 ## Governed Runtime Path
@@ -89,6 +89,22 @@ pytest -q -p no:cacheprovider eval/test_governance_overreach.py
 ```
 
 The denial ID is `GO-20260811-001`.
+
+## Escalation / Rollback Check
+
+The adaptive router has a fail-closed escalation test for LOW work that observes a HIGH-sensitive path during implementation:
+
+```bash
+pytest -q -p no:cacheprovider eval/test_adaptive_router.py::test_low_route_observing_high_sensitive_path_fails_closed_with_escalation
+```
+
+Expected result:
+
+```text
+1 passed
+```
+
+This is regression/governance coverage only. It does not change the frozen measured AURA scenario results.
 
 ## GitHub CI Evidence
 

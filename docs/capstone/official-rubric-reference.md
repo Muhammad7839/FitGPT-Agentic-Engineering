@@ -8,7 +8,7 @@ Submission: `an external tool`
 
 Rubric title: `Agentic Engineer Capstone Project`
 
-Provenance note: this rubric was recovered from Muhammad's previously saved/uploaded LaunchCode capstone assignment page. The local `/Users/muhammad/LaunchCodeAgenticEngineer` reference repository contains only Modules 1-3 and was not the source of the final rubric.
+Provenance note: this rubric was recovered from Muhammad's previously saved/uploaded LaunchCode capstone assignment page. The local LaunchCode course reference repository contains only Modules 1-3 and was not the source of the final rubric.
 
 ## 1. Workflow Scoping
 

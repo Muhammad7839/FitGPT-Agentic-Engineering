@@ -83,8 +83,8 @@ ci() {
   cat <<'CI'
 GitHub Actions evidence
 Workflow: AURA Forge Governance CI
-Final run: 31517900793
-Run URL: https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/31517900793
+Verified submission-package CI run: 31520499134
+Run URL: https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/31520499134
 
 Permanent gates:
 - change-classifier: PASS

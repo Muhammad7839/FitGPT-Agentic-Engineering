@@ -20,6 +20,43 @@ This matrix records the AURA Forge rule for choosing deterministic code, an agen
 
 Use deterministic code when the input is stable, machine-readable, and policy-like. Use agentic roles when judgment, synthesis, or implementation tradeoffs matter. Use human approval when the result changes sensitive governance, production-adjacent behavior, or final readiness for a higher-risk route.
 
+## Reusable Decision Questions
+
+Use deterministic code when:
+
+- Are the rules stable enough to encode directly?
+- Is the result objectively verifiable from files, paths, JSON, tests, or CI output?
+- Should repeated identical inputs produce identical output?
+- Would model judgment add little value but add cost or variability?
+
+Use an agentic role when:
+
+- Does the task require interpretation, synthesis, implementation judgment, or tradeoff analysis?
+- Is the solution path not mechanically fixed?
+- Is bounded tool use useful, with a reviewer/tester able to check the result?
+- Can the role be scoped to only the files, tests, or evidence it needs?
+
+Use a human when:
+
+- Is there irreversible or sensitive approval?
+- Does accountability need to stay with Muhammad or a maintainer?
+- Does policy require explicit plan or final approval?
+- Would delegating the decision blur responsibility for governance, readiness, or submission?
+
+## AURA Stage Mapping
+
+| AURA stage | Tool type | Why | Evidence |
+|---|---|---|---|
+| Changed-path normalization | Deterministic | Path handling must be repeatable and fail closed on malformed input. | `eval/risk_classifier.py`, `eval/test_risk_classifier.py` |
+| Risk tier classification | Deterministic | HIGH-sensitive paths must outrank LOW labels every time. | `docs/capstone/risk-classifier.md` |
+| Route plan selection | Deterministic | Route IDs and role lists are policy outputs. | `eval/adaptive_router.py`, `eval/test_adaptive_router.py` |
+| Mid-run observed-path escalation | Deterministic | A LOW plan observing HIGH-sensitive paths must output `ESCALATION REQUIRED`, not silently continue. | `eval/test_adaptive_router.py::test_low_route_observing_high_sensitive_path_fails_closed_with_escalation` |
+| LOW implementation | Agentic | The document still needs semantic editing and independent review. | `docs/capstone/aura-results.md` |
+| MEDIUM implementation and testing | Agentic plus deterministic tests | Executable/test work needs implementation judgment and focused verification. | `.eval-artifacts/capstone/aura-runs/AF-MEDIUM-001/`, `docs/capstone/aura-results.md` |
+| HIGH plan/final approval | Human | Sensitive governance work requires accountability before implementation and before PM closure. | `.eval-artifacts/capstone/aura-runs/AF-HIGH-001/` |
+| Policy/MCP enforcement | Deterministic | Authorization and allow-list behavior must be machine-checkable. | `eval/test_policy.py`, `eval/test_mcp_runtime.py`, `docs/capstone/governance-overreach-demo.md` |
+| Change Passport | Deterministic | Readiness fields must come from producers and hashes, not from memory. | `scripts/build-change-passport.py`, `eval/test_change_passport.py` |
+
 ## Quantitative Conversion Evidence
 
 The converted config/docs consistency check runs deterministically with `$0` model cost and a measured local runtime around `0.156 ms`. The original historical auditor path required an agentic documentation review and model cost. The deterministic replacement is cheaper, easier to audit, and more repeatable for this narrow factual check.
