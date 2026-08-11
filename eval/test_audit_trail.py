@@ -47,6 +47,14 @@ def test_audit_trail_marks_unavailable_producers_without_fabricating(tmp_path):
     assert "integrity_result" not in audit
 
 
+def test_audit_trail_marks_missing_requested_artifact_unavailable(tmp_path):
+    audit = build_audit_trail.build_audit_trail(
+        output_dir=tmp_path / "audit",
+        integrity=tmp_path / "missing-integrity.json",
+    )
+    assert audit["integrity_result"]["status"] == "not_available"
+
+
 def test_advisory_review_gracefully_skips_without_secret(tmp_path, monkeypatch):
     monkeypatch.delenv("AURA_ADVISORY_AI_KEY", raising=False)
     artifact = run_advisory_review.build_advisory(tmp_path)

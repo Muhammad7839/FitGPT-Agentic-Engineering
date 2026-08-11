@@ -38,6 +38,8 @@ def build_audit_trail(
 
 
 def _read_json(path: Path) -> Any:
+    if not path.exists():
+        return {"status": "not_available", "reason": f"{path} was not produced"}
     return json.loads(path.read_text(encoding="utf-8"))
 
 
