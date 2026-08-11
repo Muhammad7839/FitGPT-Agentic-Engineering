@@ -1,12 +1,12 @@
 # Final Evidence Snapshot
 
-This snapshot records the verified submission evidence baseline. The most recent verified substantive CI baseline before final packaging was run `31513596822` at commit `c5e2e5323f6ab46d7eb4003d7112ff41ecf6e72e`. Final packaging commits may trigger newer documentation-only CI runs; this snapshot should be refreshed only when a newer run is intentionally designated as the submission baseline.
+This snapshot records the verified submission evidence baseline. The final grader-package commit was verified by GitHub Actions run `31517695449`. A later metadata-only refresh may trigger another CI run; do not repeatedly edit this file solely to chase its own new run identifier.
 
 | Field | Value |
 |---|---|
 | Branch | `capstone/aura-forge` |
-| Verified substantive CI commit | `c5e2e5323f6ab46d7eb4003d7112ff41ecf6e72e` |
-| Verified substantive CI run | `31513596822` |
+| Verified submission CI commit | `35cade1fa0265633cfbb4f067000ea54daebf77e` |
+| Verified submission CI run | `31517695449` |
 | Final CI result at that baseline | `success` |
 | Rubric score | `47 / 52` |
 | Control vs AURA quality | `44/48 -> 48/48` |
