@@ -17,7 +17,12 @@ class PassportError(ValueError):
     pass
 
 
-def build_passport(repo_root: Path, scenario_id: str) -> dict[str, object]:
+def build_passport(
+    repo_root: Path,
+    scenario_id: str,
+    ci_run_metadata: str | None = None,
+    ci_artifact_root: str | None = None,
+) -> dict[str, object]:
     repo_root = repo_root.resolve()
     run_root = _safe_ref(repo_root, f".eval-artifacts/capstone/aura-runs/{scenario_id}")
     metrics_path = _safe_ref(repo_root, f".eval-artifacts/capstone/aura-runs/{scenario_id}/final-successful-route-metrics.json")
@@ -79,6 +84,8 @@ def build_passport(repo_root: Path, scenario_id: str) -> dict[str, object]:
     tests = _tests_from_metrics(metrics)
     if tests:
         passport["tests"] = tests
+    if ci_run_metadata:
+        passport["ci"] = _ci_evidence(repo_root, ci_run_metadata, ci_artifact_root)
 
     return passport
 
@@ -95,6 +102,14 @@ def validate_passport(passport: dict[str, object], repo_root: Path) -> None:
             raise PassportError(f"evidence reference does not resolve: {item['path']}")
         if item["sha256"] != _sha256(path):
             raise PassportError(f"evidence hash mismatch: {item['path']}")
+    ci = passport.get("ci", {})
+    github = ci.get("github_actions", {}) if isinstance(ci, dict) else {}
+    for item in github.get("artifact_references", []):
+        path = _safe_ref(repo_root, item["path"])
+        if not path.exists():
+            raise PassportError(f"CI artifact reference does not resolve: {item['path']}")
+        if item["sha256"] != _sha256(path):
+            raise PassportError(f"CI artifact hash mismatch: {item['path']}")
 
 
 def _roles_from_metrics(metrics: dict[str, Any]) -> list[str]:
@@ -146,6 +161,50 @@ def _approval_events(repo_root: Path, run_root: Path) -> list[dict[str, object]]
     return events
 
 
+def _ci_evidence(repo_root: Path, metadata_ref: str, artifact_root_ref: str | None) -> dict[str, object]:
+    metadata_path = _safe_ref(repo_root, metadata_ref)
+    if not metadata_path.exists():
+        raise PassportError(f"missing CI metadata producer: {metadata_ref}")
+    run = _read_json(metadata_path)
+    jobs = {job["name"]: job.get("conclusion") or job.get("status", "not_available") for job in run.get("jobs", [])}
+    artifact_references: list[dict[str, str]] = []
+    artifact_names: list[str] = []
+    advisory_artifact = None
+    if artifact_root_ref:
+        artifact_root = _safe_ref(repo_root, artifact_root_ref)
+        if not artifact_root.exists():
+            raise PassportError(f"missing CI artifact producer: {artifact_root_ref}")
+        for path in sorted(p for p in artifact_root.rglob("*") if p.is_file()):
+            artifact_references.append({"path": _rel(repo_root, path), "sha256": _sha256(path)})
+            artifact_names.append(_rel(artifact_root, path))
+        advisory_path = artifact_root / "advisory-review" / "advisory-review.json"
+        if advisory_path.exists():
+            advisory_artifact = _read_json(advisory_path)
+
+    github_actions: dict[str, object] = {
+        "provider": "github_actions",
+        "workflow_run_id": run["databaseId"],
+        "run_url": run["url"],
+        "commit_sha": run["headSha"],
+        "status": run["status"],
+        "conclusion": run["conclusion"],
+        "policy_status": jobs.get("policy-tests", "not_available"),
+        "evaluation_status": jobs.get("evaluation-gate", "not_available"),
+        "integrity_status": jobs.get("pipeline-integrity", "not_available"),
+        "audit_status": jobs.get("audit-trail", "not_available"),
+        "artifact_names": artifact_names,
+        "metadata_reference": {"path": _rel(repo_root, metadata_path), "sha256": _sha256(metadata_path)},
+    }
+    if advisory_artifact:
+        github_actions["advisory_status"] = advisory_artifact["status"]
+        github_actions["advisory_reason"] = advisory_artifact.get("reason", "not_available")
+    else:
+        github_actions["advisory_status"] = jobs.get("advisory-review", "not_available")
+    if artifact_references:
+        github_actions["artifact_references"] = artifact_references
+    return {"github_actions": github_actions}
+
+
 def _evidence(repo_root: Path, paths: list[Path]) -> list[dict[str, str]]:
     return [{"path": _rel(repo_root, path), "sha256": _sha256(path)} for path in paths]
 
@@ -182,10 +241,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("scenario_id")
     parser.add_argument("--repo-root", default=".")
     parser.add_argument("--output")
+    parser.add_argument("--ci-run-metadata")
+    parser.add_argument("--ci-artifact-root")
     args = parser.parse_args(argv)
 
     repo_root = Path(args.repo_root)
-    passport = build_passport(repo_root, args.scenario_id)
+    passport = build_passport(
+        repo_root,
+        args.scenario_id,
+        ci_run_metadata=args.ci_run_metadata,
+        ci_artifact_root=args.ci_artifact_root,
+    )
     validate_passport(passport, repo_root)
     payload = json.dumps(passport, indent=2, sort_keys=True) + "\n"
     if args.output:

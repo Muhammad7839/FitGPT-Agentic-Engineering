@@ -37,6 +37,89 @@ def test_unavailable_ci_evidence_is_not_fabricated():
     assert "github_actions" not in passport
 
 
+def test_real_ci_metadata_adds_github_actions_fields(tmp_path):
+    run_root = tmp_path / ".eval-artifacts/capstone/aura-runs/AF-X/precheck-001"
+    run_root.mkdir(parents=True)
+    scenario_root = tmp_path / ".eval-artifacts/capstone/aura-runs/AF-X"
+    (scenario_root / "final-successful-route-metrics.json").write_text(
+        json.dumps(
+            {
+                "route": ["Implementer", "Reviewer"],
+                "human_checkpoints": 0,
+                "tool_event_count": 2,
+                "authorization_denial_count": 0,
+                "total_cost_usd": 0.01,
+                "duration_ms": 10,
+                "duration_api_ms": 9,
+                "deterministic_gates": {"focused_tests": "PASS"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    (scenario_root / "final-quality-score.json").write_text(
+        json.dumps({"result": "PASS", "total": 16, "maximum": 16}),
+        encoding="utf-8",
+    )
+    (run_root / "classifier-router-output.json").write_text(
+        json.dumps(
+            {
+                "classifier": {
+                    "classifier_version": "aura-risk-v1",
+                    "tier": "LOW",
+                    "triggered_rules": [],
+                    "normalized_paths": ["docs/example.md"],
+                },
+                "router": {"router_version": "aura-router-v1", "route_id": "aura-low-v1"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    artifact_root = tmp_path / "ci" / "artifacts"
+    (artifact_root / "advisory-review").mkdir(parents=True)
+    (artifact_root / "policy-tests").mkdir()
+    (artifact_root / "evaluation-gate").mkdir()
+    (artifact_root / "pipeline-integrity").mkdir()
+    (artifact_root / "audit-trail").mkdir()
+    (artifact_root / "advisory-review" / "advisory-review.json").write_text(
+        json.dumps({"status": "SKIPPED", "reason": "AI SECRET UNAVAILABLE"}),
+        encoding="utf-8",
+    )
+    (artifact_root / "policy-tests" / "policy-tests.txt").write_text("18 passed\n", encoding="utf-8")
+    metadata = tmp_path / "ci" / "run-view.json"
+    metadata.write_text(
+        json.dumps(
+            {
+                "databaseId": 123,
+                "url": "https://github.com/example/actions/runs/123",
+                "headSha": "abc123",
+                "status": "completed",
+                "conclusion": "success",
+                "jobs": [
+                    {"name": "policy-tests", "conclusion": "success"},
+                    {"name": "evaluation-gate", "conclusion": "success"},
+                    {"name": "pipeline-integrity", "conclusion": "success"},
+                    {"name": "audit-trail", "conclusion": "success"},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    passport = builder.build_passport(
+        tmp_path,
+        "AF-X",
+        ci_run_metadata=str(metadata),
+        ci_artifact_root=str(artifact_root),
+    )
+
+    github = passport["ci"]["github_actions"]
+    assert github["workflow_run_id"] == 123
+    assert github["policy_status"] == "success"
+    assert github["evaluation_status"] == "success"
+    assert github["integrity_status"] == "success"
+    assert github["advisory_status"] == "SKIPPED"
+
+
 def test_missing_required_producer_fails(tmp_path):
     (tmp_path / ".eval-artifacts/capstone/aura-runs/AF-X/precheck-001").mkdir(parents=True)
     try:

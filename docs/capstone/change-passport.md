@@ -18,6 +18,7 @@ Supported fields include:
 - tool-event count and authorization-denial count;
 - measured cost and timing read from run artifacts;
 - evidence references and SHA-256 hashes.
+- GitHub Actions CI fields only when explicit run metadata and artifact producers are supplied.
 
 ## Evidence Discipline
 
@@ -26,6 +27,28 @@ The generator follows this rule:
 `NO PASSPORT FIELD EXISTS UNLESS IT IS AUTOMATICALLY DERIVED FROM REAL MACHINE EVIDENCE OR AN ACTUAL HUMAN-APPROVAL RECORD.`
 
 Unavailable optional fields are omitted. The generator does not add placeholder CI claims before a real CI run exists.
+
+## GitHub CI Evidence
+
+After the first green capstone GitHub Actions run, a CI-backed terminal Passport was generated locally for `AF-HIGH-001`.
+
+Real CI producer:
+
+- workflow run: `31513173735`
+- commit: `92d60c438039b65e6229eefd7abc607c73393a0f`
+- policy status: `success`
+- evaluation status: `success`
+- pipeline-integrity status: `success`
+- audit-trail status: `success`
+- advisory status: `SKIPPED` because `AURA_ADVISORY_AI_KEY` was unavailable
+
+Local ignored output:
+
+`.eval-artifacts/capstone/change-passports/AF-HIGH-001-with-ci.json`
+
+The GitHub CI fields are derived from downloaded run metadata and artifacts under:
+
+`.eval-artifacts/capstone/github-ci/31513173735/`
 
 ## Generated Local Passports
 
@@ -54,3 +77,4 @@ Deterministic tests verify that:
 - evidence references resolve and hashes match;
 - path traversal references are rejected;
 - output is deterministic for the same evidence set.
+- CI fields are included only when real CI metadata and artifact producers are provided.
