@@ -4,11 +4,11 @@ Repository: https://github.com/Muhammad7839/FitGPT-Agentic-Engineering
 
 Branch: `capstone/aura-forge`
 
-Verified submission-package CI run: https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/31520499134
+Verified CI run: https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/31531270032
 
-Final presentation path: `docs/capstone/submission/AURA_Forge_Final_Presentation.pptx`
+Final recording presentation path: `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`
 
-Final video URL: [ADD FINAL VIDEO URL]
+Final Loom video URL: [ADD FINAL LOOM VIDEO URL]
 
 Final presentation URL if LaunchCode requires upload/link: [ADD FINAL PRESENTATION URL IF REQUIRED]
 

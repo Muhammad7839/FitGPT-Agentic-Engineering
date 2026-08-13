@@ -1,11 +1,9 @@
 # Final Human Checklist
 
-- Open the final PPTX once and confirm it renders correctly.
-- Verify the grader can access the GitHub repository.
-- Record the final walkthrough video.
-- Make sure the governance denial is visible in the recording.
-- Upload the video.
-- Add the video link to `SUBMISSION-LINKS.md`.
-- Upload or link the presentation if LaunchCode requires it.
-- Complete the LaunchCode external-tool submission.
-- Press Submit.
+1. Record final Loom walkthrough.
+2. Upload/save Loom video and obtain shareable URL.
+3. Verify Loom link can be viewed by grader.
+4. Give video URL to Codex/ChatGPT for insertion into submission links if desired.
+5. Confirm grader has GitHub repository access.
+6. Complete LaunchCode submission fields.
+7. Press Submit.

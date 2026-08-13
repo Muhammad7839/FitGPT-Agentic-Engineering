@@ -1,27 +1,40 @@
 # AURA Forge Final Submission Bundle
 
-Everything in this folder is for the final LaunchCode capstone submission.
+Everything in this folder supports the final LaunchCode capstone submission.
 
-## Main files
+## Final Recording Presentation
 
-- PowerPoint: `docs/capstone/submission/AURA_Forge_Final_Presentation.pptx`
-- PDF preview: `docs/capstone/submission/AURA_Forge_Final_Presentation.pdf`
-- Slide preview: `docs/capstone/submission/AURA_Forge_Slide_Preview.png`
-- Speaker notes: `docs/capstone/submission/AURA_Forge_Speaker_Notes.md`
+- Final Gamma PDF: `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`
+
+This is the final recording presentation. It supersedes the earlier Codex-generated deck for Muhammad's Loom walkthrough.
+
+No genuine Gamma PPTX export was found in `/Users/muhammad/Downloads` or `/Users/muhammad/Desktop` during the final archive pass, so no Gamma PPTX was committed.
+
+## Historical Codex-Generated Deck
+
+- Historical PPTX: `docs/capstone/submission/AURA_Forge_Final_Presentation.pptx`
+- Historical PDF preview: `docs/capstone/submission/AURA_Forge_Final_Presentation.pdf`
+- Historical slide preview: `docs/capstone/submission/AURA_Forge_Slide_Preview.png`
+- Historical speaker notes: `docs/capstone/submission/AURA_Forge_Speaker_Notes.md`
+- Historical final video script: `docs/capstone/submission/AURA_Forge_Final_Video_Script.md`
+
+These files remain preserved as generated submission artifacts and evidence, but they are not the final recording deck.
+
+## Current Recording Files
+
 - Teleprompter: `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md`
-- Final video script: `docs/capstone/submission/AURA_Forge_Final_Video_Script.md`
 - Recording cheat sheet: `docs/capstone/submission/RECORDING-CHEAT-SHEET.md`
 - Video evidence staging: `docs/capstone/submission/VIDEO-EVIDENCE-STAGING.md`
 - Submission links: `docs/capstone/submission/SUBMISSION-LINKS.md`
 - Human checklist: `docs/capstone/submission/FINAL-HUMAN-CHECKLIST.md`
 
-## Visual assets
+## Visual Assets
 
-All generated chart and evidence assets are in:
+Generated chart and evidence assets are in:
 
 `docs/capstone/submission/assets/`
 
-## Demo helper
+## Demo Helper
 
 Run from the repository root:
 
@@ -31,6 +44,6 @@ Run from the repository root:
 
 The helper is deterministic. It does not call paid models, contact upstream, modify files, expose secrets, or deploy anything.
 
-## Submission bundle zip
+## Submission Bundle Zip
 
 The repository does not commit a zip copy of these artifacts because it would duplicate binary files without adding rubric value. If LaunchCode requires a single upload, create the zip locally from this folder after the final video URL is known.

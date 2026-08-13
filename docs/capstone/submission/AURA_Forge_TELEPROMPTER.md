@@ -1,52 +1,70 @@
 # AURA Forge Teleprompter
 
-Use this as the single read-aloud script for the final recording. Target length: about 6 to 8 minutes.
+Use this as the single read-aloud script for the final Gamma deck recording. Target length: about 6 to 8 minutes.
 
-## Slide 1
+## Slide 1: AURA Forge
 
-Hi, I’m Muhammad Imran. My capstone is AURA Forge, a governed adaptive engineering workflow for FitGPT.
+Hi, I am Muhammad Imran. My capstone is AURA Forge, a governed adaptive engineering workflow for FitGPT.
 
-The main idea is simple: not every software change deserves the same amount of AI autonomy. A small documentation change should not need the same full route as a governance-sensitive change. AURA Forge decides how much autonomy a change deserves, then proves the route stayed inside policy.
+The core idea is simple: fixed autonomy makes small changes too expensive, but removing governance from sensitive work is unsafe.
 
-## Slide 2
+AURA Forge solves that by routing each change by risk, then preserving evidence that the route stayed inside policy.
 
-Before AURA, the route was fixed. A change went through Planner, human approval, Implementer, Reviewer, Tester, another human approval, and Project Manager.
+The best agentic engineering system is not the one that uses the most agents. It is the one that knows when not to use them.
 
-That route made sense for high-risk work, but it was too expensive for low-risk work. A documentation-only change got over-served. At the same time, I did not want to remove governance from sensitive work just to show savings.
+## Slide 2: Fixed autonomy made simple changes too expensive
 
-## Slide 3
+Before AURA, every change followed the same PRE-AURA route:
 
-AURA Forge starts with deterministic risk classification. The classifier assigns LOW, MEDIUM, or HIGH from repository evidence. It does not call a model.
+Planner to Human Plan Approval to Implementer to Reviewer to Tester to Human Final Approval to Project Manager.
 
-Then the adaptive router chooses the route. The evidence boundary matters here: every route emits structured evidence, policy results, eval results, approvals when required, and CI signals. The system is designed to avoid unsupported production claims.
+That seven-stage route makes sense for high-risk work. The problem is that low-risk work, like documentation-only cleanup, still paid the full coordination cost.
 
-## Slide 4
+I did not want to prove savings by weakening governance. The goal was to keep strong controls where they matter and remove unnecessary overhead where they do not.
+
+## Slide 3: AURA Forge routes each change by risk
+
+AURA Forge starts with a deterministic classifier. It reads repository evidence and assigns LOW, MEDIUM, or HIGH risk without calling a model.
+
+Then the adaptive router chooses the route. The route controls which roles participate, which policy gates run, which approvals are required, and which evidence gets captured.
+
+The important boundary is that this is not a production deployment claim. It is a course-system engineering workflow with preserved evidence, policy checks, evals, and CI.
+
+## Slide 4: LOW gets speed. HIGH keeps governance.
 
 The route changes only when risk justifies it.
 
-LOW gets Implementer, Reviewer, and deterministic gates. MEDIUM gets Implementer, Reviewer, Tester, and final approval. HIGH keeps the full governed route: Planner, plan approval, Implementer, Reviewer, Tester, policy and evaluation gates, final approval, and Project Manager.
+LOW gets speed: fewer roles and no human checkpoints for simple, bounded work.
 
-The key point is that HIGH is not optimized away. Sensitive work keeps governance.
+MEDIUM keeps review, testing, and one final approval.
 
-## Slide 5
+HIGH keeps the full governed path: planning, human plan approval, implementation, review, testing, final human approval, and project-manager closure.
 
-I measured three matched scenarios: LOW, MEDIUM, and HIGH.
+The safety point is that HIGH is not optimized away. Sensitive work keeps governance.
 
-LOW was a documentation and accessibility scenario. MEDIUM was a bounded executable test change. HIGH was governance and MCP policy-sensitive.
+## Slide 5: The experiment compared matched scenarios
 
-For each one, I measured the fixed control route first, froze the router, and then measured the AURA route. The quality rubric stayed locked at 16 points.
+The experiment used three matched scenarios: LOW, MEDIUM, and HIGH.
 
-## Slide 6
+LOW represented documentation and accessibility work. MEDIUM represented a bounded executable test change. HIGH represented governance and MCP policy-sensitive work.
 
-Here are the measured results.
+For each one, I measured the fixed control route first, froze the AURA router, then measured the AURA route against the same 16-point quality rubric.
 
-Across the three representative scenarios, quality improved from 44 out of 48 to 48 out of 48. Successful-route cost dropped 19.22 percent. Model roles dropped 33.33 percent. Human checkpoints dropped 50 percent.
+That kept the comparison bounded and checkable.
 
-LOW had the clearest gain because it was over-served before. HIGH kept the same number of model roles and human checkpoints because that was the right safety decision.
+## Slide 6: Less overhead. Stronger quality.
 
-## Switch to live denial evidence
+Across the three representative scenarios, AURA Forge reduced successful-route cost by 19.22 percent.
 
-Now I’m going to show the governance denial.
+It used 33.33 percent fewer model roles and 50 percent fewer human checkpoints.
+
+Quality improved from 44 out of 48 to 48 out of 48.
+
+LOW had the biggest cost drop, from $0.6066006 to $0.3377550. MEDIUM dropped from $0.9093231 to $0.7300815. HIGH stayed close, from $1.1753241 to $1.1061042, because HIGH kept full governance.
+
+## Slide 7: Governance stopped a real overreach attempt
+
+Now I am going to show the governance denial.
 
 Run:
 
@@ -54,37 +72,27 @@ Run:
 ./scripts/capstone-demo.sh denial
 ```
 
-This is the most important safety moment. An Implementer attempted to use the Project-Manager-only task tracker. The governed authorization layer denied it. External state changed: no. Model cost: zero.
+Expected result: the role is `implementer`, the attempted tool is `task_tracker`, and the decision is `DENIED`.
 
-## Slide 7
+This matters because the role that changes files should not also mark the work complete. The system enforced that boundary through policy, not just through prompt wording.
 
-This slide summarizes that denial. The role was `implementer`, the attempted tool was `task_tracker`, and the decision was `DENIED`.
+External state changed: no. Model cost: zero.
 
-This matters because the role that changes files should not also mark the work complete. That separation is enforced by the system, not just by a prompt instruction.
+## Slide 8: CI made the engineering gates visible
 
-## Switch to routes evidence
+GitHub Actions made the engineering gates visible.
 
-Run:
-
-```bash
-./scripts/capstone-demo.sh routes
-```
-
-This shows that the classifier and router are deterministic. LOW, MEDIUM, and HIGH produce the expected route IDs and role summaries.
-
-## Slide 8
-
-The project also uses GitHub Actions as engineering evidence.
-
-Open the verified submission-package CI run:
+Open this verified CI run:
 
 ```text
-https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/31520499134
+https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/31531270032
 ```
 
-The important point is not that CI exists. It is that the permanent gates are visible: change classification, policy tests, evaluation, pipeline integrity, audit trail, and advisory graceful skip when the optional AI secret is unavailable.
+The important story is failure to diagnosis to repair to rerun. The final verified run, `31531270032`, is green.
 
-## Slide 9
+The visible gates include classifier behavior, adaptive routing, policy tests, evaluation checks, pipeline integrity, and advisory AI graceful skip when optional credentials are unavailable.
+
+## Slide 9: Change Passport proves readiness
 
 Next is the Change Passport.
 
@@ -94,16 +102,24 @@ Run:
 ./scripts/capstone-demo.sh passport
 ```
 
-The Passport gives a reviewer one evidence-backed summary: scenario, readiness, quality, risk tier, route, policy tests, human checkpoints, and source evidence. It is generated from files and machine evidence, not from memory.
+Or open:
 
-I also converted one narrow agentic step to deterministic code. A stable `DATABASE_URL` documentation and config check now runs with zero model cost because that kind of factual check does not need a model.
+```text
+docs/capstone/evidence/change-passport-AF-HIGH-001.json
+```
 
-## Slide 10
+The Passport gives a reviewer one evidence-backed readiness record: scenario, route, risk tier, quality, policy results, human checkpoints, and source evidence.
+
+This slide also shows the right-tool decision. A stable `DATABASE_URL` documentation/config check was converted to deterministic code. It now runs with zero model cost and about 0.156 milliseconds of local runtime because that factual consistency check does not need a model.
+
+## Slide 10: Impact is measured, bounded, and honest
 
 The impact is measured, bounded, and honest.
 
-AURA Forge improved quality and reduced overhead for LOW and MEDIUM work, while keeping HIGH governance in place. It does not claim production deployment. It does not claim company-wide savings. It uses three representative scenarios and real course-system evidence.
+AURA Forge reduced overhead for LOW and MEDIUM work while preserving HIGH governance. It improved measured quality in the three-scenario comparison.
 
-The final takeaway is: AURA Forge gives each change the minimum autonomy it deserves, then proves the route stayed inside policy.
+It does not claim production deployment. It does not claim real-user production data. It does not make an organization-wide projection. Advisory AI was safely skipped when optional credentials were unavailable.
+
+AURA Forge gives each change the minimum autonomy it deserves, then proves the route stayed inside policy.
 
 That is the project.

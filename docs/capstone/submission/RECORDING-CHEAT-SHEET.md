@@ -1,26 +1,24 @@
 # Recording Cheat Sheet
 
-## Before recording
+## Open Before Recording
 
-- Open `docs/capstone/submission/AURA_Forge_Final_Presentation.pptx`.
+- Open `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`.
 - Open terminal at the repository root.
-- Open verified submission-package CI run `31520499134`.
-- Open denial evidence: `docs/capstone/governance-overreach-demo.md`.
-- Keep `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md` available as the read-aloud source.
-- Silence notifications.
+- Open verified CI run `31531270032`.
+- Keep `docs/capstone/evidence/change-passport-AF-HIGH-001.json` ready as backup.
 
-## During recording
+## Live Evidence Order
 
-1. Slides 1-6.
-2. Run `./scripts/capstone-demo.sh denial`.
-3. Run `./scripts/capstone-demo.sh routes`.
-4. Show verified submission-package CI run `31520499134`.
-5. Run `./scripts/capstone-demo.sh passport`.
-6. Return to slide 10 and close.
+1. Present the Gamma deck through slide 6.
+2. On slide 7, run `./scripts/capstone-demo.sh denial`.
+3. On slide 8, show verified CI run `31531270032`.
+4. On slide 9, run `./scripts/capstone-demo.sh passport` or show `docs/capstone/evidence/change-passport-AF-HIGH-001.json`.
+5. Return to slide 10 and close with the bounded impact statement.
 
-## After recording
+## Keep Closed
 
-- Confirm denial is visible.
-- Confirm CI evidence is visible.
-- Upload video.
-- Add video URL to `SUBMISSION-LINKS.md`.
+- `.env` files
+- OAuth/account pages
+- production dashboards
+- API key consoles
+- browser tabs with personal account data

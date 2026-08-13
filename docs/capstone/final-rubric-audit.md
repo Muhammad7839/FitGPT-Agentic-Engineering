@@ -19,7 +19,7 @@ Main gaps were grader discoverability, root README positioning, stakeholder one-
 | Root README described FitGPT first, not AURA Forge | HIGH VALUE | Closed by adding capstone landing section. |
 | CI chronology did not distinguish terminal run clearly enough | HIGH VALUE | Closed in `docs/capstone/governance-ci-results.md` and final snapshot. |
 | CI-backed Passport existed only in ignored artifacts | HIGH VALUE | Closed with `docs/capstone/evidence/change-passport-AF-HIGH-001.json`. |
-| Missing stakeholder/demo/video/presentation package | HIGH VALUE | Closed with one-pager, demo script, video script, actual final PPTX, speaker notes, visual assets, and recording kit. |
+| Missing stakeholder/demo/video/presentation package | HIGH VALUE | Closed with one-pager, demo script, video script, final Gamma deck, speaker notes, visual assets, and recording kit. |
 | Monitoring/incident runbook not standalone | HIGH VALUE | Closed with `docs/capstone/monitoring-incident-runbook.md`. |
 | Actual final video not recorded | HUMAN-ONLY | Not closed by Codex. |
 | Production deployment not performed | NOT SAFE / OUT OF SCOPE | Not closed; deliberate safety boundary. |
@@ -63,9 +63,9 @@ The added evidence improves grader discoverability and regression coverage, but 
 | 8 | Right-Tool Decisions & ADRs | 3 | 4 | `docs/capstone/right-tool-decision-matrix.md`, `docs/capstone/adr-evidence-matrix.md`, `docs/adr/*` | ADRs were formalized late, but cite real evidence. |
 | 9 | Production Integration & Tool-Evolution Drill | 3 | 3 | `docs/capstone/tool-evolution-drill.md`, runbook, CI failure/repair, escalation regression | Intentional fault was manually injected, so it does not satisfy the 4/4 "not caught manually" bullet. |
 | 10 | Iteration Narrative & Impact | 3 | 4 | `docs/capstone/iteration-narrative.md`, impact report | None material. |
-| 11 | Stakeholder Communication | 2 | 3 | one-pager, demo/video scripts, teleprompter, video staging, final recording kit | Actual final video is human-only and not yet recorded. |
-| 12 | Clarity & Flow | 2 | 4 | final PPTX, speaker notes, video script, recording sequence | Actual spoken delivery still depends on Muhammad, but the deck and script now supply the complete flow. |
-| 13 | Design | 2 | 4 | final PPTX, rendered slide preview, generated charts/visual assets | Actual visual deck now exists; final recorded video still depends on Muhammad. |
+| 11 | Stakeholder Communication | 2 | 3 | one-pager, demo/video scripts, teleprompter, video staging, final Gamma recording kit | Actual final video is human-only and not yet recorded. |
+| 12 | Clarity & Flow | 2 | 4 | final Gamma deck, teleprompter, video staging, recording sequence | Actual spoken delivery still depends on Muhammad, but the deck and script now supply the complete flow. |
+| 13 | Design | 2 | 4 | final Gamma deck, measured-result visuals, governance and CI evidence cards | Actual visual deck now exists; final recorded video still depends on Muhammad. |
 
 Final defensible score after final submission package: `49 / 52`.
 
@@ -246,13 +246,15 @@ Official 4/4 wording:
 - The video is compelling, on-time, and shows governance stopping an over-reaching agent so the safety story is visible rather than claimed.
 - A technical reviewer can evaluate the full submission in five minutes and probe any engineering decision in 30.
 
-Rationale: the one-pager, final PPTX, speaker notes, recording script, cheat sheet, submission links file, and deterministic demo helper are grader-ready and sanitized, but the actual recorded video does not exist yet.
+Rationale: the one-pager, final Gamma deck, teleprompter, video staging, cheat sheet, submission links file, and deterministic demo helper are grader-ready and sanitized, but the actual recorded video does not exist yet.
 
-Evidence: `docs/capstone/stakeholder-one-pager.md`, `docs/capstone/GRADER-QUICKSTART.md`, `docs/capstone/demo-script.md`, `docs/capstone/video-script.md`, `docs/capstone/evidence-index.md`, `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md`, `docs/capstone/submission/VIDEO-EVIDENCE-STAGING.md`, `docs/capstone/submission/`.
+Evidence: `docs/capstone/stakeholder-one-pager.md`, `docs/capstone/GRADER-QUICKSTART.md`, `docs/capstone/demo-script.md`, `docs/capstone/video-script.md`, `docs/capstone/evidence-index.md`, `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`, `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md`, `docs/capstone/submission/VIDEO-EVIDENCE-STAGING.md`, `docs/capstone/submission/`.
 
 Evidence type: capstone evidence.
 
 Gap: Muhammad must record and submit the video.
+
+Gamma freeze note: the final Gamma deck is archived and recording-ready. The score remains `3/4` until the actual video exists; a clear on-time video showing the governance denial may strengthen Criterion 11 after recording.
 
 ### 12. Clarity & Flow - 4/4
 
@@ -261,9 +263,9 @@ Official 4/4 wording:
 - The presentation frames the project around a compelling engineering problem from the first minute and builds a narrative arc that makes the value feel earned rather than reported.
 - Transitions between technical and stakeholder sections are seamless.
 
-Rationale: the actual final PPTX now opens with the fixed-autonomy problem, builds through architecture, route matrix, experiment, measured results, governance denial, CI, Change Passport, and closes with bounded impact and limitations. The speaker notes and final video script specify transitions between slides, terminal evidence, GitHub CI, and repository artifacts.
+Rationale: the final Gamma PDF now opens with the fixed-autonomy problem, builds through architecture, route matrix, experiment, measured results, governance denial, CI, Change Passport, and closes with bounded impact and limitations. The synced teleprompter and video staging specify transitions between slides, terminal evidence, GitHub CI, and repository artifacts.
 
-Evidence: `docs/capstone/submission/AURA_Forge_Final_Presentation.pptx`, `docs/capstone/submission/AURA_Forge_Speaker_Notes.md`, `docs/capstone/submission/AURA_Forge_Final_Video_Script.md`, `docs/capstone/submission/AURA_Forge_Slide_Preview.png`.
+Evidence: `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`, `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md`, `docs/capstone/submission/VIDEO-EVIDENCE-STAGING.md`, `docs/capstone/submission/RECORDING-CHEAT-SHEET.md`.
 
 Evidence type: capstone evidence.
 
@@ -277,9 +279,9 @@ Official 4/4 wording:
 - Visual hierarchy guides the audience to critical information.
 - Complex ideas such as orchestration flows, governance matrices, and before/after metrics are made intuitive through thoughtful visual choices.
 
-Rationale: the final deck now uses a consistent dark engineering visual system, generated measured-results charts, architecture and route visuals, governance-denial evidence card, CI summary card, and Change Passport summary. A rendered slide preview is included for visual inspection.
+Rationale: the final Gamma deck now uses a consistent dark engineering visual system, measured-results charts, architecture and route visuals, governance-denial evidence card, CI summary card, and Change Passport summary. The archived PDF has 10 pages and was visually inspected before the freeze.
 
-Evidence: `docs/capstone/submission/AURA_Forge_Final_Presentation.pptx`, `docs/capstone/submission/assets/`, `docs/capstone/submission/AURA_Forge_Slide_Preview.png`.
+Evidence: `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`, `docs/capstone/submission/assets/`.
 
 Evidence type: capstone evidence.
 

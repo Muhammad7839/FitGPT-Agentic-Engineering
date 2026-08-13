@@ -1,5 +1,7 @@
 # AURA Forge Final Video Script
 
+Historical note: this script was created for the earlier Codex-generated deck. The final Gamma recording should use `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md`.
+
 Target length: 6-8 minutes.
 
 ## 0:00-0:30 - Presentation opening
@@ -67,11 +69,11 @@ Backup: `docs/capstone/risk-classifier.md` and `docs/capstone/adaptive-routing.m
 
 ## 4:10-5:05 - GitHub Actions evidence
 
-Window/file: browser at `https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/31520499134` or PowerPoint slide 8.
+Window/file: browser at `https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/31531270032` or presentation slide 8.
 
 Say: "The verified submission-package CI run passed permanent gates: change classification, policy tests, evaluation gate, pipeline integrity, and audit trail. Advisory review skipped safely because the AI secret was unavailable."
 
-Expected result: verified submission-package CI run `31520499134` is visible or summarized.
+Expected result: verified CI run `31531270032` is visible or summarized.
 
 Backup: `docs/capstone/governance-ci-results.md` and `docs/capstone/submission/assets/github-ci-summary.png`.
 

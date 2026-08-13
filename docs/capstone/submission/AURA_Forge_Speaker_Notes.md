@@ -1,5 +1,7 @@
 # AURA Forge Speaker Notes
 
+Historical note: these notes were created for the earlier Codex-generated deck. The final Gamma recording should use `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md`.
+
 Target duration: 6-8 minutes.
 
 ## Slide 1: AURA Forge
@@ -108,7 +110,7 @@ Goal: Show that the project is eval-gated.
 
 What to say: The repository did not stop at local files. The verified submission-package CI run passed GitHub Actions. The advisory review also behaved safely: when the AI secret was unavailable, it skipped gracefully instead of failing open.
 
-What to point at: Point to verified submission-package CI run 31520499134 and the green job list.
+What to point at: Point to verified CI run 31531270032 and the green job list.
 
 Transition: Next, show how all of this evidence is packaged.
 
