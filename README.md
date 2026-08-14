@@ -23,15 +23,16 @@ Change
 Key evidence:
 
 - Grader quickstart: `docs/capstone/GRADER-QUICKSTART.md`
-- Final rubric audit: `docs/capstone/final-rubric-audit.md`
 - Evidence index: `docs/capstone/evidence-index.md`
+- Final rubric audit: `docs/capstone/final-rubric-audit.md`
+- Stakeholder one-pager: `docs/capstone/stakeholder-one-pager.md`
 - Reproducibility runbook: `docs/capstone/reproducibility-runbook.md`
-- Final pre-video verification: `docs/capstone/final-pre-video-verification.md`
 - Architecture diagrams: `docs/capstone/final-architecture.md`
 - Change Passport example: `docs/capstone/evidence/change-passport-AF-HIGH-001.json`
 - Real GitHub CI evidence: `docs/capstone/governance-ci-results.md`
 - ADR evidence matrix: `docs/capstone/adr-evidence-matrix.md`
-- Final presentation: `docs/capstone/submission/AURA_Forge_Final_Presentation.pptx`
+- Final presentation: `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`
+- Final walkthrough video: https://youtu.be/WxEXCWC75vs
 
 ## Measured Impact
 
@@ -48,13 +49,13 @@ These are measured capstone results only. They are not company-wide or productio
 
 ## Real CI Status Evidence
 
-Terminal verified GitHub Actions run:
+Stable demonstrated GitHub Actions run used in the final presentation:
 
-`31513596822`
+`31531270032`
 
 Commit:
 
-`c5e2e5323f6ab46d7eb4003d7112ff41ecf6e72e`
+`25207fc5994ab893fa70dd8e48629577b686d455`
 
 Result:
 
@@ -66,8 +67,10 @@ Result:
 
 Additional passed evidence runs:
 
-- `31520499134`: verified submission-package CI evidence used in the final deck.
+- `31513596822`: CI-backed Change Passport source run.
+- `31520499134`: verified submission-package CI evidence used in an earlier deck.
 - `31527786959`: passed after final presentation visual repair.
+- `31763864725`: latest final repository CI before the final quality check.
 
 ## Quick Verification
 

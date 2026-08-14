@@ -8,7 +8,7 @@ Everything in this folder supports the final LaunchCode capstone submission.
 
 This is the final recording presentation. It supersedes the earlier Codex-generated deck for Muhammad's Loom walkthrough.
 
-No genuine Gamma PPTX export was found in `/Users/muhammad/Downloads` or `/Users/muhammad/Desktop` during the final archive pass, so no Gamma PPTX was committed.
+No genuine Gamma PPTX export was found during the final archive pass, so no Gamma PPTX was committed.
 
 ## Historical Codex-Generated Deck
 
