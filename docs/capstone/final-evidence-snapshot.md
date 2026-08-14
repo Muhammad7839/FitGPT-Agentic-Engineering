@@ -9,6 +9,8 @@ This snapshot records the verified submission evidence baseline. The final grade
 | Verified submission CI run | `31517695449` |
 | Final CI result at that baseline | `success` |
 | Rubric score after final submission package | `49 / 52` |
+| Final walkthrough video | https://youtu.be/WxEXCWC75vs |
+| Final recording presentation | `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf` |
 | Control vs AURA quality | `44/48 -> 48/48` |
 | Control vs AURA successful-route cost | `$2.6912478 -> $2.1739407`, `-19.22%` |
 | Model roles | `15 -> 10`, `-33.33%` |
@@ -28,6 +30,5 @@ This snapshot records the verified submission evidence baseline. The final grade
 
 ## Human-Only Remaining Items
 
-- Record the final walkthrough video.
 - Confirm repository/video access permissions.
 - Submit the external-tool link in the LaunchCode course portal.

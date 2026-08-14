@@ -1,9 +1,15 @@
 # Final Human Checklist
 
-1. Record final Loom walkthrough.
-2. Upload/save Loom video and obtain shareable URL.
-3. Verify Loom link can be viewed by grader.
-4. Give video URL to Codex/ChatGPT for insertion into submission links if desired.
-5. Confirm grader has GitHub repository access.
-6. Complete LaunchCode submission fields.
-7. Press Submit.
+## Completed
+
+- Final walkthrough recorded.
+- Video uploaded.
+- Shareable video URL obtained: https://youtu.be/WxEXCWC75vs
+- Video URL inserted into `docs/capstone/submission/SUBMISSION-LINKS.md`.
+
+## Remaining
+
+1. Verify the video link can be viewed by grader.
+2. Confirm grader has GitHub repository access.
+3. Complete LaunchCode submission fields.
+4. Press Submit.

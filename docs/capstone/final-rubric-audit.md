@@ -21,7 +21,7 @@ Main gaps were grader discoverability, root README positioning, stakeholder one-
 | CI-backed Passport existed only in ignored artifacts | HIGH VALUE | Closed with `docs/capstone/evidence/change-passport-AF-HIGH-001.json`. |
 | Missing stakeholder/demo/video/presentation package | HIGH VALUE | Closed with one-pager, demo script, video script, final Gamma deck, speaker notes, visual assets, and recording kit. |
 | Monitoring/incident runbook not standalone | HIGH VALUE | Closed with `docs/capstone/monitoring-incident-runbook.md`. |
-| Actual final video not recorded | HUMAN-ONLY | Not closed by Codex. |
+| Final walkthrough video artifact | HUMAN-ONLY | Closed by final uploaded walkthrough video: https://youtu.be/WxEXCWC75vs. |
 | Production deployment not performed | NOT SAFE / OUT OF SCOPE | Not closed; deliberate safety boundary. |
 | Sandbox network egress not fully constrained | NOT SAFE / OUT OF SCOPE for this pass | Documented conservatively; not claimed airtight. |
 
@@ -63,13 +63,13 @@ The added evidence improves grader discoverability and regression coverage, but 
 | 8 | Right-Tool Decisions & ADRs | 3 | 4 | `docs/capstone/right-tool-decision-matrix.md`, `docs/capstone/adr-evidence-matrix.md`, `docs/adr/*` | ADRs were formalized late, but cite real evidence. |
 | 9 | Production Integration & Tool-Evolution Drill | 3 | 3 | `docs/capstone/tool-evolution-drill.md`, runbook, CI failure/repair, escalation regression | Intentional fault was manually injected, so it does not satisfy the 4/4 "not caught manually" bullet. |
 | 10 | Iteration Narrative & Impact | 3 | 4 | `docs/capstone/iteration-narrative.md`, impact report | None material. |
-| 11 | Stakeholder Communication | 2 | 3 | one-pager, demo/video scripts, teleprompter, video staging, final Gamma recording kit | Actual final video is human-only and not yet recorded. |
+| 11 | Stakeholder Communication | 2 | 3 | one-pager, demo/video scripts, teleprompter, video staging, final Gamma recording kit, final walkthrough video | The video artifact exists; content was not locally re-scored against every 4/4 requirement in this package update. |
 | 12 | Clarity & Flow | 2 | 4 | final Gamma deck, teleprompter, video staging, recording sequence | Actual spoken delivery still depends on Muhammad, but the deck and script now supply the complete flow. |
 | 13 | Design | 2 | 4 | final Gamma deck, measured-result visuals, governance and CI evidence cards | Actual visual deck now exists; final recorded video still depends on Muhammad. |
 
 Final defensible score after final submission package: `49 / 52`.
 
-Final pre-video defensible score after the autonomous completion pass: `49 / 52`.
+Final defensible score after final video link update: `49 / 52`.
 
 ## Detailed Audit
 
@@ -246,15 +246,15 @@ Official 4/4 wording:
 - The video is compelling, on-time, and shows governance stopping an over-reaching agent so the safety story is visible rather than claimed.
 - A technical reviewer can evaluate the full submission in five minutes and probe any engineering decision in 30.
 
-Rationale: the one-pager, final Gamma deck, teleprompter, video staging, cheat sheet, submission links file, and deterministic demo helper are grader-ready and sanitized, but the actual recorded video does not exist yet.
+Rationale: the one-pager, final Gamma deck, teleprompter, video staging, cheat sheet, submission links file, deterministic demo helper, and final walkthrough video artifact now exist. The final video URL is https://youtu.be/WxEXCWC75vs.
 
-Evidence: `docs/capstone/stakeholder-one-pager.md`, `docs/capstone/GRADER-QUICKSTART.md`, `docs/capstone/demo-script.md`, `docs/capstone/video-script.md`, `docs/capstone/evidence-index.md`, `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`, `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md`, `docs/capstone/submission/VIDEO-EVIDENCE-STAGING.md`, `docs/capstone/submission/`.
+Evidence: `docs/capstone/stakeholder-one-pager.md`, `docs/capstone/GRADER-QUICKSTART.md`, `docs/capstone/demo-script.md`, `docs/capstone/video-script.md`, `docs/capstone/evidence-index.md`, `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`, `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md`, `docs/capstone/submission/VIDEO-EVIDENCE-STAGING.md`, `docs/capstone/submission/`, https://youtu.be/WxEXCWC75vs.
 
 Evidence type: capstone evidence.
 
-Gap: Muhammad must record and submit the video.
+Gap: no repository-local transcript or independent content review is stored in this package update to prove every exact 4/4 video-quality requirement. The required walkthrough artifact now exists, but the score stays conservative.
 
-Gamma freeze note: the final Gamma deck is archived and recording-ready. The score remains `3/4` until the actual video exists; a clear on-time video showing the governance denial may strengthen Criterion 11 after recording.
+Final video note: the final walkthrough URL was added after recording. Criteria 2, 4, and 9 are unchanged.
 
 ### 12. Clarity & Flow - 4/4
 
@@ -291,11 +291,11 @@ Gap: final recorded video composition still depends on Muhammad's screen recordi
 
 The lowest score is shared by Criteria 2, 4, 9, and 11 at `3/4`.
 
-The most important residual risk is Criterion 11 because the official 4/4 level requires an actual compelling, on-time video that visibly shows governance stopping overreach. Codex can provide the script and evidence, but Muhammad must record the final video.
+The most important residual risk is Criterion 11 because the official 4/4 level requires a compelling, on-time video that visibly shows governance stopping overreach. The final video artifact now exists, but this package update did not add a repository-local transcript or independent content review proving every exact 4/4 requirement.
 
 Unavailable points after this pass:
 
 - Criterion 2: one point remains unavailable because network egress is not proven constrained enough to call the sandbox airtight.
 - Criterion 4: one point remains unavailable because complete stale-memory pruning with documented reasons and before/after reflection scores cannot be reconstructed honestly after the fact.
 - Criterion 9: one point remains unavailable because the tool-evolution drill was intentional fault injection, not an unobserved real regression caught before manual detection.
-- Criterion 11: one point remains unavailable until Muhammad records the actual walkthrough video.
+- Criterion 11: one point remains conservatively unavailable until the recorded walkthrough content is independently verified against the exact 4/4 video requirement.

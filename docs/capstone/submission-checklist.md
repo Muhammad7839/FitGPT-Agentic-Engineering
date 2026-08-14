@@ -21,10 +21,11 @@ Source: official recovered LaunchCode assignment page identified in `docs/capsto
 
 ## Muhammad Must Do Manually
 
-- [ ] Record the walkthrough video.
-- [ ] Show the governance overreach denial during the video.
+- [x] Record the walkthrough video.
+- [x] Upload/save the final walkthrough video URL: https://youtu.be/WxEXCWC75vs.
+- [ ] Verify the video visibly shows the governance overreach denial.
 - [ ] Confirm the repository branch or URL is visible to the grader.
 - [ ] Upload or paste the required external-tool submission link in the LaunchCode course portal.
-- [ ] Upload or link the final video/presentation if the portal asks for it.
+- [ ] Upload or link the final presentation if the portal asks for it.
 - [ ] Confirm access permissions before pressing final submit.
 - [ ] Press final Submit in the course platform.
