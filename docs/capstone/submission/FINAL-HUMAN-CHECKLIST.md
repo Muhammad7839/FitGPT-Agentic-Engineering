@@ -4,7 +4,7 @@
 
 - Final walkthrough recorded.
 - Video uploaded.
-- Shareable video URL obtained: https://youtu.be/WxEXCWC75vs
+- Shareable video URL obtained: https://youtu.be/srFGYvnEd7c
 - Video URL inserted into `docs/capstone/submission/SUBMISSION-LINKS.md`.
 
 ## Remaining

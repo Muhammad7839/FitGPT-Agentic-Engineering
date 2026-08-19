@@ -21,7 +21,7 @@ Main gaps were grader discoverability, root README positioning, stakeholder one-
 | CI-backed Passport existed only in ignored artifacts | HIGH VALUE | Closed with `docs/capstone/evidence/change-passport-AF-HIGH-001.json`. |
 | Missing stakeholder/demo/video/presentation package | HIGH VALUE | Closed with one-pager, demo script, video script, final Gamma deck, speaker notes, visual assets, and recording kit. |
 | Monitoring/incident runbook not standalone | HIGH VALUE | Closed with `docs/capstone/monitoring-incident-runbook.md`. |
-| Final walkthrough video artifact | HUMAN-ONLY | Closed by final uploaded walkthrough video: https://youtu.be/WxEXCWC75vs. |
+| Final walkthrough video artifact | HUMAN-ONLY | Closed by final uploaded walkthrough video: https://youtu.be/srFGYvnEd7c. |
 | Production deployment not performed | NOT SAFE / OUT OF SCOPE | Not closed; deliberate safety boundary. |
 | Sandbox network egress not fully constrained | NOT SAFE / OUT OF SCOPE for this pass | Documented conservatively; not claimed airtight. |
 
@@ -246,9 +246,9 @@ Official 4/4 wording:
 - The video is compelling, on-time, and shows governance stopping an over-reaching agent so the safety story is visible rather than claimed.
 - A technical reviewer can evaluate the full submission in five minutes and probe any engineering decision in 30.
 
-Rationale: the one-pager, final Gamma deck, teleprompter, video staging, cheat sheet, submission links file, deterministic demo helper, and final walkthrough video artifact now exist. The final video URL is https://youtu.be/WxEXCWC75vs.
+Rationale: the one-pager, final Gamma deck, teleprompter, video staging, cheat sheet, submission links file, deterministic demo helper, and final walkthrough video artifact now exist. The final video URL is https://youtu.be/srFGYvnEd7c.
 
-Evidence: `docs/capstone/stakeholder-one-pager.md`, `docs/capstone/GRADER-QUICKSTART.md`, `docs/capstone/demo-script.md`, `docs/capstone/video-script.md`, `docs/capstone/evidence-index.md`, `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`, `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md`, `docs/capstone/submission/VIDEO-EVIDENCE-STAGING.md`, `docs/capstone/submission/`, https://youtu.be/WxEXCWC75vs.
+Evidence: `docs/capstone/stakeholder-one-pager.md`, `docs/capstone/GRADER-QUICKSTART.md`, `docs/capstone/demo-script.md`, `docs/capstone/video-script.md`, `docs/capstone/evidence-index.md`, `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`, `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md`, `docs/capstone/submission/VIDEO-EVIDENCE-STAGING.md`, `docs/capstone/submission/`, https://youtu.be/srFGYvnEd7c.
 
 Evidence type: capstone evidence.
 

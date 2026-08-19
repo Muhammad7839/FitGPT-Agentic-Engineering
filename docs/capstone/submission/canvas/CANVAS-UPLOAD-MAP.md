@@ -10,7 +10,7 @@ GitHub repository link:
 
 Walkthrough video:
 
-`https://youtu.be/WxEXCWC75vs`
+`https://youtu.be/srFGYvnEd7c`
 
 ## Required PDF Uploads
 

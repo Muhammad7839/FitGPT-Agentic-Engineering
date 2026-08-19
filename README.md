@@ -32,7 +32,7 @@ Key evidence:
 - Real GitHub CI evidence: `docs/capstone/governance-ci-results.md`
 - ADR evidence matrix: `docs/capstone/adr-evidence-matrix.md`
 - Final presentation: `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`
-- Final walkthrough video: https://youtu.be/WxEXCWC75vs
+- Final walkthrough video: https://youtu.be/srFGYvnEd7c
 
 ## Measured Impact
 

@@ -13,7 +13,7 @@ The measured capstone claim is bounded: across three representative scenarios, q
 - PRD: `docs/capstone/aura-forge-prd.md`
 - Impact report: `docs/capstone/control-vs-aura-impact.md`
 - Final presentation: `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`
-- Final walkthrough video: https://youtu.be/WxEXCWC75vs
+- Final walkthrough video: https://youtu.be/srFGYvnEd7c
 
 ## Fast deterministic verification
 

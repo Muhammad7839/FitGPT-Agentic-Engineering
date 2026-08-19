@@ -16,7 +16,7 @@ This index is organized for a grader. It points to the strongest evidence withou
 | 8 | Change Passport | `scripts/build-change-passport.py`, `docs/capstone/evidence/change-passport-AF-HIGH-001.json` | `13edafc`, run `31513596822` | Evidence aggregation with real CI fields. |
 | 9 | Deterministic conversion | `scripts/check-config-docs-consistency.py`, `docs/capstone/deterministic-conversion.md` | `9f9e461` | Right-tool conversion from agentic check to deterministic code. |
 | 10 | Tool-evolution drill | `docs/capstone/tool-evolution-drill.md` | `7c666e5`, `4e446f6` | Eval-gated fault and repair history. |
-| 11 | Final walkthrough video | https://youtu.be/WxEXCWC75vs | final submission artifact | Recorded stakeholder walkthrough artifact. |
+| 11 | Final walkthrough video | https://youtu.be/srFGYvnEd7c | final submission artifact | Recorded stakeholder walkthrough artifact. |
 
 ## Five-Minute Navigation
 
@@ -34,7 +34,7 @@ This index is organized for a grader. It points to the strongest evidence withou
 | How do I reproduce core tests? | `docs/capstone/reproducibility-runbook.md` |
 | Where are the ADRs? | `docs/adr/`, `docs/capstone/adr-evidence-matrix.md` |
 | Where is the final presentation? | `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf` |
-| Where is the final walkthrough video? | https://youtu.be/WxEXCWC75vs |
+| Where is the final walkthrough video? | https://youtu.be/srFGYvnEd7c |
 | What remains human-only? | `docs/capstone/submission/FINAL-HUMAN-CHECKLIST.md` |
 | Where is the final dry run? | `docs/capstone/reproducibility-dry-run.md`, `docs/capstone/final-pre-video-verification.md` |
 | Where is the sanitization audit? | `docs/capstone/final-security-audit.md` |
@@ -53,6 +53,6 @@ This index is organized for a grader. It points to the strongest evidence withou
 | 8. Right-Tool Decisions & ADRs | `docs/capstone/right-tool-decision-matrix.md`, `docs/capstone/adr-evidence-matrix.md`, `docs/adr/*`, `docs/capstone/deterministic-conversion.md` | `643c455`, `9f9e461` | Agent vs deterministic vs human rationale. |
 | 9. Production Integration & Tool-Evolution Drill | `docs/capstone/tool-evolution-drill.md`, `docs/capstone/monitoring-incident-runbook.md`, `docs/capstone/governance-ci-results.md` | `7c666e5`, `4e446f6`, `92d60c4` | Production-like isolated CI, failure handling, drill. |
 | 10. Iteration Narrative & Impact | `docs/capstone/iteration-narrative.md`, `docs/capstone/control-vs-aura-impact.md` | packaging commit, `025bcbf` | Chronological improvement and measured impact. |
-| 11. Stakeholder Communication | `docs/capstone/stakeholder-one-pager.md`, `docs/capstone/GRADER-QUICKSTART.md`, `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md`, `docs/capstone/submission/VIDEO-EVIDENCE-STAGING.md`, https://youtu.be/WxEXCWC75vs | packaging commits and final video artifact | Non-engineer summary, recording plan, and final walkthrough video now exist. |
+| 11. Stakeholder Communication | `docs/capstone/stakeholder-one-pager.md`, `docs/capstone/GRADER-QUICKSTART.md`, `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md`, `docs/capstone/submission/VIDEO-EVIDENCE-STAGING.md`, https://youtu.be/srFGYvnEd7c | packaging commits and final video artifact | Non-engineer summary, recording plan, and final walkthrough video now exist. |
 | 12. Clarity & Flow | `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`, `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md` | presentation commits | Complete 10-slide Gamma narrative and speaker flow. |
 | 13. Design | `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`, `docs/capstone/submission/AURA_Forge_Slide_Preview.png` | presentation commits | Final rendered visual deck and preserved historical contact sheet. |

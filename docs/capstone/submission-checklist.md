@@ -22,7 +22,7 @@ Source: official recovered LaunchCode assignment page identified in `docs/capsto
 ## Muhammad Must Do Manually
 
 - [x] Record the walkthrough video.
-- [x] Upload/save the final walkthrough video URL: https://youtu.be/WxEXCWC75vs.
+- [x] Upload/save the final walkthrough video URL: https://youtu.be/srFGYvnEd7c.
 - [ ] Verify the video visibly shows the governance overreach denial.
 - [ ] Confirm the repository branch or URL is visible to the grader.
 - [ ] Upload or paste the required external-tool submission link in the LaunchCode course portal.

@@ -8,7 +8,7 @@ Verified CI run: https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/acti
 
 Final recording presentation path: `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`
 
-Final walkthrough video: https://youtu.be/WxEXCWC75vs
+Final walkthrough video: https://youtu.be/srFGYvnEd7c
 
 Final presentation URL if LaunchCode requires upload/link: [ADD FINAL PRESENTATION URL IF REQUIRED]
 
