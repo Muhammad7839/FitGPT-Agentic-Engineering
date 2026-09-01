@@ -100,4 +100,4 @@ The stable `DATABASE_URL` docs/config check was converted from agentic review to
 - The offline deterministic verifier disables network egress and mounts no credentials. Historical model-backed sandbox runs used ordinary bridge networking and remain labeled with that limitation.
 - The tool-evolution drill includes intentional fault injection; it should not be misrepresented as an unobserved spontaneous regression.
 - No production deployment or live FitGPT mutation is part of this capstone.
-- The current repository revision still needs to be pushed, pass fresh GitHub CI, and be verified from a logged-out browser before resubmission.
+- The public repository is pushed and the current branch is CI-green. The remaining external step is to submit the exact repository link through Canvas/LaunchCode and confirm the grader received it.
