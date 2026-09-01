@@ -1,6 +1,6 @@
 # Project Memory Index
 
-Last updated: 2026-08-01
+Last reviewed: 2026-08-28
 
 ## Active entries
 
@@ -20,3 +20,7 @@ Last updated: 2026-08-01
 - Project-scoped entries: review at least every 90 days.
 - Superseded entries: mark superseded immediately and link to the replacement.
 - Duplicate entries: consolidate into the current authoritative entry.
+
+## Review history
+
+- `2026-08-28`: reviewed the single active entry. Its `2026-10-30` review date has not arrived, it is not superseded or duplicated, and no stale entry was eligible for pruning. No memory content was deleted or rewritten.

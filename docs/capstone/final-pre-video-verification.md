@@ -20,7 +20,9 @@ This is the final local verification barrier before Muhammad records. It records
 
 ## Current pre-video score
 
-`49 / 52`
+`48 / 52`
+
+The earlier `49 / 52` statement was an arithmetic error: criteria 2, 4, 9, and 11 were each scored `3/4`, so the correct calculation is `52 - 4 = 48`.
 
 This score is intentionally conservative. The unavailable points are documented in `docs/capstone/final-rubric-audit.md` and `docs/capstone/pre-video-rubric-gap-table.md`.
 

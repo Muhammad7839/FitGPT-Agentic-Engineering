@@ -8,7 +8,7 @@ This snapshot records the verified submission evidence baseline. The final grade
 | Verified submission CI commit | `35cade1fa0265633cfbb4f067000ea54daebf77e` |
 | Verified submission CI run | `31517695449` |
 | Final CI result at that baseline | `success` |
-| Rubric score after final submission package | `49 / 52` |
+| Corrected defensible rubric score | `48 / 52` (`52 - four one-point gaps`) |
 | Final walkthrough video | https://youtu.be/srFGYvnEd7c |
 | Final recording presentation | `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf` |
 | Control vs AURA quality | `44/48 -> 48/48` |

@@ -134,7 +134,7 @@ path = Path("mcp-servers/retrieval/server.py")
 spec = importlib.util.spec_from_file_location("retrieval_server", path)
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
-result = module.retrieve(query="", requested_classification="confidential")
+result = module.retrieve(query="release planning", requested_classification="confidential")
 print(json.dumps(result, indent=2, sort_keys=True))
 if not result["withheld"]:
     raise SystemExit("expected confidential item to be withheld")

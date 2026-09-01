@@ -10,6 +10,7 @@ From repository root:
 pytest -q -p no:cacheprovider eval/test_risk_classifier.py eval/test_adaptive_router.py eval/test_pre_aura_control.py
 pytest -q -p no:cacheprovider eval/test_ci_change_classifier.py eval/test_pipeline_integrity.py eval/test_audit_trail.py eval/test_change_passport.py
 pytest -q -p no:cacheprovider eval/test_config_docs_consistency.py eval/test_governance_overreach.py
+pytest -q -p no:cacheprovider eval/test_retrieval_behavior.py eval/test_reliability_controls.py eval/test_sandbox_contract.py
 python3 scripts/check-pipeline-integrity.py .github/workflows/ci.yml
 python3 scripts/build-change-passport.py AF-HIGH-001 --output /tmp/aura-passport.json
 ```
@@ -17,7 +18,7 @@ python3 scripts/build-change-passport.py AF-HIGH-001 --output /tmp/aura-passport
 Expected local result from the final packaging run:
 
 ```text
-82 passed
+Run the commands above and use their current output as the result. The historical `82 passed` count is no longer authoritative because permanent coverage has expanded.
 ```
 
 ## Governed Runtime Path
@@ -34,33 +35,38 @@ If needed, rebuild from the trusted repository Dockerfile:
 docker build -t agentic_engineer_4:latest -f Dockerfile .
 ```
 
-Run governed verification with a read-only workspace:
+Run the complete governed verification with a read-only root filesystem, read-only workspace, no network, no Linux capabilities, no credential mount, bounded CPU/memory/processes, and a unique container name:
 
 ```bash
-docker run --rm -i \
-  -e PYTHONDONTWRITEBYTECODE=1 \
-  -v "$PWD:/workspace:ro" \
-  -w /workspace \
-  agentic_engineer_4:latest \
-  pytest -q -p no:cacheprovider eval/test_policy.py eval/test_mcp_runtime.py eval/test_coursetools_runtime.py
+./scripts/run-offline-governance-verification.sh
 ```
 
 Expected final local result:
 
 ```text
-18 passed
+Current revision result:
+
+```text
+32 passed
+```
+
+The earlier `18 passed` count predates the retrieval, reliability, and sandbox-contract tests.
 ```
 
 Host Python may not have the MCP package installed. The governed runtime is the authoritative path for MCP/policy verification.
+
+For parallel sessions, each invocation generates a unique container name from UTC time and its process ID. A caller may provide a unique `AURA_VERIFY_RUN_ID`; duplicate active names fail instead of sharing a container.
+
+The offline verifier needs no Claude authentication volume and performs no paid model call.
 
 ## Scenario Demonstration Path
 
 Show deterministic classification and routing:
 
 ```bash
-python3 - <<'PY'
-from eval.risk_classifier import classify_change
-from eval.adaptive_router import route_for_classification
+PYTHONPATH=eval python3 - <<'PY'
+from risk_classifier import classify_change
+from adaptive_router import build_route_plan
 scenarios = {
     "LOW": ["docs/features/accessibility.md"],
     "MEDIUM": ["web/src/utils/feedbackPrompts.test.js"],
@@ -68,8 +74,8 @@ scenarios = {
 }
 for label, paths in scenarios.items():
     classification = classify_change(paths)
-    route = route_for_classification(classification)
-    print(label, classification["tier"], route["route_id"], " -> ".join(route["roles"]))
+    route = build_route_plan(classification)
+    print(label, classification.tier, route.route_id, " -> ".join(route.model_roles))
 PY
 ```
 

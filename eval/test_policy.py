@@ -50,6 +50,16 @@ def test_policy_json_is_valid_and_complete():
     assert "orchestrator" in data["roles"]
 
 
+def test_retrieval_contract_is_schema_classification_and_citation_ready():
+    contract = policy()["retrieval_contract"]
+
+    assert contract["schema_version"] == "governed-retrieval-result-v2"
+    assert contract["search_mode"] == "deterministic-semantic-vector"
+    assert contract["classification_field"] == "classification"
+    assert contract["citation_fields"] == ["path", "section"]
+    assert contract["top_k_range"] == [1, 10]
+
+
 def test_every_governed_role_has_definition():
     for role, spec in policy()["roles"].items():
         defined_in = ROOT / spec["defined_in"]

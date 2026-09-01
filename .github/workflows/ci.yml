@@ -60,7 +60,7 @@ jobs:
           set -euo pipefail
           python -m pip install --upgrade pip
           pip install pytest mcp==1.12.0 pydantic==2.9.2
-          pytest -q -p no:cacheprovider eval/test_policy.py eval/test_mcp_runtime.py eval/test_coursetools_runtime.py | tee policy-tests.txt
+          pytest -q -p no:cacheprovider eval/test_policy.py eval/test_mcp_runtime.py eval/test_coursetools_runtime.py eval/test_retrieval_behavior.py eval/test_sandbox_contract.py | tee policy-tests.txt
 
       - name: Upload policy report
         uses: actions/upload-artifact@v4
@@ -89,7 +89,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest
           if [ "$SHOULD_RUN_EVALUATION" = "true" ]; then
-            pytest -q -p no:cacheprovider eval/test_risk_classifier.py eval/test_adaptive_router.py eval/test_pre_aura_control.py | tee evaluation-gate.txt
+            pytest -q -p no:cacheprovider eval/test_risk_classifier.py eval/test_adaptive_router.py eval/test_pre_aura_control.py eval/test_reliability_controls.py | tee evaluation-gate.txt
           else
             echo "SKIPPED -- classifier reported no agent/prompt/skill/tool/governance behavior affected" | tee evaluation-gate.txt
           fi

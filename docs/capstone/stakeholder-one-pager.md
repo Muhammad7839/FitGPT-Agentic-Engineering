@@ -18,16 +18,18 @@ The goal is faster routine engineering without weakening governance. Low-risk ch
 
 Measured across three representative scenarios only:
 
-| Scenario | Quality | Cost change | Model-role change | Human-checkpoint change |
+| Scenario | Quality | Model cost | Measured model time | Human checkpoints |
 |---|---:|---:|---:|---:|
-| LOW | `14/16 -> 16/16` | `-44.32%` | `-60%` | `-100%` |
-| MEDIUM | `15/16 -> 16/16` | `-19.71%` | `-40%` | `-50%` |
-| HIGH | `15/16 -> 16/16` | `-5.89%` | unchanged | unchanged |
-| Aggregate | `44/48 -> 48/48` | `-19.22%` | `-33.33%` | `-50%` |
+| LOW | `14/16 -> 16/16` | `$0.6066006 -> $0.3377550`, saving `$0.2688456` | `89.398s -> 45.969s`, saving `43.429s` | `2 -> 0` |
+| MEDIUM | `15/16 -> 16/16` | `$0.9093231 -> $0.7300815`, saving `$0.1792416` | `193.330s -> 109.502s`, saving `83.828s` | `2 -> 1` |
+| HIGH | `15/16 -> 16/16` | `$1.1753241 -> $1.1061042`, saving `$0.0692199` | `248.666s -> 158.510s`, saving `90.156s` | `2 -> 2` |
+| Aggregate | `44/48 -> 48/48` | `$2.6912478 -> $2.1739407`, saving `$0.5173071` | `531.394s -> 313.981s`, saving `217.413s` or about `3m 37s` | `6 -> 3` |
+
+Measured model time is a cycle-time proxy because complete human waiting time was not captured consistently across all six runs. Human checkpoint savings are counts only; no hourly labor-dollar claim is made because approval duration was not measured.
 
 ## Safety and Governance
 
-AURA Forge includes least-privilege MCP tool boundaries, a real overreach denial, policy tests, pipeline-integrity checks, audit artifacts, and a Change Passport. The final GitHub CI run passed permanent policy, evaluation, integrity, and audit gates.
+AURA Forge includes least-privilege MCP tool boundaries, governed semantic retrieval with citations, deterministic timeout/retry/budget decisions, a real overreach denial, policy tests, pipeline-integrity checks, audit artifacts, and a Change Passport. The last recorded GitHub CI run passed permanent policy, evaluation, integrity, and audit gates; the current unpushed revision still requires a fresh CI run.
 
 ## Tradeoffs
 

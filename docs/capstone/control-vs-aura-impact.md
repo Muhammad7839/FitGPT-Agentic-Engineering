@@ -22,6 +22,8 @@ All values below are `MEASURED` unless explicitly labeled otherwise.
 | Quality score | 14/16 FAIL | 16/16 PASS | +2 points |
 | Route appropriateness | 2/4 | 4/4 | +2 points |
 | Successful-route cost | $0.6066006 | $0.3377550 | -$0.2688456 (-44.32%) |
+| Measured model-time cycle proxy | 89.398 s | 45.969 s | -43.429 s (-48.58%) |
+| Reviewer execution-time proxy | 14.910 s | 15.888 s | +0.978 s (+6.56%) |
 | Model roles | 5 | 2 | -3 (-60.00%) |
 | Human checkpoints | 2 | 0 | -2 (-100.00%) |
 
@@ -33,6 +35,8 @@ LOW shows the clearest adaptive-autonomy gain. The documentation-only change ret
 |---|---:|---:|---:|
 | Quality score | 15/16 PASS | 16/16 PASS | +1 point |
 | Successful-route cost | $0.9093231 | $0.7300815 | -$0.1792416 (-19.71%) |
+| Measured model-time cycle proxy | 193.330 s | 109.502 s | -83.828 s (-43.36%) |
+| Reviewer execution-time proxy | 36.680 s | 32.490 s | -4.190 s (-11.42%) |
 | Model roles | 5 | 3 | -2 (-40.00%) |
 | Human checkpoints | 2 | 1 | -1 (-50.00%) |
 
@@ -46,6 +50,8 @@ The provider session-limit failure before one MEDIUM Tester attempt remains clas
 |---|---:|---:|---:|
 | Quality score | 15/16 PASS | 16/16 PASS | +1 point |
 | Successful-route cost | $1.1753241 | $1.1061042 | -$0.0692199 (-5.89%) |
+| Measured model-time cycle proxy | 248.666 s | 158.510 s | -90.156 s (-36.26%) |
+| Reviewer execution-time proxy | 71.825 s | 23.370 s | -48.455 s (-67.46%) |
 | Model roles | 5 | 5 | 0 (0.00%) |
 | Human checkpoints | 2 | 2 | 0 (0.00%) |
 
@@ -57,8 +63,24 @@ HIGH deliberately preserved full governance because the scenario touched evaluat
 |---|---:|---:|---:|
 | Quality score | 44/48 | 48/48 | +4 points |
 | Successful-route cost | $2.6912478 | $2.1739407 | -$0.5173071 (-19.22%) |
+| Measured model-time cycle proxy | 531.394 s | 313.981 s | -217.413 s (-40.91%) |
+| Reviewer execution-time proxy | 123.415 s | 71.748 s | -51.667 s (-41.86%) |
 | Model roles | 15 | 10 | -5 (-33.33%) |
 | Human checkpoints | 6 | 3 | -3 (-50.00%) |
+
+## Five-Metric Baseline Coverage
+
+The grader requested quality, review latency, defect rate, cycle time, and cost. The evidence supports the following bounded comparison:
+
+| Required metric | PRE-AURA | AURA | Calculation and limitation |
+|---|---:|---:|---|
+| Quality | 44/48 | 48/48 | Sum of the same four-dimension rubric across three scenarios. |
+| Review latency proxy | 123.415 s | 71.748 s | Sum of Reviewer execution duration. Change: `(71.748 - 123.415) / 123.415 × 100 = -41.86%`. It excludes queue and human waiting time. |
+| Defect-rate proxy | 1 of 3 scenarios failed the locked rubric, or 33.33% | 0 of 3 failed, or 0% | `1 / 3 × 100 = 33.33%`; AURA is `0 / 3 × 100 = 0%`. This is a scenario-level rubric-failure proxy, not production defect density. |
+| Cycle-time proxy | 531.394 s | 313.981 s | Sum of measured model duration. Change: `(313.981 - 531.394) / 531.394 × 100 = -40.91%`. Complete human wait time was not consistently available. |
+| Cost | $2.6912478 | $2.1739407 | Change: `$2.1739407 - $2.6912478 = -$0.5173071`; `-$0.5173071 / $2.6912478 × 100 = -19.22%`. |
+
+The proxy labels are deliberate. No unavailable wall-clock or production-defect measurement is presented as direct evidence.
 
 ## Thesis Assessment
 

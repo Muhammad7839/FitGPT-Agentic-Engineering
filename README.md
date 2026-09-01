@@ -23,6 +23,7 @@ Change
 Key evidence:
 
 - Grader quickstart: `docs/capstone/GRADER-QUICKSTART.md`
+- Canvas feedback resolution: `docs/capstone/grader-feedback-resolution.md`
 - Evidence index: `docs/capstone/evidence-index.md`
 - Final rubric audit: `docs/capstone/final-rubric-audit.md`
 - Stakeholder one-pager: `docs/capstone/stakeholder-one-pager.md`
@@ -31,6 +32,9 @@ Key evidence:
 - Change Passport example: `docs/capstone/evidence/change-passport-AF-HIGH-001.json`
 - Real GitHub CI evidence: `docs/capstone/governance-ci-results.md`
 - ADR evidence matrix: `docs/capstone/adr-evidence-matrix.md`
+- Semantic retrieval evidence: `docs/capstone/retrieval-tool-evidence.md`
+- Timeout/retry/budget evidence: `docs/capstone/reliability-controls.md`
+- Agent/skill/memory reflection evidence: `docs/capstone/reflection-log.md`
 - Final presentation: `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`
 - Final walkthrough video: https://youtu.be/srFGYvnEd7c
 
@@ -80,18 +84,16 @@ Fast deterministic checks:
 pytest -q -p no:cacheprovider eval/test_risk_classifier.py eval/test_adaptive_router.py eval/test_pre_aura_control.py
 pytest -q -p no:cacheprovider eval/test_ci_change_classifier.py eval/test_pipeline_integrity.py eval/test_audit_trail.py eval/test_change_passport.py
 pytest -q -p no:cacheprovider eval/test_config_docs_consistency.py eval/test_governance_overreach.py
+pytest -q -p no:cacheprovider eval/test_retrieval_behavior.py eval/test_reliability_controls.py eval/test_sandbox_contract.py
 ```
 
 Governed Docker verification:
 
 ```bash
-docker run --rm -i \
-  -e PYTHONDONTWRITEBYTECODE=1 \
-  -v "$PWD:/workspace:ro" \
-  -w /workspace \
-  agentic_engineer_4:latest \
-  pytest -q -p no:cacheprovider eval/test_policy.py eval/test_mcp_runtime.py eval/test_coursetools_runtime.py
+./scripts/run-offline-governance-verification.sh
 ```
+
+The verifier disables network access, mounts the repository read-only, mounts no credentials, drops Linux capabilities, and assigns each parallel run a unique container name.
 
 Pipeline integrity:
 
@@ -107,7 +109,7 @@ python3 scripts/build-change-passport.py AF-HIGH-001 --output /tmp/aura-passport
 
 ## Safety Boundaries
 
-AURA Forge does not deploy to production, mutate live FitGPT, contact production databases, use real user data, or require production secrets for deterministic verification. Advisory AI review is optional and safely skips when its secret is unavailable.
+AURA Forge does not deploy to production, mutate live FitGPT, contact production databases, use real user data, or require production secrets for deterministic verification. The offline verifier has network disabled. Advisory AI review is optional and safely skips when its secret is unavailable.
 
 ## Target Codebase: FitGPT
 

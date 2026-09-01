@@ -47,3 +47,26 @@ The helper is deterministic. It does not call paid models, contact upstream, mod
 ## Submission Bundle Zip
 
 The repository does not commit a zip copy of these artifacts because it would duplicate binary files without adding rubric value. If LaunchCode requires a single upload, create the zip locally from this folder after the final video URL is known.
+
+## Canvas PDF Rebuild
+
+Install the isolated PDF-build dependency in a disposable virtual environment:
+
+```bash
+python3 -m venv /tmp/aura-canvas-pdf-venv
+/tmp/aura-canvas-pdf-venv/bin/python -m pip install -r docs/capstone/submission/canvas/requirements.txt
+```
+
+The grader-facing Canvas PDFs `01` through `05` are generated from current tracked Markdown evidence:
+
+```bash
+/tmp/aura-canvas-pdf-venv/bin/python scripts/build-canvas-submission-pdfs.py
+```
+
+The official-rubric self-check PDF `06` is generated separately so its verified test counts are explicit:
+
+```bash
+/tmp/aura-canvas-pdf-venv/bin/python scripts/build-canvas-rubric-self-check.py --local-tests 114 --offline-tests 32
+```
+
+Use the fresh counts from the final verification run if coverage changes before submission.

@@ -45,6 +45,8 @@ Controlled retrieval operation:
 
 - `retrieve`
 
+The retrieval tool requires a non-empty query, performs deterministic semantic-vector ranking over the synthetic course corpus, applies the calling role's classification ceiling before returning content, and includes a repository path and section citation on every match. `top_k` is bounded from 1 through 10. Empty queries, unknown classifications, invalid limits, and unauthorized roles fail closed.
+
 Governed skills:
 
 - `run-tests`
@@ -93,6 +95,13 @@ Every `NO` below is justified by either a recorded risk in `docs/governance-risk
   "classification_order": ["public", "internal", "confidential"],
   "storage_operations": ["write_entry", "read_entry", "list_entries", "update_entry", "delete_entry", "audit_read"],
   "retrieval_operations": ["retrieve"],
+  "retrieval_contract": {
+    "schema_version": "governed-retrieval-result-v2",
+    "search_mode": "deterministic-semantic-vector",
+    "classification_field": "classification",
+    "citation_fields": ["path", "section"],
+    "top_k_range": [1, 10]
+  },
   "skills": ["run-tests", "draft-pr-description", "summarize-session"],
   "roles": {
     "orchestrator": {

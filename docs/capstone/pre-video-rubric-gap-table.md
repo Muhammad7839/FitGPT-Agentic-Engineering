@@ -18,6 +18,6 @@ This table was created before the final autonomous pre-human documentation pass.
 | 12 | Clarity & Flow | 4 | None material after final deck repair. | Already satisfied | No redesign. Added teleprompter aligned to approved deck. |
 | 13 | Design | 4 | None material after visual QA. | Already satisfied | No redesign. Kept final clean deck. |
 
-Current defensible score before this pass: `49 / 52`.
+Corrected defensible score: `48 / 52`.
 
-Final pre-video defensible score after this pass remains `49 / 52` because the remaining unavailable points are not honest autonomous fixes.
+The earlier `49 / 52` total was an arithmetic error. Four criteria were each one point below full credit, so the correct calculation is `52 - 4 = 48`. The remaining unavailable points are not honest autonomous fixes.

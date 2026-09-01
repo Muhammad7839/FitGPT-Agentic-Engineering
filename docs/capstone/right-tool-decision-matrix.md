@@ -15,6 +15,9 @@ This matrix records the AURA Forge rule for choosing deterministic code, an agen
 | Final approval for MEDIUM/HIGH | Human | Risk-sensitive or executable changes still require human accountability. | `.eval-artifacts/capstone/aura-runs/*/final-approval-001/` |
 | Change Passport | Deterministic evidence aggregation | Evidence must be read from producers, not summarized from memory. | `scripts/build-change-passport.py`, `eval/test_change_passport.py` |
 | Config/docs consistency check | Deterministic code | The `DATABASE_URL` surfaces are stable text/config facts. | `scripts/check-config-docs-consistency.py`, `docs/capstone/deterministic-conversion.md` |
+| Governed document retrieval | Deterministic semantic-vector search plus policy enforcement | The synthetic corpus, similarity rules, classification ceilings, and citation contract must be reproducible without an external model. | `mcp-servers/retrieval/server.py`, `eval/test_retrieval_behavior.py`, `docs/capstone/retrieval-tool-evidence.md` |
+| Retry, timeout, and cost decision | Deterministic code | Continuation authority is a policy boundary. Identical attempt evidence must produce the same stop, retry, or escalation result. | `eval/reliability_controls.py`, `eval/test_reliability_controls.py`, `docs/capstone/reliability-controls.md` |
+| Offline grader verification | Deterministic container script | Reproduction should require no model credential or network access and should isolate parallel runs. | `scripts/run-offline-governance-verification.sh`, `eval/test_sandbox_contract.py` |
 
 ## Decision Rule
 
@@ -56,6 +59,8 @@ Use a human when:
 | HIGH plan/final approval | Human | Sensitive governance work requires accountability before implementation and before PM closure. | `.eval-artifacts/capstone/aura-runs/AF-HIGH-001/` |
 | Policy/MCP enforcement | Deterministic | Authorization and allow-list behavior must be machine-checkable. | `eval/test_policy.py`, `eval/test_mcp_runtime.py`, `docs/capstone/governance-overreach-demo.md` |
 | Change Passport | Deterministic | Readiness fields must come from producers and hashes, not from memory. | `scripts/build-change-passport.py`, `eval/test_change_passport.py` |
+| Semantic retrieval ranking | Deterministic | Search results, ceilings, and citations must be reproducible and policy-testable. | `mcp-servers/retrieval/server.py`, `eval/test_retrieval_behavior.py` |
+| Attempt continuation decision | Deterministic | Timeout, cost, retry count, and failure class are explicit evidence fields. | `eval/reliability_controls.py`, `eval/test_reliability_controls.py` |
 
 ## Quantitative Conversion Evidence
 

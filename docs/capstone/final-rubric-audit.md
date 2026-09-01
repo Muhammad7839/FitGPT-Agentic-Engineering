@@ -23,7 +23,7 @@ Main gaps were grader discoverability, root README positioning, stakeholder one-
 | Monitoring/incident runbook not standalone | HIGH VALUE | Closed with `docs/capstone/monitoring-incident-runbook.md`. |
 | Final walkthrough video artifact | HUMAN-ONLY | Closed by final uploaded walkthrough video: https://youtu.be/srFGYvnEd7c. |
 | Production deployment not performed | NOT SAFE / OUT OF SCOPE | Not closed; deliberate safety boundary. |
-| Sandbox network egress not fully constrained | NOT SAFE / OUT OF SCOPE for this pass | Documented conservatively; not claimed airtight. |
+| Sandbox network egress not fully constrained | PARTIALLY CLOSED | Added and freshly ran a network-disabled offline verifier; `32 passed`. Historical model-backed egress remains documented. |
 
 ## Final Pre-Video Completion Pass
 
@@ -31,7 +31,7 @@ Current verified state before this pass:
 
 - Presentation-layout commit: `5f91fb2`.
 - Presentation-repair GitHub Actions run: `31527786959`, `success`.
-- Current defensible score before this pass: `49 / 52`.
+- Previously stated score before this pass: `49 / 52`. This was an arithmetic error because four criteria were scored `3/4`; the correct total is `48 / 52`.
 
 Autonomous work completed in this pass:
 
@@ -54,10 +54,10 @@ The added evidence improves grader discoverability and regression coverage, but 
 | # | Criterion | Initial | Final | Best evidence | Residual risk |
 |---:|---|---:|---:|---|---|
 | 1 | Workflow Scoping | 4 | 4 | `docs/capstone/aura-forge-prd.md` | None material. |
-| 2 | Sandboxed Environment | 3 | 3 | `Dockerfile`, `README.md`, governed Docker tests | Network egress is not proven airtight. |
+| 2 | Sandboxed Environment | 3 | 3 | offline verifier `32 passed`, sandbox-contract test, `Dockerfile`, `README.md` | Historical model-backed path used bridge networking. |
 | 3 | Quality Spec & Baseline | 4 | 4 | `docs/capstone/quality-rubric.md`, control baseline docs | None material. |
-| 4 | Agent, Skills & Memory | 3 | 3 | `.claude/agents/*`, `.claude/skills/*`, `.memory/*`, iteration logs | Stale-memory pruning and before/after reflection scores are not complete enough for 4. |
-| 5 | Orchestration & MCP Tools | 4 | 4 | `docs/routing-and-tool-grant-map.md`, `mcp/coursetools_server.py` | None material. |
+| 4 | Agent, Skills & Memory | 3 | 3 | `.claude/agents/*`, `.claude/skills/*`, `.memory/*`, reflection index | No stale entry was eligible for a real pruning event. |
+| 5 | Orchestration & MCP Tools | 4 | 4 | grant map, governed semantic retrieval, policy and behavior tests | None material. |
 | 6 | Evaluation & Calibration | 4 | 4 | `eval/*`, `docs/calibration-log.md`, holdout evidence | None material. |
 | 7 | Governance, Security & CI/CD | 4 | 4 | CI run `31513596822`, overreach demo, integrity drill | None material. |
 | 8 | Right-Tool Decisions & ADRs | 3 | 4 | `docs/capstone/right-tool-decision-matrix.md`, `docs/capstone/adr-evidence-matrix.md`, `docs/adr/*` | ADRs were formalized late, but cite real evidence. |
@@ -67,9 +67,9 @@ The added evidence improves grader discoverability and regression coverage, but 
 | 12 | Clarity & Flow | 2 | 4 | final Gamma deck, teleprompter, video staging, recording sequence | Actual spoken delivery still depends on Muhammad, but the deck and script now supply the complete flow. |
 | 13 | Design | 2 | 4 | final Gamma deck, measured-result visuals, governance and CI evidence cards | Actual visual deck now exists; final recorded video still depends on Muhammad. |
 
-Final defensible score after final submission package: `49 / 52`.
+Corrected defensible score after the non-video feedback revision: `48 / 52`.
 
-Final defensible score after final video link update: `49 / 52`.
+Calculation: `52 - 1 (criterion 2) - 1 (criterion 4) - 1 (criterion 9) - 1 (criterion 11) = 48`.
 
 ## Detailed Audit
 
@@ -97,13 +97,13 @@ Official 4/4 wording:
 - The README includes a prerequisite check, example commands, and a troubleshooting note.
 - Someone could fork, run, and debug without any assistance from the author.
 
-Rationale: the governed Docker path uses read-only `/workspace`, no Claude auth is required for deterministic verification, and README/runbook now provide commands. However, network egress is not proven constrained enough to call the container airtight.
+Rationale: the new offline verification path enforces `--network none`, a read-only root and workspace, no credential mount, no Linux capabilities, bounded resources, tmpfs runtime state, and unique container names for parallel runs. The contract is statically tested, and the fresh offline container run reported `32 passed`. The historical model-backed sandbox still used ordinary bridge networking.
 
-Evidence: `Dockerfile`, `README.md`, `docs/capstone/reproducibility-runbook.md`, `docs/capstone/foundation-runtime-repair.md`, terminal Docker run `18 passed`.
+Evidence: `Dockerfile`, `scripts/run-offline-governance-verification.sh`, `eval/test_sandbox_contract.py`, `README.md`, `docs/capstone/reproducibility-runbook.md`, `docs/capstone/foundation-runtime-repair.md`.
 
 Evidence type: capstone evidence.
 
-Gap: full airtight network egress proof remains unresolved.
+Gap: historical model-backed egress remains a documented limitation, so this audit does not call every agent execution path airtight.
 
 ### 3. Quality Spec & Baseline - 4/4
 
@@ -130,13 +130,13 @@ Official 4/4 wording:
 - Stale entries are pruned with documented reasons.
 - Reflection entries show before/after rubric scores confirming that each change held on a rerun.
 
-Rationale: versioned agents, skills, memory layout, and multiple iteration logs exist. The evidence supports proficient work, but stale-entry pruning with documented reasons and before/after reflection scores for each change are not complete enough for 4/4.
+Rationale: versioned agents, three versioned skills, scoped memory, and real before/fix/rerun records are now directly indexed in `docs/capstone/reflection-log.md`. The memory index records that its one active decision is not yet stale. The evidence supports proficient work, but it would be dishonest to invent a historical stale-entry pruning event when none was due.
 
-Evidence: `.claude/agents/*`, `.claude/skills/*`, `.memory/*`, `docs/memory-architecture.md`, `docs/agents/*/iteration-log.md`, `docs/adr/0002-memory-context-and-prompt-architecture.md`.
+Evidence: `.claude/agents/*`, `.claude/skills/*`, `.memory/*`, `docs/memory-architecture.md`, `docs/capstone/reflection-log.md`, `docs/agents/*/iteration-log.md`, `docs/adr/0002-memory-context-and-prompt-architecture.md`.
 
 Evidence type: historical course evidence and capstone evidence.
 
-Gap: no safe late fix can honestly create historical before/after reflection records.
+Gap: no stale entry was eligible for pruning, so the exact exemplary stale-pruning bullet remains unproven.
 
 ### 5. Orchestration & MCP Tools - 4/4
 
@@ -146,9 +146,9 @@ Official 4/4 wording:
 - Tool grants are deliberately narrow--each subagent accesses only what its role requires.
 - The MCP tools are schema-validated, classification-tagged, and citation-bearing, ready for governance enforcement.
 
-Rationale: the orchestration docs, grant map, governed server, policy tests, and overreach denial prove narrow grants and implementable routing.
+Rationale: the orchestration docs, grant map, governed servers, policy tests, and overreach denial prove narrow grants and implementable routing. The retrieval server now performs bounded semantic-vector ranking and returns schema-versioned, classification-tagged, citation-bearing results.
 
-Evidence: `docs/orchestration-diagram.md`, `docs/routing-and-tool-grant-map.md`, `mcp/coursetools_server.py`, `eval/test_policy.py`, `docs/capstone/governance-overreach-demo.md`.
+Evidence: `docs/orchestration-diagram.md`, `docs/routing-and-tool-grant-map.md`, `mcp/coursetools_server.py`, `mcp-servers/retrieval/server.py`, `eval/test_policy.py`, `eval/test_retrieval_behavior.py`, `docs/capstone/retrieval-tool-evidence.md`, `docs/capstone/governance-overreach-demo.md`.
 
 Evidence type: historical course evidence and capstone evidence.
 
@@ -214,9 +214,9 @@ Official 4/4 wording:
 - The system degrades gracefully under failure conditions.
 - Escalation and rollback paths are tested rather than only documented.
 
-Rationale: the complete workflow ran in the isolated course repo with real GitHub CI, reliability controls, cost controls, graceful advisory skip, and a documented drill. However, the controlled fault was intentionally injected and manually known, so it does not satisfy the exact "not caught manually" 4/4 bullet.
+Rationale: the complete workflow ran in the isolated course repo with real GitHub CI, cost controls, graceful advisory skip, and a documented drill. The new deterministic reliability controller demonstrates timeout, bounded retry, cost-budget stop, and fail-closed escalation. However, the controlled fault was intentionally injected and manually known, so it does not satisfy the exact "not caught manually" 4/4 bullet.
 
-Evidence: `docs/capstone/tool-evolution-drill.md`, `docs/capstone/monitoring-incident-runbook.md`, `docs/capstone/governance-ci-results.md`, `eval/test_adaptive_router.py`, commits `7c666e5`, `4e446f6`, `92d60c4`.
+Evidence: `docs/capstone/tool-evolution-drill.md`, `docs/capstone/monitoring-incident-runbook.md`, `docs/capstone/reliability-controls.md`, `docs/capstone/governance-ci-results.md`, `eval/reliability_controls.py`, `eval/test_reliability_controls.py`, `eval/test_adaptive_router.py`, commits `7c666e5`, `4e446f6`, `92d60c4`.
 
 Evidence type: capstone evidence and real GitHub evidence.
 
@@ -230,9 +230,9 @@ Official 4/4 wording:
 - The impact report distinguishes measured gains from projected gains with specific and defensible assumptions.
 - The self-improving loop ran across the full course, not just in the final drill, and this is visible in the commit history and calibration log.
 
-Rationale: the iteration narrative now ties foundation, baseline, failures, classifier/router, AURA runs, denial, CI failure/repair, and terminal CI to evidence; impact explicitly labels measured scope.
+Rationale: the iteration narrative ties foundation, baseline, failures, classifier/router, AURA runs, denial, CI failure/repair, and terminal CI to evidence. The impact report now covers quality, review-latency proxy, defect-rate proxy, cycle-time proxy, and cost with calculations and explicit limitations. The reflection index surfaces multiple before/fix/rerun cycles.
 
-Evidence: `docs/capstone/iteration-narrative.md`, `docs/capstone/control-vs-aura-impact.md`, `docs/calibration-log.md`, `git log`.
+Evidence: `docs/capstone/iteration-narrative.md`, `docs/capstone/control-vs-aura-impact.md`, `docs/capstone/reflection-log.md`, `docs/calibration-log.md`, `git log`.
 
 Evidence type: historical course evidence, capstone evidence, real GitHub evidence.
 
@@ -246,15 +246,15 @@ Official 4/4 wording:
 - The video is compelling, on-time, and shows governance stopping an over-reaching agent so the safety story is visible rather than claimed.
 - A technical reviewer can evaluate the full submission in five minutes and probe any engineering decision in 30.
 
-Rationale: the one-pager, final Gamma deck, teleprompter, video staging, cheat sheet, submission links file, deterministic demo helper, and final walkthrough video artifact now exist. The final video URL is https://youtu.be/srFGYvnEd7c.
+Rationale: the one-pager now translates percentage savings into measured dollars and model seconds/minutes. The final Gamma deck, teleprompter, video staging, cheat sheet, submission links file, deterministic demo helper, and final walkthrough video artifact exist. Canvas reports the reviewed video is approximately 13 minutes against a 10-minute cap, so this criterion remains `3/4` until the video is handled with Muhammad.
 
 Evidence: `docs/capstone/stakeholder-one-pager.md`, `docs/capstone/GRADER-QUICKSTART.md`, `docs/capstone/demo-script.md`, `docs/capstone/video-script.md`, `docs/capstone/evidence-index.md`, `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`, `docs/capstone/submission/AURA_Forge_TELEPROMPTER.md`, `docs/capstone/submission/VIDEO-EVIDENCE-STAGING.md`, `docs/capstone/submission/`, https://youtu.be/srFGYvnEd7c.
 
 Evidence type: capstone evidence.
 
-Gap: no repository-local transcript or independent content review is stored in this package update to prove every exact 4/4 video-quality requirement. The required walkthrough artifact now exists, but the score stays conservative.
+Gap: the video-length violation remains open by Muhammad's instruction not to edit or replace the video during this revision.
 
-Final video note: the final walkthrough URL was added after recording. Criteria 2, 4, and 9 are unchanged.
+Final video note: the final walkthrough URL was added after recording. This non-video revision did not change the recording.
 
 ### 12. Clarity & Flow - 4/4
 
@@ -291,11 +291,11 @@ Gap: final recorded video composition still depends on Muhammad's screen recordi
 
 The lowest score is shared by Criteria 2, 4, 9, and 11 at `3/4`.
 
-The most important residual risk is Criterion 11 because the official 4/4 level requires a compelling, on-time video that visibly shows governance stopping overreach. The final video artifact now exists, but this package update did not add a repository-local transcript or independent content review proving every exact 4/4 requirement.
+The most important residual risk is Criterion 11 because Canvas reports that the reviewed video exceeds the 10-minute cap. The repository fixes cannot resolve a recording-duration violation.
 
 Unavailable points after this pass:
 
-- Criterion 2: one point remains unavailable because network egress is not proven constrained enough to call the sandbox airtight.
-- Criterion 4: one point remains unavailable because complete stale-memory pruning with documented reasons and before/after reflection scores cannot be reconstructed honestly after the fact.
+- Criterion 2: one point remains unavailable because historical model-backed runs used ordinary bridge networking even though the new offline network-disabled verification path passed `32` tests.
+- Criterion 4: one point remains unavailable because no stale memory entry was eligible for pruning; no pruning event is fabricated.
 - Criterion 9: one point remains unavailable because the tool-evolution drill was intentional fault injection, not an unobserved real regression caught before manual detection.
-- Criterion 11: one point remains conservatively unavailable until the recorded walkthrough content is independently verified against the exact 4/4 video requirement.
+- Criterion 11: one point remains unavailable because Canvas reports the video exceeds the 10-minute cap. Video work is deferred.

@@ -217,3 +217,51 @@ Evidence: terminal run `31513596822`.
 Verification: policy `18 passed`, eval `60 passed`, integrity `PASS`, advisory `SKIPPED`, audit `success`.
 
 Impact: final capstone branch has real green governance CI.
+
+## 21. Semantic Retrieval Contract
+
+Problem: Canvas feedback said semantic document search was absent from all available evidence.
+
+Evidence: `mcp-servers/retrieval/server.py`, `eval/test_retrieval_behavior.py`, `docs/capstone/retrieval-tool-evidence.md`.
+
+Decision: add bounded deterministic semantic-vector ranking to the existing governed retrieval server, preserve classification ceilings, and require path/section citations on returned matches.
+
+Verification: the new behavior tests cover synonym-based ranking, citation output, above-ceiling withholding, and empty-query denial.
+
+Impact: retrieval is now directly inspectable as schema-versioned, classification-tagged, and citation-bearing instead of only documented as an allow-list concept.
+
+## 22. Timeout, Retry, and Budget Enforcement
+
+Problem: Canvas feedback said reliability controls were described but not demonstrated.
+
+Evidence: `eval/reliability_controls.py`, `eval/test_reliability_controls.py`, `docs/capstone/reliability-controls.md`.
+
+Decision: keep the frozen measured router unchanged and add a deterministic decision seam over recorded attempt evidence.
+
+Verification: tests demonstrate one bounded retry, retry exhaustion, timeout stop, budget stop, and non-retryable escalation.
+
+Impact: reliability decisions are machine-checkable without rerunning paid model workflows or rewriting historical holdouts.
+
+## 23. Offline Sandbox Boundary
+
+Problem: fork/run readiness, egress, and parallel-session isolation were hard to verify.
+
+Evidence: `scripts/run-offline-governance-verification.sh`, `eval/test_sandbox_contract.py`, `docs/capstone/reproducibility-runbook.md`.
+
+Decision: provide one offline verification command with network disabled, read-only root/workspace, no credential mount, dropped capabilities, bounded resources, tmpfs, and a unique container name.
+
+Verification: static contract tests and shell syntax checks passed. The fresh network-disabled, read-only container run reported `32 passed`.
+
+Impact: a grader has an explicit isolated path that cannot contact external services during deterministic verification.
+
+## 24. Canvas Feedback Resolution and Score Correction
+
+Problem: grader evidence was inaccessible, the concern-to-file map was missing, and the prior self-audit total was arithmetically wrong.
+
+Evidence: `docs/capstone/grader-feedback-resolution.md`, `docs/capstone/evidence-index.md`, `docs/capstone/final-rubric-audit.md`.
+
+Decision: map every Canvas comment to evidence and remaining action, and correct `49/52` to `48/52` because four criteria are one point below full credit.
+
+Verification: `52 - 1 - 1 - 1 - 1 = 48`.
+
+Impact: the submission package is easier to grade and no longer overstates its defensible score.
