@@ -2,6 +2,21 @@
 
 This document records the final governance and CI evidence for the capstone milestone. It separates local evidence from real GitHub Actions evidence.
 
+## September 1 Grader-Feedback Implementation Run
+
+- Commit: `a7813c453b369dcaf0dd2fe27196d730c1889c67`
+- Run: `33517133584`
+- URL: https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/33517133584
+- Conclusion: `success`
+- `change-classifier`: success
+- `policy-tests`: success, `27 passed`
+- `evaluation-gate`: success, `66 passed`
+- `pipeline-integrity`: success
+- `advisory-review`: success with explicit `SKIPPED` status because the optional AI secret was unavailable
+- `audit-trail`: success
+
+The only annotations were non-failing GitHub warnings that Node.js 20-targeting actions were forced to Node.js 24. No policy, evaluation, integrity, advisory, or audit job failed.
+
 ## Local Evidence
 
 Before the first push, local checks proved:

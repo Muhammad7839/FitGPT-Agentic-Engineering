@@ -54,6 +54,7 @@ Evidence: `docs/capstone/governance-ci-results.md`
 
 Known passed governance runs include:
 
+- run `33517133584`: grader-feedback implementation commit `a7813c4`; policy `27 passed`, evaluation `66 passed`, integrity success, advisory safely skipped, audit success.
 - run `31513596822`: CI-backed Change Passport source run.
 - run `31520499134`: verified submission-package evidence run used in the deck.
 - run `31527786959`: passed after the final presentation visual repair commit.

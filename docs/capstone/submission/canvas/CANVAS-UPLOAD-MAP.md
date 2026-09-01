@@ -8,7 +8,11 @@ GitHub repository link:
 
 `https://github.com/Muhammad7839/FitGPT-Agentic-Engineering`
 
-Current access status: `PRIVATE`. Do not resubmit this link until a logged-out grader can open the exact `capstone/aura-forge` branch.
+Current access status: `PUBLIC`. On September 1, 2026, the anonymous branch page and raw grader quickstart both returned HTTP `200`.
+
+Verified implementation commit: `a7813c453b369dcaf0dd2fe27196d730c1889c67`
+
+Verified governance CI: https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/33517133584
 
 Walkthrough video:
 
@@ -52,19 +56,16 @@ Final presentation:
 
 ## Upload Order
 
-1. Confirm the current revision is committed, pushed, and green in fresh GitHub CI.
-2. Confirm the repository and exact branch open in a logged-out browser.
-3. Complete and verify a walkthrough at or below 10 minutes.
-4. Paste the verified GitHub repository link.
-5. Paste the compliant walkthrough video link.
-6. Upload `01_AURA_Forge_Architecture_Writeup.pdf`.
-7. Upload `02_AURA_Forge_Impact_and_Tool_Evolution.pdf`.
-8. Upload `03_AURA_Forge_Stakeholder_One_Pager.pdf`.
-9. Upload `04_AURA_Forge_Ops_Runbook.pdf`.
-10. Upload `05_AURA_Forge_ADR_Package.pdf`.
-11. Upload `06_AURA_Forge_Rubric_Self_Check.pdf`.
-12. Upload `07_AURA_Forge_Sanitization_Note.pdf`.
-13. Upload or attach `00_AURA_Forge_Final_Presentation.pdf` where Canvas asks for the completed slide deck.
+1. Paste the verified public GitHub repository link requested by Learn at LaunchCode.
+2. If Canvas requires the walkthrough now, use the current historical link but disclose that the video-length correction remains pending; do not call it compliant.
+3. Upload `01_AURA_Forge_Architecture_Writeup.pdf`.
+4. Upload `02_AURA_Forge_Impact_and_Tool_Evolution.pdf`.
+5. Upload `03_AURA_Forge_Stakeholder_One_Pager.pdf`.
+6. Upload `04_AURA_Forge_Ops_Runbook.pdf`.
+7. Upload `05_AURA_Forge_ADR_Package.pdf`.
+8. Upload `06_AURA_Forge_Rubric_Self_Check.pdf`.
+9. Upload `07_AURA_Forge_Sanitization_Note.pdf`.
+10. Upload or attach `00_AURA_Forge_Final_Presentation.pdf` where Canvas asks for the completed slide deck.
 
 ## Rebuild Sources
 

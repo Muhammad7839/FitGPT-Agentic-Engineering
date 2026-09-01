@@ -71,6 +71,7 @@ Result:
 
 Additional passed evidence runs:
 
+- `33517133584`: grader-feedback implementation `a7813c4`; policy `27 passed`, evaluation `66 passed`, integrity and audit succeeded.
 - `31513596822`: CI-backed Change Passport source run.
 - `31520499134`: verified submission-package CI evidence used in an earlier deck.
 - `31527786959`: passed after final presentation visual repair.

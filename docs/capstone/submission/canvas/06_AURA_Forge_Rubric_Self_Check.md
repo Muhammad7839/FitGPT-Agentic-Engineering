@@ -28,12 +28,13 @@ This self-check uses the official LaunchCode 13-criterion rubric preserved in `d
 - Offline network-disabled container: `32 passed`.
 - Pipeline integrity: `PASS`.
 - Local path-reference scan: `PASS`.
+- Grader-feedback implementation commit: `a7813c453b369dcaf0dd2fe27196d730c1889c67`.
+- GitHub governance CI run `33517133584`: `SUCCESS` with policy `27 passed` and evaluation `66 passed`.
+- Public access: anonymous branch page and raw grader quickstart returned HTTP `200`.
 - Video files and video URL were not edited in the non-video revision.
 
 ## Required human actions before resubmission
 
-1. Approve, commit, and push this revision to `capstone/aura-forge`.
-2. Wait for fresh GitHub CI and use that run as current evidence.
-3. Change or share the currently private repository so a logged-out grader can access the exact branch.
-4. Work with Codex on a walkthrough at or below 10 minutes; video work was deliberately deferred.
-5. Submit the exact canonical repository link through the corrected Canvas/LaunchCode path and verify the revised submission is visible.
+1. Submit the exact public repository link through the Canvas/LaunchCode path requested on August 31.
+2. Confirm the grader received and can open the full repository.
+3. Work with Codex on a walkthrough at or below 10 minutes; video work was deliberately deferred.

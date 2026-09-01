@@ -16,7 +16,7 @@ Source: official recovered LaunchCode assignment page identified in `docs/capsto
 - [x] Presentation outline exists.
 - [x] Sanitized Change Passport example is tracked.
 - [x] Historical GitHub CI evidence exists and permanent gates were green for that recorded commit.
-- [ ] Push the current feedback revision and capture a fresh passing CI run.
+- [x] Push the grader-feedback implementation commit and capture passing CI run `33517133584`.
 - [x] Holdout checksum is unchanged.
 - [x] No production deployment is claimed.
 
@@ -26,7 +26,7 @@ Source: official recovered LaunchCode assignment page identified in `docs/capsto
 - [x] Upload/save the final walkthrough video URL: https://youtu.be/srFGYvnEd7c.
 - [ ] Verify the video visibly shows the governance overreach denial.
 - [ ] Work with Codex to make the video comply with the 10-minute cap; video work was deliberately deferred from the repository revision.
-- [ ] Confirm the repository branch or URL is visible to the grader.
+- [x] Confirm the public repository branch and raw quickstart return anonymous HTTP `200`.
 - [ ] Upload or paste the required external-tool submission link in the LaunchCode course portal.
 - [ ] Upload or link the final presentation if the portal asks for it.
 - [ ] Confirm access permissions before pressing final submit.

@@ -4,9 +4,11 @@ Repository: https://github.com/Muhammad7839/FitGPT-Agentic-Engineering
 
 Branch: `capstone/aura-forge`
 
+Grader-feedback implementation commit: `a7813c453b369dcaf0dd2fe27196d730c1889c67`
+
 Historical verified CI run: https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/31531270032
 
-Current revision CI: [ADD AFTER THIS REVISION IS PUSHED AND PASSES]
+Verified grader-feedback CI run: https://github.com/Muhammad7839/FitGPT-Agentic-Engineering/actions/runs/33517133584
 
 Final recording presentation path: `docs/capstone/submission/AURA_Forge_Final_Gamma_Presentation.pdf`
 
@@ -18,4 +20,4 @@ Final presentation URL if LaunchCode requires upload/link: [ADD FINAL PRESENTATI
 
 LaunchCode submission confirmation: [ADD AFTER SUBMITTING]
 
-Public grader-access check: [ADD AFTER LOGGED-OUT REPOSITORY VERIFICATION]
+Public grader-access check: `VERIFIED 2026-09-01` — anonymous branch page and raw grader quickstart both returned HTTP `200`.
